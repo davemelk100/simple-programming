@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+:root {
+  --color-topic-blue: #3b82f6;
+  --color-topic-purple: #8b5cf6;
+  --color-topic-green: #22c55e;
+  --color-topic-orange: #f97316;
+  --color-topic-yellow: #eab308;
+  --color-topic-pink: #ec4899;
+  --color-topic-indigo: #6366f1;
+}
+
+body {
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  background-color: #f8fafc; /* slate-50 */
+  color: #0f172a; /* slate-900 */
+  min-height: 100vh;
+}
+
+*:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+  border-radius: 4px;
+}

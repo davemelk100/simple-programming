@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Signing In... - Simple Programming">
+  <div class="flex min-h-[50vh] items-center justify-center">
+    <div class="text-center">
+      <div class="mb-4 text-4xl">&#x1F510;</div>
+      <h1 class="mb-2 text-xl font-bold text-slate-900">Signing you in...</h1>
+      <p class="text-sm text-slate-500">You'll be redirected in a moment.</p>
+    </div>
+  </div>
+
+  <script>
+    import { supabase } from '../../lib/supabase';
+
+    // Supabase automatically picks up the tokens from the URL hash.
+    // We just need to wait for the session to be established, then redirect.
+    supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_IN') {
+        window.location.href = '/';
+      }
+    });
+
+    // Fallback redirect if auth state doesn't fire quickly
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 5000);
+  </script>
+</BaseLayout>

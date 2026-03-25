@@ -1,0 +1,8 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TopicPage from '../../components/topics/TopicPage.svelte';
+---
+
+<BaseLayout title="Things That Change - Simple Programming">
+  <TopicPage client:load topicSlug="state" />
+</BaseLayout>
