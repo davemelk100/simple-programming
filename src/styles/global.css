@@ -19,6 +19,11 @@ h3 {
   font-size: 1.35rem;
 }
 
+
+html {
+  font-size: 18px;
+}
+
 body {
   font-family: "Roboto", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";

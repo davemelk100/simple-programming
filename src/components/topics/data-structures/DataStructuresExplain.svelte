@@ -39,9 +39,9 @@
     <!-- Array section -->
     <div class="transition-all duration-700 {showArray ? 'translate-x-0 opacity-100' : '-translate-x-8 opacity-0'}">
       <h3 class="mb-3 text-lg font-bold text-green-700">Arrays: Ordered Lists</h3>
-      <p class="mb-4 text-sm text-slate-600">An array is a numbered list of items. Each item has an <strong>index</strong> (its position number, starting from 0).</p>
+      <p class="mb-4 text-slate-600">An array is a numbered list of items. Each item has an <strong>index</strong> (its position number, starting from 0).</p>
 
-      <div class="flex items-center justify-center gap-1">
+      <div class="flex items-center justify-start gap-1">
         <span class="mr-2 text-lg font-bold text-slate-500">[</span>
         {#each fruits as fruit, i}
           <div class="flex flex-col items-center gap-1 transition-all duration-500
@@ -62,7 +62,7 @@
     <!-- Object section -->
     <div class="transition-all duration-700 {showObject ? 'translate-x-0 opacity-100' : '-translate-x-8 opacity-0'}">
       <h3 class="mb-3 text-lg font-bold text-green-700">Objects: Labeled Containers</h3>
-      <p class="mb-4 text-sm text-slate-600">An object stores data with <strong>labels</strong> (called keys) instead of numbers.</p>
+      <p class="mb-4 text-slate-600">An object stores data with <strong>labels</strong> (called keys) instead of numbers.</p>
 
       <div class="max-w-xs rounded-xl border-2 border-green-400 bg-green-50 p-4 shadow-md">
         <div class="mb-2 text-xs font-bold text-green-600">Person</div>

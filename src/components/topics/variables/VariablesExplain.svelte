@@ -35,7 +35,7 @@
     </p>
   </div>
 
-  <div class="flex-1 flex flex-col items-center gap-6">
+  <div class="flex-1 flex flex-col items-start gap-6">
     {#each boxes as box, i}
       <div
         class="flex w-full max-w-md items-center gap-4 transition-all duration-700
@@ -52,7 +52,7 @@
         </div>
 
         <!-- Description -->
-        <p class="text-sm text-slate-600">{box.desc}</p>
+        <p class="text-slate-600">{box.desc}</p>
       </div>
     {/each}
   </div>

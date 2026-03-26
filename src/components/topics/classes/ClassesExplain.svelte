@@ -94,7 +94,7 @@
           </div>
 
           {#if i <= activeExample}
-            <p class="mt-2 max-w-md text-sm text-slate-500">{ex.desc}</p>
+            <p class="mt-2 max-w-md text-slate-500">{ex.desc}</p>
           {/if}
         </div>
       {/each}

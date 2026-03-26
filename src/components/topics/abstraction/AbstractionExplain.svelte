@@ -86,7 +86,7 @@
               <span class="text-xs font-semibold text-slate-500">Hidden complexity:</span>
               <span class="text-xs text-slate-500">{ex.hidden}</span>
             </div>
-            <p class="text-sm text-slate-600">{ex.desc}</p>
+            <p class="text-slate-600">{ex.desc}</p>
           </div>
         {/each}
       </div>

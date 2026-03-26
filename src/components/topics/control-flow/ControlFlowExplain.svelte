@@ -83,7 +83,7 @@
     <!-- Loop visual -->
     <div class="transition-all duration-700 {showLoop ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}">
       <h3 class="mb-4 text-lg font-bold text-orange-700">Loops: Repeating Actions</h3>
-      <p class="mb-3 text-sm text-slate-600">"Say hello 5 times"</p>
+      <p class="mb-3 text-slate-600">"Say hello 5 times"</p>
 
       <div class="flex items-center justify-center gap-2">
         {#each [1, 2, 3, 4, 5] as step}

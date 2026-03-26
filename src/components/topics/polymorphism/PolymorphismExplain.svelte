@@ -64,7 +64,7 @@
 
   <div class="space-y-8">
       <!-- Remote metaphor -->
-      <div class="flex flex-col items-center gap-4">
+      <div class="flex flex-col items-start gap-4">
         <div class="flex h-14 w-32 items-center justify-center rounded-xl border-2 border-orange-400 bg-orange-100 font-bold text-orange-700 shadow-md">
           Play
         </div>
@@ -90,7 +90,7 @@
         <div class="transition-all duration-700
           {i <= activeExample ? 'translate-x-0 opacity-100' : '-translate-x-8 opacity-0'}">
           <h3 class="mb-3 text-lg font-bold text-orange-700">{ex.method}</h3>
-          <div class="flex flex-wrap items-start justify-center gap-4">
+          <div class="flex flex-wrap items-start justify-start gap-4">
             {#each ex.items as item}
               <div class="flex w-48 flex-col items-center gap-2">
                 <!-- Shape icon -->
@@ -119,7 +119,7 @@
             {/each}
           </div>
           {#if i <= activeExample}
-            <p class="mt-2 text-sm text-slate-500">{ex.desc}</p>
+            <p class="mt-2 text-slate-500">{ex.desc}</p>
           {/if}
         </div>
       {/each}
