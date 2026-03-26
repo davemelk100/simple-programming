@@ -32,8 +32,7 @@
 
 <div class="space-y-8">
   <div>
-    <h2 class="mb-3 text-2xl font-bold text-slate-800">Making Decisions & Repeating</h2>
-    <p class="max-w-lg text-slate-600">
+    <p class="text-slate-600">
       Programs need to <strong>choose</strong> what to do and sometimes <strong>repeat</strong> actions. <strong>If/else</strong> lets your program pick a path, while <strong>loops</strong> let it repeat steps without writing the same code over and over!
     </p>
   </div>

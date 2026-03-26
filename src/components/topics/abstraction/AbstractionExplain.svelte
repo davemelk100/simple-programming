@@ -39,15 +39,14 @@
 
 <div class="space-y-8">
   <div>
-    <h2 class="mb-3 text-2xl font-bold text-slate-800">Abstraction: Focus on What, Not How</h2>
-    <p class="max-w-lg text-slate-600">
+    <p class="text-slate-600">
       Think of driving a car. You use the <strong>steering wheel</strong> and <strong>pedals</strong> &mdash; the abstract interface &mdash; without knowing how the engine, transmission, or brakes work internally. That's <strong>abstraction</strong>: simplifying complex systems by hiding unnecessary details so you interact with a clean, simple interface.
     </p>
   </div>
 
   <div class="space-y-8">
       <!-- Car metaphor visual -->
-      <div class="flex max-w-lg items-center gap-4 rounded-xl border-2 border-indigo-300 bg-indigo-50 p-5 shadow-md">
+      <div class="flex items-center gap-4 rounded-xl border-2 border-indigo-300 bg-indigo-50 p-5 shadow-md">
         <div class="flex flex-col items-center gap-1">
           <div class="flex h-14 w-14 items-center justify-center rounded-full bg-indigo-200 text-2xl">🚗</div>
           <span class="text-xs font-bold text-indigo-700">Driver</span>
@@ -72,7 +71,7 @@
       <div class="flex flex-col items-start gap-6">
         {#each examples as ex, i}
           <div
-            class="w-full max-w-lg rounded-xl border p-5 transition-all duration-700
+            class="w-full rounded-xl border p-5 transition-all duration-700
               {i <= activeExample ? 'translate-x-0 opacity-100 border-indigo-300 bg-indigo-50' : '-translate-x-8 opacity-0 border-slate-200 bg-white'}"
           >
             <div class="mb-3 flex items-center gap-3">

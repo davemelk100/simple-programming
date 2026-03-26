@@ -28,8 +28,7 @@
 
 <div class="space-y-8">
   <div>
-    <h2 class="mb-3 text-2xl font-bold text-slate-800">Functions are Machines</h2>
-    <p class="max-w-lg text-slate-600">
+    <p class="text-slate-600">
       Think of a function like a machine in a factory. You put something <strong>in</strong>, the machine does its work, and something comes <strong>out</strong>. Every function has a <strong>name</strong>, takes some <strong>input</strong>, and produces an <strong>output</strong>. For simple functions like these, the same input always gives the same output!
     </p>
   </div>
@@ -37,7 +36,7 @@
   <div class="flex-1 flex flex-col items-start gap-8">
     {#each examples as ex, i}
       <div
-        class="flex w-full max-w-lg items-center gap-3 transition-all duration-700
+        class="flex w-full items-center gap-3 transition-all duration-700
           {i <= activeExample ? 'translate-x-0 opacity-100' : '-translate-x-8 opacity-0'}"
       >
         <!-- Input -->
@@ -71,7 +70,7 @@
       </div>
 
       {#if i <= activeExample}
-        <p class="max-w-md text-slate-500 -mt-4">{ex.desc}</p>
+        <p class="text-slate-500 -mt-4">{ex.desc}</p>
       {/if}
     {/each}
   </div>

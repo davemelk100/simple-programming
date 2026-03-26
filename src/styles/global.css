@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+@layer base {
+  p, a {
+    font-weight: 300;
+  }
+}
+
 :root {
   --color-topic-blue: #3b82f6;
   --color-topic-purple: #8b5cf6;
@@ -23,6 +29,7 @@ h3 {
 html {
   font-size: 18px;
 }
+
 
 body {
   font-family: "Roboto", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",

@@ -39,8 +39,7 @@
 
 <div class="space-y-8">
   <div>
-    <h2 class="mb-3 text-2xl font-bold text-slate-800">Hiding the Details, Exposing What Matters</h2>
-    <p class="max-w-lg text-slate-600">
+    <p class="text-slate-600">
       Think of a <strong>TV remote</strong>. You press buttons &mdash; power, volume, channel &mdash; without knowing how the circuits inside work. That's <strong>encapsulation</strong>: hiding the complex internals and only exposing a simple interface. It protects data from being changed in unexpected ways, preventing bugs and keeping your code safe and predictable.
     </p>
   </div>
@@ -80,7 +79,7 @@
     <div class="flex flex-col items-start gap-6">
       {#each examples as ex, i}
         <div
-          class="w-full max-w-lg rounded-xl border-2 p-5 transition-all duration-700
+          class="w-full rounded-xl border-2 p-5 transition-all duration-700
             {i <= activeExample ? 'translate-x-0 opacity-100 border-green-300 bg-green-50' : '-translate-x-8 opacity-0 border-slate-200 bg-white'}"
         >
           <div class="mb-3 flex items-center gap-2">

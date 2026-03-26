@@ -43,8 +43,7 @@
 
 <div class="space-y-8">
   <div>
-    <h2 class="mb-3 text-2xl font-bold text-slate-800">Classes are Blueprints</h2>
-    <p class="max-w-lg text-slate-600">
+    <p class="text-slate-600">
       Think of a class like a <strong>cookie cutter</strong>. The cookie cutter is the blueprint &mdash; it defines the <strong>shape</strong>. Each cookie you stamp out is an <strong>object</strong>, a real thing made from that blueprint. One class can create as many objects as you need &mdash; each with its own unique values. Objects also have <strong>methods</strong> (behaviors) &mdash; things they can <em>do</em>, like <code>car.drive()</code> or <code>dog.bark()</code>.
     </p>
   </div>
@@ -94,7 +93,7 @@
           </div>
 
           {#if i <= activeExample}
-            <p class="mt-2 max-w-md text-slate-500">{ex.desc}</p>
+            <p class="mt-2 text-slate-500">{ex.desc}</p>
           {/if}
         </div>
       {/each}

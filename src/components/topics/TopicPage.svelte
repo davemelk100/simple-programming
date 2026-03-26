@@ -5,7 +5,8 @@
   import { loadProgress, markSectionComplete } from '../../lib/progress';
   import { getUser } from '../../lib/auth';
   import SectionTabs from '../ui/SectionTabs.svelte';
-  import SuccessAnimation from '../ui/SuccessAnimation.svelte';
+  import Modal from '../ui/Modal.svelte';
+  import CompletionModal from '../ui/CompletionModal.svelte';
 
   // Topic components
   import VariablesExplain from './variables/VariablesExplain.svelte';
@@ -83,7 +84,9 @@
   let activeSection = $state<SectionType>('explain');
   let completedSections = $state({ explain: false, demo: false, exercise: false, code: false });
   let userId = $state<string | null>(null);
-  let showSuccess = $state(false);
+  let showCompletionModal = $state(false);
+  let completedSectionType = $state<SectionType>('explain');
+  let completedScore = $state<number | undefined>(undefined);
 
   const colorMap: Record<string, string> = {
     blue: 'text-blue-700',
@@ -122,10 +125,9 @@
 
   async function handleSectionComplete(section: SectionType, score?: number) {
     completedSections[section] = true;
-
-    if (section === 'exercise') {
-      showSuccess = true;
-    }
+    completedSectionType = section;
+    completedScore = score;
+    showCompletionModal = true;
 
     if (userId) {
       await markSectionComplete(userId, topicSlug, section, score);
@@ -156,7 +158,6 @@
       <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <span class="text-2xl">{topic.icon}</span>
         <h1 class="text-2xl font-black {colorMap[topic.color] ?? 'text-slate-800'}">{topic.title}</h1>
-        <p class="text-sm text-slate-500">&mdash; {topic.description}</p>
       </div>
 
       <SectionTabs
@@ -229,9 +230,16 @@
     </div>
   </div>
 
-  {#if showSuccess}
-    <SuccessAnimation />
-  {/if}
+  <Modal open={showCompletionModal} onclose={() => (showCompletionModal = false)}>
+    <CompletionModal
+      topicTitle={topic.title}
+      topicIcon={topic.icon}
+      sectionType={completedSectionType}
+      {topicSlug}
+      score={completedScore}
+      onclose={() => (showCompletionModal = false)}
+    />
+  </Modal>
 {:else}
   <div class="text-center py-12">
     <p class="text-lg text-slate-500">Topic not found.</p>

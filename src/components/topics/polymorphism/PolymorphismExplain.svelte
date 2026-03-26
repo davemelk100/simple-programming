@@ -56,8 +56,7 @@
 
 <div class="space-y-8">
   <div>
-    <h2 class="mb-3 text-2xl font-bold text-slate-800">Same Interface, Different Behavior</h2>
-    <p class="max-w-lg text-slate-600">
+    <p class="text-slate-600">
       Imagine a <strong>universal remote</strong>. You press the same &ldquo;Play&rdquo; button, but each device does something different. That's <strong>polymorphism</strong> &mdash; you can treat different objects the same way, call the same method on any of them, and each one knows how to respond in its own way.
     </p>
   </div>

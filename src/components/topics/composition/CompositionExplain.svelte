@@ -27,14 +27,13 @@
 
 <div class="space-y-8">
   <div>
-    <h2 class="mb-3 text-2xl font-bold text-slate-800">Building Bigger Things</h2>
-    <p class="max-w-lg text-slate-600">
+    <p class="text-slate-600">
       The real power of programming comes from <strong>combining</strong> small pieces. Each piece does one thing well, and you connect them into a <strong>pipeline</strong> — plugging the output of one function into the input of the next. Small, simple functions become powerful when chained together!
     </p>
   </div>
 
   <!-- Pipeline visual -->
-  <div class="max-w-lg">
+  <div class="">
     <h3 class="mb-4 text-sm font-bold text-indigo-600">A Pipeline in Action</h3>
 
     <div class="flex flex-col items-center gap-2">

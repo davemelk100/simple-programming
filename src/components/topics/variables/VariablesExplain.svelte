@@ -29,16 +29,15 @@
 
 <div class="space-y-8">
   <div>
-    <h2 class="mb-3 text-2xl font-bold text-slate-800">Variables are Labeled Boxes</h2>
-    <p class="max-w-lg text-slate-600">
+    <p class="text-slate-600">
       Imagine you have a bunch of storage boxes. Each box has a <strong>label</strong> on the outside and a <strong>value</strong> inside. That's exactly what a variable is — we create them to <strong>remember</strong> information. The label is the variable's <strong>name</strong>, and the contents are its <strong>value</strong>. You can change what's inside a box anytime!
     </p>
   </div>
 
-  <div class="flex-1 flex flex-col items-start gap-6">
+  <div class="flex items-start justify-evenly">
     {#each boxes as box, i}
       <div
-        class="flex w-full max-w-md items-center gap-4 transition-all duration-700
+        class="flex flex-col items-center gap-2 transition-all duration-700
           {i < visibleBoxes ? 'translate-x-0 opacity-100' : '-translate-x-8 opacity-0'}"
       >
         <!-- The box visual -->
@@ -52,7 +51,7 @@
         </div>
 
         <!-- Description -->
-        <p class="text-slate-600">{box.desc}</p>
+        <p class="w-36 text-center text-sm text-slate-600">{box.desc}</p>
       </div>
     {/each}
   </div>

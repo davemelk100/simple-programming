@@ -29,14 +29,13 @@
 
 <div class="space-y-8">
   <div>
-    <h2 class="mb-3 text-2xl font-bold text-slate-800">Things That Change: State</h2>
-    <p class="max-w-lg text-slate-600">
+    <p class="text-slate-600">
       <strong>State</strong> is the current snapshot of your data — a value that changes over time. Think of a counter: it starts at 0, and each time you click +1, the state updates. Understanding state means understanding how your program <strong>evolves</strong> over time.
     </p>
   </div>
 
   <!-- Timeline -->
-  <div class="max-w-lg">
+  <div class="">
     <h3 class="mb-4 text-sm font-bold text-pink-600">Timeline of a Counter</h3>
 
     <div class="space-y-4">

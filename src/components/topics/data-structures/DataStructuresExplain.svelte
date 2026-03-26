@@ -29,8 +29,7 @@
 
 <div class="space-y-8">
   <div>
-    <h2 class="mb-3 text-2xl font-bold text-slate-800">Organizing Information</h2>
-    <p class="max-w-lg text-slate-600">
+    <p class="text-slate-600">
       Sometimes you need to store <strong>many</strong> things together. Arrays and objects help you group related data. Use <strong>arrays</strong> when order matters (like a shopping list) and <strong>objects</strong> when you need named labels (like a contact card).
     </p>
   </div>
