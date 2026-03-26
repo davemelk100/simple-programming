@@ -31,41 +31,30 @@
   <div>
     <h2 class="mb-3 text-2xl font-bold text-slate-800">Variables are Labeled Boxes</h2>
     <p class="max-w-lg text-slate-600">
-      Imagine you have a bunch of storage boxes. Each box has a <strong>label</strong> on the outside
-      and a <strong>value</strong> inside. Each box holds exactly one value at a time. That's exactly what a variable is!
+      Imagine you have a bunch of storage boxes. Each box has a <strong>label</strong> on the outside and a <strong>value</strong> inside. That's exactly what a variable is — we create them to <strong>remember</strong> information. The label is the variable's <strong>name</strong>, and the contents are its <strong>value</strong>. You can change what's inside a box anytime!
     </p>
   </div>
 
-  <div class="flex flex-col gap-6 lg:flex-row lg:items-start">
-    <div class="flex-1 flex flex-col items-center gap-6">
-      {#each boxes as box, i}
-        <div
-          class="flex w-full max-w-md items-center gap-4 transition-all duration-700
-            {i < visibleBoxes ? 'translate-x-0 opacity-100' : '-translate-x-8 opacity-0'}"
-        >
-          <!-- The box visual -->
-          <div class="relative flex h-28 w-36 shrink-0 flex-col items-center justify-center rounded-xl border-2 border-dashed {box.color} shadow-md transition-transform duration-300 hover:scale-105">
-            <!-- Label tag -->
-            <div class="absolute -top-3 rounded-full bg-white px-3 py-0.5 text-xs font-bold {box.textColor} shadow-sm border {box.color}">
-              {box.label}
-            </div>
-            <!-- Value inside -->
-            <span class="text-xl font-bold {box.textColor}">{box.value}</span>
+  <div class="flex-1 flex flex-col items-center gap-6">
+    {#each boxes as box, i}
+      <div
+        class="flex w-full max-w-md items-center gap-4 transition-all duration-700
+          {i < visibleBoxes ? 'translate-x-0 opacity-100' : '-translate-x-8 opacity-0'}"
+      >
+        <!-- The box visual -->
+        <div class="relative flex h-28 w-36 shrink-0 flex-col items-center justify-center rounded-xl border-2 border-dashed {box.color} shadow-md transition-transform duration-300 hover:scale-105">
+          <!-- Label tag -->
+          <div class="absolute -top-3 rounded-full bg-white px-3 py-0.5 text-xs font-bold {box.textColor} shadow-sm border {box.color}">
+            {box.label}
           </div>
-
-          <!-- Description -->
-          <p class="text-sm text-slate-600">{box.desc}</p>
+          <!-- Value inside -->
+          <span class="text-xl font-bold {box.textColor}">{box.value}</span>
         </div>
-      {/each}
-    </div>
 
-    <div class="w-full shrink-0 rounded-xl bg-blue-50 p-5 lg:w-64 lg:self-start">
-      <p class="text-sm text-blue-800">
-        In programming, we create variables to <strong>remember</strong> information.
-        The label is the variable's <strong>name</strong>, and the contents are its <strong>value</strong>.
-        You can change what's inside a box anytime!
-      </p>
-    </div>
+        <!-- Description -->
+        <p class="text-sm text-slate-600">{box.desc}</p>
+      </div>
+    {/each}
   </div>
 
   <div>

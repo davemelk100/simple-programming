@@ -98,7 +98,7 @@
     <!-- Hidden complexity -->
     {#if showComplexity}
       <div class="rounded-xl border border-dashed border-indigo-300 bg-indigo-50/50 p-4 transition-all">
-        <p class="mb-3 text-center text-xs font-bold uppercase tracking-wider text-slate-400">Hidden Implementation</p>
+        <p class="mb-3 text-center text-xs font-bold uppercase tracking-wider text-slate-500">Hidden Implementation</p>
         <div class="space-y-3">
           {#each steps as step, i}
             <div class="flex items-center gap-3 transition-all duration-500
@@ -108,7 +108,7 @@
                 <span class="text-lg">{step.icon}</span>
               </div>
               <div>
-                <p class="text-sm font-bold {i <= currentStep ? 'text-indigo-700' : 'text-slate-400'}">{step.label}</p>
+                <p class="text-sm font-bold {i <= currentStep ? 'text-indigo-700' : 'text-slate-500'}">{step.label}</p>
                 <p class="text-xs {i <= currentStep ? 'text-slate-500' : 'text-slate-300'}">{step.detail}</p>
               </div>
               {#if i <= currentStep}

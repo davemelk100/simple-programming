@@ -63,7 +63,7 @@
         disabled={c1Result === 'correct'}
         class="w-32 rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none disabled:opacity-50"
       />
-      <span class="text-slate-400">=</span>
+      <span class="text-slate-500">=</span>
       <input
         type="text"
         bind:value={c1Value}

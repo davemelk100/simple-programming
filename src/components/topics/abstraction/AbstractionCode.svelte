@@ -37,20 +37,20 @@
       <h3 class="mb-2 text-sm font-semibold text-slate-500">Visual: Hidden Complexity</h3>
       <div class="rounded-lg border border-dashed border-slate-300 bg-slate-50 p-4">
         <div class="space-y-2">
-          <div class="flex items-center gap-2 text-xs text-slate-400">
+          <div class="flex items-center gap-2 text-xs text-slate-500">
             <span>🫘</span><span>Grind beans</span>
           </div>
-          <div class="flex items-center gap-2 text-xs text-slate-400">
+          <div class="flex items-center gap-2 text-xs text-slate-500">
             <span>🔥</span><span>Heat water to 96°C</span>
           </div>
-          <div class="flex items-center gap-2 text-xs text-slate-400">
+          <div class="flex items-center gap-2 text-xs text-slate-500">
             <span>💧</span><span>Brew under pressure</span>
           </div>
-          <div class="flex items-center gap-2 text-xs text-slate-400">
+          <div class="flex items-center gap-2 text-xs text-slate-500">
             <span>☕</span><span>Pour into cup</span>
           </div>
         </div>
-        <p class="mt-2 text-xs text-slate-400">The messy details — hidden from the user</p>
+        <p class="mt-2 text-xs text-slate-500">The messy details — hidden from the user</p>
       </div>
     </div>
     <div>

@@ -191,7 +191,7 @@
           />
         {/if}
       {:else}
-        <p class="text-center text-slate-400">Content coming soon!</p>
+        <p class="text-center text-slate-500">Content coming soon!</p>
       {/if}
     </div>
 
@@ -211,7 +211,7 @@
         <div></div>
       {/if}
 
-      <a href="/" class="text-sm text-slate-400 hover:text-slate-600">All Topics</a>
+      <a href="/" class="text-sm text-slate-500 hover:text-slate-600">All Topics</a>
 
       {#if nextTopic}
         <a

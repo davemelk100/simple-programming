@@ -21,15 +21,15 @@
             <span class="rounded bg-green-100 px-2 py-0.5 text-xs font-bold text-green-700">A: TRUE</span>
             <span class="font-bold text-yellow-700">AND</span>
             <span class="rounded bg-red-100 px-2 py-0.5 text-xs font-bold text-red-600">B: FALSE</span>
-            <span class="text-slate-400">=</span>
+            <span class="text-slate-500">=</span>
             <span class="opacity-40">💡</span>
-            <span class="text-xs font-bold text-slate-400">OFF</span>
+            <span class="text-xs font-bold text-slate-500">OFF</span>
           </div>
           <div class="flex items-center gap-2">
             <span class="rounded bg-green-100 px-2 py-0.5 text-xs font-bold text-green-700">A: TRUE</span>
             <span class="font-bold text-yellow-700">OR</span>
             <span class="rounded bg-red-100 px-2 py-0.5 text-xs font-bold text-red-600">B: FALSE</span>
-            <span class="text-slate-400">=</span>
+            <span class="text-slate-500">=</span>
             <span>💡</span>
             <span class="text-xs font-bold text-yellow-600">ON</span>
           </div>

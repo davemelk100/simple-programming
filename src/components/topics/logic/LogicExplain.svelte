@@ -54,7 +54,7 @@
         <button onclick={() => { switchA = !switchA; }} class="flex h-8 w-14 items-center rounded-full p-1 transition-colors duration-300 {switchA ? 'bg-green-500 justify-end' : 'bg-slate-300 justify-start'}">
           <span class="h-6 w-6 rounded-full bg-white shadow-md transition-all duration-300"></span>
         </button>
-        <span class="text-xs font-semibold {switchA ? 'text-green-600' : 'text-slate-400'}">{switchA ? 'TRUE' : 'FALSE'}</span>
+        <span class="text-xs font-semibold {switchA ? 'text-green-600' : 'text-slate-500'}">{switchA ? 'TRUE' : 'FALSE'}</span>
       </div>
 
       {#if activeOp !== 'NOT'}
@@ -64,7 +64,7 @@
           <button onclick={() => { switchB = !switchB; }} class="flex h-8 w-14 items-center rounded-full p-1 transition-colors duration-300 {switchB ? 'bg-green-500 justify-end' : 'bg-slate-300 justify-start'}">
             <span class="h-6 w-6 rounded-full bg-white shadow-md transition-all duration-300"></span>
           </button>
-          <span class="text-xs font-semibold {switchB ? 'text-green-600' : 'text-slate-400'}">{switchB ? 'TRUE' : 'FALSE'}</span>
+          <span class="text-xs font-semibold {switchB ? 'text-green-600' : 'text-slate-500'}">{switchB ? 'TRUE' : 'FALSE'}</span>
         </div>
       {/if}
 
@@ -72,14 +72,14 @@
       <div class="text-lg font-black text-yellow-700">{activeOp}</div>
 
       <!-- Equals -->
-      <div class="text-lg font-bold text-slate-400">=</div>
+      <div class="text-lg font-bold text-slate-500">=</div>
 
       <!-- Light bulb -->
       <div class="flex flex-col items-center gap-1">
         <div class="text-4xl transition-all duration-300 {result ? 'bulb-glow' : 'opacity-40 grayscale'}">
           💡
         </div>
-        <span class="text-xs font-bold {result ? 'text-yellow-600' : 'text-slate-400'}">{result ? 'TRUE' : 'FALSE'}</span>
+        <span class="text-xs font-bold {result ? 'text-yellow-600' : 'text-slate-500'}">{result ? 'TRUE' : 'FALSE'}</span>
       </div>
     </div>
   </div>

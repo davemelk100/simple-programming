@@ -20,7 +20,7 @@
           <span class="text-[10px] font-bold text-blue-500">name</span>
           <span class="text-sm font-bold text-blue-700">"Alice"</span>
         </div>
-        <span class="text-slate-400">=</span>
+        <span class="text-slate-500">=</span>
         <span class="text-sm text-slate-600">A box labeled <strong>name</strong> holding <strong>"Alice"</strong></span>
       </div>
     </div>

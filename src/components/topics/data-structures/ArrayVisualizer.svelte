@@ -80,7 +80,7 @@
     <span class="text-2xl font-bold text-slate-300">]</span>
 
     {#if items.length === 0}
-      <span class="py-4 text-sm text-slate-400 italic">Empty array</span>
+      <span class="py-4 text-sm text-slate-500 italic">Empty array</span>
     {/if}
   </div>
 
@@ -92,7 +92,7 @@
     </div>
   {/if}
 
-  <p class="text-xs text-slate-400">Click any box to read its value.</p>
+  <p class="text-xs text-slate-500">Click any box to read its value.</p>
 
   <div>
     <button onclick={oncomplete} class="rounded-full bg-green-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-green-700 active:scale-95">

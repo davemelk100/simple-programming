@@ -54,7 +54,7 @@
   </div>
 
   <div>
-    <button onclick={resetAll} class="text-sm text-slate-400 hover:text-slate-600 underline">Reset</button>
+    <button onclick={resetAll} class="text-sm text-slate-500 hover:text-slate-600 underline">Reset</button>
   </div>
 
   <!-- Timeline -->
@@ -82,7 +82,7 @@
     </div>
   </div>
 
-  <p class="text-xs text-slate-400">
+  <p class="text-xs text-slate-500">
     {timeline.length} step{timeline.length !== 1 ? 's' : ''} recorded. Current state: <strong>{count}</strong>
   </p>
 

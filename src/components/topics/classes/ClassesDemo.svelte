@@ -108,14 +108,14 @@
     {/each}
 
     {#if objects.length === 0}
-      <div class="flex h-32 w-full items-center justify-center rounded-xl border-2 border-dashed border-slate-300 text-slate-400">
+      <div class="flex h-32 w-full items-center justify-center rounded-xl border-2 border-dashed border-slate-300 text-slate-500">
         No objects yet! Click "Create Object" above.
       </div>
     {/if}
   </div>
 
   {#if objects.length > 0}
-    <p class="text-xs text-slate-400">Click an object card to see its properties.</p>
+    <p class="text-xs text-slate-500">Click an object card to see its properties.</p>
   {/if}
 
   <div>

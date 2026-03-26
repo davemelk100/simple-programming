@@ -52,7 +52,7 @@
       <span class="text-indigo-400">&rarr;</span>
       <span class="rounded border border-indigo-300 bg-indigo-50 px-3 py-1 font-bold text-indigo-700">Add 1</span>
       <span class="text-indigo-400">&rarr;</span>
-      <span class="rounded bg-slate-100 px-3 py-1 font-bold text-slate-400">?</span>
+      <span class="rounded bg-slate-100 px-3 py-1 font-bold text-slate-500">?</span>
     </div>
     <div class="flex items-center justify-center gap-2">
       <input type="text" bind:value={c1Answer} disabled={c1Result === 'correct'} placeholder="?" class="w-16 rounded-lg border border-slate-300 px-3 py-2 text-center text-sm focus:border-indigo-500 focus:outline-none disabled:opacity-50" />
@@ -73,7 +73,7 @@
       <span class="text-indigo-400">&rarr;</span>
       <span class="rounded border border-indigo-300 bg-indigo-50 px-3 py-1 font-bold text-indigo-700">Double</span>
       <span class="text-indigo-400">&rarr;</span>
-      <span class="rounded bg-slate-100 px-3 py-1 font-bold text-slate-400">?</span>
+      <span class="rounded bg-slate-100 px-3 py-1 font-bold text-slate-500">?</span>
     </div>
     <div class="flex items-center justify-center gap-2">
       <input type="text" bind:value={c2Answer} disabled={c2Result === 'correct'} placeholder="?" class="w-16 rounded-lg border border-slate-300 px-3 py-2 text-center text-sm focus:border-indigo-500 focus:outline-none disabled:opacity-50" />

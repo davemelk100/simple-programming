@@ -16,7 +16,7 @@
     <div>
       <h3 class="mb-2 text-sm font-semibold text-slate-500">Visual: Ordered List</h3>
       <div class="flex items-center gap-1 rounded-lg border border-green-200 bg-green-50 p-4">
-        <span class="text-slate-400">[</span>
+        <span class="text-slate-500">[</span>
         <div class="flex flex-col items-center">
           <span class="text-[10px] text-green-500">[0]</span>
           <span class="rounded border border-green-400 bg-green-100 px-2 py-1 text-xs font-bold text-green-700">"apple"</span>
@@ -31,7 +31,7 @@
           <span class="text-[10px] text-green-500">[2]</span>
           <span class="rounded border border-green-400 bg-green-100 px-2 py-1 text-xs font-bold text-green-700">"cherry"</span>
         </div>
-        <span class="text-slate-400">]</span>
+        <span class="text-slate-500">]</span>
       </div>
     </div>
     <div>

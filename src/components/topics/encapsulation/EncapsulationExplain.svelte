@@ -41,9 +41,7 @@
   <div>
     <h2 class="mb-3 text-2xl font-bold text-slate-800">Hiding the Details, Exposing What Matters</h2>
     <p class="max-w-lg text-slate-600">
-      Think of a <strong>TV remote</strong>. You press buttons -- power, volume, channel --
-      without knowing how the circuits inside work. That's <strong>encapsulation</strong>:
-      hiding the complex internals and only exposing a simple interface.
+      Think of a <strong>TV remote</strong>. You press buttons &mdash; power, volume, channel &mdash; without knowing how the circuits inside work. That's <strong>encapsulation</strong>: hiding the complex internals and only exposing a simple interface. It protects data from being changed in unexpected ways, preventing bugs and keeping your code safe and predictable.
     </p>
   </div>
 
@@ -74,13 +72,12 @@
           <div class="rounded-lg bg-slate-200 px-4 py-1.5 text-center text-sm text-slate-500 blur-[2px]">Signal encoder</div>
         </div>
       </div>
-      <span class="text-xs text-slate-400 font-medium">What's hidden</span>
+      <span class="text-xs text-slate-500 font-medium">What's hidden</span>
     </div>
   </div>
 
-  <div class="flex flex-col gap-6 lg:flex-row lg:items-start">
-    <!-- Animated examples -->
-    <div class="flex flex-1 flex-col items-start gap-6">
+  <!-- Animated examples -->
+    <div class="flex flex-col items-start gap-6">
       {#each examples as ex, i}
         <div
           class="w-full max-w-lg rounded-xl border-2 p-5 transition-all duration-700
@@ -120,15 +117,6 @@
         </div>
       {/each}
     </div>
-
-    <!-- Info callout -->
-    <div class="w-full shrink-0 rounded-xl bg-green-50 p-5 lg:w-64 lg:self-start">
-      <p class="text-sm text-green-800">
-        <strong>Why encapsulate?</strong> Encapsulation protects data from being changed in unexpected ways.
-        By hiding internals and only allowing controlled access, you prevent bugs and keep your code safe and predictable.
-      </p>
-    </div>
-  </div>
 
   <div>
     <button

@@ -142,7 +142,7 @@
 
         <!-- Final output -->
         <div class="flex h-12 w-16 shrink-0 items-center justify-center rounded-lg border-2 text-lg font-bold shadow-sm transition-all duration-300
-          {intermediates.length > pipeline.length ? 'border-green-400 bg-green-50 text-green-700 output-pop' : 'border-slate-300 bg-slate-50 text-slate-400'}">
+          {intermediates.length > pipeline.length ? 'border-green-400 bg-green-50 text-green-700 output-pop' : 'border-slate-300 bg-slate-50 text-slate-500'}">
           {intermediates.length > pipeline.length ? intermediates[intermediates.length - 1] : '?'}
         </div>
       {/if}
@@ -166,7 +166,7 @@
     </button>
   </div>
 
-  <p class="text-xs text-slate-400">Hover over blocks to reorder or remove them.</p>
+  <p class="text-xs text-slate-500">Hover over blocks to reorder or remove them.</p>
 
   <div>
     <button onclick={oncomplete} class="rounded-full bg-indigo-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-indigo-700 active:scale-95">

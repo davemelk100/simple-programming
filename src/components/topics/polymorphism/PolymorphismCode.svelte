@@ -102,17 +102,17 @@
         <div class="space-y-1">
           <div class="flex items-center gap-2 text-xs">
             <span class="font-bold text-orange-700">Circle</span>
-            <span class="text-slate-400">&rarr;</span>
+            <span class="text-slate-500">&rarr;</span>
             <span class="text-slate-600">pi x r x r</span>
           </div>
           <div class="flex items-center gap-2 text-xs">
             <span class="font-bold text-orange-700">Rectangle</span>
-            <span class="text-slate-400">&rarr;</span>
+            <span class="text-slate-500">&rarr;</span>
             <span class="text-slate-600">w x h</span>
           </div>
           <div class="flex items-center gap-2 text-xs">
             <span class="font-bold text-orange-700">Triangle</span>
-            <span class="text-slate-400">&rarr;</span>
+            <span class="text-slate-500">&rarr;</span>
             <span class="text-slate-600">(b x h) / 2</span>
           </div>
         </div>

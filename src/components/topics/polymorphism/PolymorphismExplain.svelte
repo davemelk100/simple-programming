@@ -58,12 +58,11 @@
   <div>
     <h2 class="mb-3 text-2xl font-bold text-slate-800">Same Interface, Different Behavior</h2>
     <p class="max-w-lg text-slate-600">
-      Imagine a <strong>universal remote</strong>. You press the same "Play" button, but each device does something different.
+      Imagine a <strong>universal remote</strong>. You press the same &ldquo;Play&rdquo; button, but each device does something different. That's <strong>polymorphism</strong> &mdash; you can treat different objects the same way, call the same method on any of them, and each one knows how to respond in its own way.
     </p>
   </div>
 
-  <div class="flex flex-col gap-6 lg:flex-row lg:items-start">
-    <div class="flex-1 space-y-8">
+  <div class="space-y-8">
       <!-- Remote metaphor -->
       <div class="flex flex-col items-center gap-4">
         <div class="flex h-14 w-32 items-center justify-center rounded-xl border-2 border-orange-400 bg-orange-100 font-bold text-orange-700 shadow-md">
@@ -125,14 +124,6 @@
         </div>
       {/each}
     </div>
-
-    <div class="w-full shrink-0 rounded-xl bg-orange-50 p-5 lg:w-64 lg:self-start">
-      <p class="text-sm text-orange-800">
-        <strong>Polymorphism</strong> means you can treat different objects the same way.
-        Call the same method on any of them, and each one knows how to respond in its own way.
-      </p>
-    </div>
-  </div>
 
   <div>
     <button

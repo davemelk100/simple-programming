@@ -47,7 +47,7 @@
   <div class="rounded-xl border p-5 transition-colors {c1Result === 'correct' ? 'border-green-300 bg-green-50' : c1Result === 'wrong' ? 'border-red-300 bg-red-50' : 'border-slate-200 bg-white'}">
     <p class="mb-3 font-medium text-slate-800">1. Add <strong>"grape"</strong> to the end of this array:</p>
     <div class="mb-3 flex items-center justify-center gap-1">
-      <span class="text-lg font-bold text-slate-400">[</span>
+      <span class="text-lg font-bold text-slate-500">[</span>
       {#each ['apple', 'banana'] as item}
         <div class="flex h-10 items-center justify-center rounded-lg border border-green-400 bg-green-50 px-3 text-sm font-bold text-green-700">"{item}"</div>
         <span class="text-slate-300">,</span>
@@ -55,7 +55,7 @@
       <div class="flex h-10 items-center justify-center rounded-lg border-2 border-dashed border-green-300 bg-white px-2">
         <input type="text" bind:value={c1Answer} disabled={c1Result === 'correct'} placeholder="?" class="w-16 bg-transparent text-center text-sm font-bold text-green-700 focus:outline-none disabled:opacity-50" />
       </div>
-      <span class="text-lg font-bold text-slate-400">]</span>
+      <span class="text-lg font-bold text-slate-500">]</span>
     </div>
     <div>
       {#if c1Result !== 'correct'}

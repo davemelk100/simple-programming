@@ -96,7 +96,7 @@
       <span class="text-xs font-medium text-slate-500">Output</span>
       <div class="flex h-16 w-28 items-center justify-center rounded-lg border-2 shadow
         {showOutput ? 'border-green-400 bg-green-50 output-pop' : 'border-slate-300 bg-slate-50'}">
-        <span class="text-lg font-bold {showOutput ? 'text-green-700' : 'text-slate-400'}">
+        <span class="text-lg font-bold {showOutput ? 'text-green-700' : 'text-slate-500'}">
           {showOutput ? outputValue : '?'}
         </span>
       </div>

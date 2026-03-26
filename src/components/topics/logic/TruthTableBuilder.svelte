@@ -84,7 +84,7 @@
       <div class="flex flex-col items-center gap-1">
         <span class="text-xs font-bold text-yellow-700">Output</span>
         <div class="text-5xl transition-all duration-300 {result ? '' : 'opacity-30 grayscale'}">💡</div>
-        <span class="text-sm font-bold {result ? 'text-yellow-600' : 'text-slate-400'}">{result ? 'TRUE' : 'FALSE'}</span>
+        <span class="text-sm font-bold {result ? 'text-yellow-600' : 'text-slate-500'}">{result ? 'TRUE' : 'FALSE'}</span>
       </div>
     </div>
   </div>
@@ -94,7 +94,7 @@
     <div class="max-w-sm">
       <div class="mb-2 flex items-center justify-between">
         <h3 class="text-sm font-bold text-slate-700">Your Truth Table ({operator})</h3>
-        <button onclick={clearHistory} class="text-xs text-slate-400 hover:text-slate-600">Clear</button>
+        <button onclick={clearHistory} class="text-xs text-slate-500 hover:text-slate-600">Clear</button>
       </div>
       <table class="w-full rounded-lg border border-yellow-200 bg-white text-sm">
         <thead>
@@ -119,7 +119,7 @@
     </div>
   {/if}
 
-  <p class="text-xs text-slate-400">Toggle through all combinations to complete the truth table!</p>
+  <p class="text-xs text-slate-500">Toggle through all combinations to complete the truth table!</p>
 
   <div>
     <button onclick={oncomplete} class="rounded-full bg-yellow-500 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-yellow-600 active:scale-95">

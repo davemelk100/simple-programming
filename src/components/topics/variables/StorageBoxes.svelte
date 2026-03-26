@@ -140,14 +140,14 @@
     {/each}
 
     {#if boxes.length === 0}
-      <div class="flex h-32 w-full items-center justify-center rounded-xl border-2 border-dashed border-slate-300 text-slate-400">
+      <div class="flex h-32 w-full items-center justify-center rounded-xl border-2 border-dashed border-slate-300 text-slate-500">
         No boxes yet! Create one above.
       </div>
     {/if}
   </div>
 
   {#if boxes.length > 0}
-    <p class="text-xs text-slate-400">Click a box to read its value. Double-click to edit.</p>
+    <p class="text-xs text-slate-500">Click a box to read its value. Double-click to edit.</p>
   {/if}
 
   <div>

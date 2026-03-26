@@ -1,27 +1,28 @@
 <script lang="ts">
-  import { supabase } from '../../lib/supabase';
-  import { signOut } from '../../lib/auth';
-  import type { User } from '@supabase/supabase-js';
+  import { onMount } from 'svelte';
 
-  let user: User | null = $state(null);
+  let user: { email?: string } | null = $state(null);
   let signingOut = $state(false);
 
-  $effect(() => {
-    supabase.auth.getUser().then(({ data }) => {
+  onMount(() => {
+    let subscription: { unsubscribe: () => void } | undefined;
+
+    import('../../lib/supabase').then(async ({ supabase }) => {
+      const { data } = await supabase.auth.getUser();
       user = data.user;
+
+      const { data: authData } = supabase.auth.onAuthStateChange((_event, session) => {
+        user = session?.user ?? null;
+      });
+      subscription = authData.subscription;
     });
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      user = session?.user ?? null;
-    });
-
-    return () => subscription.unsubscribe();
+    return () => subscription?.unsubscribe();
   });
 
   async function handleSignOut() {
     signingOut = true;
+    const { signOut } = await import('../../lib/auth');
     await signOut();
     signingOut = false;
   }

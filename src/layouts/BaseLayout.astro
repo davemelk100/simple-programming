@@ -22,7 +22,9 @@ const { title = 'Simple Programming' } = Astro.props;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Roboto:wght@400;500;700&display=swap" />
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" /></noscript>
     <title>{title}</title>
     <link rel="stylesheet" href="/src/styles/global.css" />
   </head>
@@ -40,7 +42,7 @@ const { title = 'Simple Programming' } = Astro.props;
       </main>
     </div>
 
-    <footer class="border-t border-slate-200 bg-white py-3 text-center text-sm text-slate-500">
+    <footer class="border-t border-slate-200 bg-white py-3 text-center text-sm text-slate-600">
       <p>Simple Programming &mdash; Learn to code, one concept at a time.</p>
     </footer>
   </body>

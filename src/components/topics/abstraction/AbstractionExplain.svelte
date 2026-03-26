@@ -41,14 +41,11 @@
   <div>
     <h2 class="mb-3 text-2xl font-bold text-slate-800">Abstraction: Focus on What, Not How</h2>
     <p class="max-w-lg text-slate-600">
-      Think of driving a car. You use the <strong>steering wheel</strong> and <strong>pedals</strong> — the abstract interface —
-      without knowing how the engine, transmission, or brakes work internally.
-      That's abstraction: <strong>hiding the complexity</strong> behind a simple surface.
+      Think of driving a car. You use the <strong>steering wheel</strong> and <strong>pedals</strong> &mdash; the abstract interface &mdash; without knowing how the engine, transmission, or brakes work internally. That's <strong>abstraction</strong>: simplifying complex systems by hiding unnecessary details so you interact with a clean, simple interface.
     </p>
   </div>
 
-  <div class="flex flex-col gap-6 lg:flex-row lg:items-start">
-    <div class="flex-1 space-y-8">
+  <div class="space-y-8">
       <!-- Car metaphor visual -->
       <div class="flex max-w-lg items-center gap-4 rounded-xl border-2 border-indigo-300 bg-indigo-50 p-5 shadow-md">
         <div class="flex flex-col items-center gap-1">
@@ -66,7 +63,7 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
         </svg>
         <div class="flex flex-col items-center gap-1 rounded-lg border border-dashed border-slate-300 bg-slate-100 px-4 py-3">
-          <span class="text-xs font-semibold text-slate-400">Hidden</span>
+          <span class="text-xs font-semibold text-slate-500">Hidden</span>
           <span class="text-sm text-slate-500">Engine internals</span>
         </div>
       </div>
@@ -86,7 +83,7 @@
               <span class="rounded-lg bg-indigo-100 px-3 py-1 text-sm font-bold text-indigo-700">{ex.surface}</span>
             </div>
             <div class="mb-2 flex items-center gap-2">
-              <span class="text-xs font-semibold text-slate-400">Hidden complexity:</span>
+              <span class="text-xs font-semibold text-slate-500">Hidden complexity:</span>
               <span class="text-xs text-slate-500">{ex.hidden}</span>
             </div>
             <p class="text-sm text-slate-600">{ex.desc}</p>
@@ -94,15 +91,6 @@
         {/each}
       </div>
     </div>
-
-    <!-- Info callout -->
-    <div class="w-full shrink-0 rounded-xl bg-indigo-50 p-5 lg:w-64 lg:self-start">
-      <p class="text-sm text-indigo-800">
-        <strong>Key idea:</strong> Abstraction simplifies complex systems by hiding unnecessary details.
-        You interact with a clean, simple interface while the complexity is managed behind the scenes.
-      </p>
-    </div>
-  </div>
 
   <div>
     <button

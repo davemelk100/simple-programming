@@ -23,7 +23,7 @@
 </script>
 
 <nav class="flex h-full w-56 shrink-0 flex-col gap-0.5 overflow-y-auto border-r border-slate-200 bg-white px-3 py-4">
-  <span class="mb-2 px-2 text-sm font-semibold uppercase tracking-wider text-slate-400" style="font-family: 'Permanent Marker', cursive;">Basics</span>
+  <span class="mb-2 px-2 text-sm font-semibold uppercase tracking-wider text-slate-500" style="font-family: 'Permanent Marker', cursive;">Basics</span>
   {#each topics as topic}
     {@const active = isActive(topic.slug)}
     {@const colors = colorMap[topic.color]}
@@ -39,7 +39,7 @@
 
   <hr class="my-3 border-slate-200" />
 
-  <span class="mb-2 px-2 text-sm font-semibold uppercase tracking-wider text-slate-400" style="font-family: 'Permanent Marker', cursive;">Object-Oriented</span>
+  <span class="mb-2 px-2 text-sm font-semibold uppercase tracking-wider text-slate-500" style="font-family: 'Permanent Marker', cursive;">Object-Oriented</span>
   {#each oopTopics as topic}
     {@const active = isActive(topic.slug)}
     {@const colors = colorMap[topic.color]}

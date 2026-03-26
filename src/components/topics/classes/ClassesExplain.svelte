@@ -45,14 +45,11 @@
   <div>
     <h2 class="mb-3 text-2xl font-bold text-slate-800">Classes are Blueprints</h2>
     <p class="max-w-lg text-slate-600">
-      Think of a class like a <strong>cookie cutter</strong>. The cookie cutter is the blueprint &mdash;
-      it defines the <strong>shape</strong>. Each cookie you stamp out is an <strong>object</strong>,
-      a real thing made from that blueprint.
+      Think of a class like a <strong>cookie cutter</strong>. The cookie cutter is the blueprint &mdash; it defines the <strong>shape</strong>. Each cookie you stamp out is an <strong>object</strong>, a real thing made from that blueprint. One class can create as many objects as you need &mdash; each with its own unique values. Objects also have <strong>methods</strong> (behaviors) &mdash; things they can <em>do</em>, like <code>car.drive()</code> or <code>dog.bark()</code>.
     </p>
   </div>
 
-  <div class="flex flex-col gap-6 lg:flex-row lg:items-start">
-    <div class="flex-1 flex flex-col items-start gap-8">
+  <div class="flex flex-col items-start gap-8">
       {#each examples as ex, i}
         <div
           class="w-full max-w-xl transition-all duration-700
@@ -102,15 +99,6 @@
         </div>
       {/each}
     </div>
-
-    <div class="w-full shrink-0 rounded-xl bg-blue-50 p-5 lg:w-64 lg:self-start">
-      <p class="text-sm text-blue-800">
-        <strong>One class, many objects.</strong> Just like one cookie cutter can stamp out dozens of cookies,
-        a single class can create as many objects as you need &mdash; each with its own unique values.
-        Objects also have <strong>methods</strong> (behaviors) &mdash; things they can <em>do</em>, like <code>car.drive()</code> or <code>dog.bark()</code>.
-      </p>
-    </div>
-  </div>
 
   <div>
     <button

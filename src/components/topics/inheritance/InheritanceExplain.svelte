@@ -39,13 +39,11 @@
   <div>
     <h2 class="mb-3 text-2xl font-bold text-slate-800">Inheritance: Building on What Exists</h2>
     <p class="max-w-lg text-slate-600">
-      Think of a <strong>family tree</strong>. Children inherit traits from their parents &mdash;
-      eye color, height, abilities. In programming, inheritance lets you build <strong>new things from existing ones</strong>.
+      Think of a <strong>family tree</strong>. Children inherit traits from their parents &mdash; eye color, height, abilities. In programming, <strong>inheritance</strong> lets you build new things from existing ones. Instead of rewriting everything from scratch, a child class gets all the parent's abilities for free &mdash; and can add its own on top!
     </p>
   </div>
 
-  <div class="flex flex-col gap-6 lg:flex-row lg:items-start">
-    <div class="flex-1 flex flex-col items-start gap-8">
+  <div class="flex flex-col items-start gap-8">
       {#each examples as ex, i}
         <div
           class="w-full max-w-lg transition-all duration-700
@@ -105,15 +103,6 @@
         </div>
       {/each}
     </div>
-
-    <div class="w-full shrink-0 rounded-xl bg-purple-50 p-5 lg:w-64 lg:self-start">
-      <p class="text-sm text-purple-800">
-        <strong>Inheritance</strong> lets you reuse code and create <strong>specialized versions</strong>
-        of existing things. Instead of rewriting everything from scratch, a child class gets all the
-        parent's abilities for free &mdash; and can add its own on top!
-      </p>
-    </div>
-  </div>
 
   <div>
     <button
