@@ -38,7 +38,7 @@
 </script>
 
 <div class="space-y-8">
-  <div class="text-center">
+  <div>
     <h2 class="mb-2 text-2xl font-bold text-slate-800">Practice: Data Structures</h2>
     <p class="text-slate-600">Test your knowledge of arrays and objects!</p>
   </div>
@@ -57,12 +57,12 @@
       </div>
       <span class="text-lg font-bold text-slate-400">]</span>
     </div>
-    <div class="text-center">
+    <div>
       {#if c1Result !== 'correct'}
         <button onclick={checkC1} class="rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-700 active:scale-95">Check</button>
       {/if}
     </div>
-    {#if c1Result === 'correct'}<p class="mt-2 text-center text-sm font-medium text-green-600">Correct!</p>{:else if c1Result === 'wrong'}<p class="mt-2 text-center text-sm text-red-600">Type "grape" in the empty box!</p>{/if}
+    {#if c1Result === 'correct'}<p class="mt-2 text-sm font-medium text-green-600">Correct!</p>{:else if c1Result === 'wrong'}<p class="mt-2 text-sm text-red-600">Type "grape" in the empty box!</p>{/if}
   </div>
 
   <!-- C2 -->
@@ -84,13 +84,13 @@
         <button onclick={checkC2} class="rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-700 active:scale-95">Check</button>
       {/if}
     </div>
-    {#if c2Result === 'correct'}<p class="mt-2 text-center text-sm font-medium text-green-600">Correct! Index 1 is "green".</p>{:else if c2Result === 'wrong'}<p class="mt-2 text-center text-sm text-red-600">Remember, index 1 is the second item!</p>{/if}
+    {#if c2Result === 'correct'}<p class="mt-2 text-sm font-medium text-green-600">Correct! Index 1 is "green".</p>{:else if c2Result === 'wrong'}<p class="mt-2 text-sm text-red-600">Remember, index 1 is the second item!</p>{/if}
   </div>
 
   <!-- C3 -->
   <div class="rounded-xl border p-5 transition-colors {c3Result === 'correct' ? 'border-green-300 bg-green-50' : c3Result === 'wrong' ? 'border-red-300 bg-red-50' : 'border-slate-200 bg-white'}">
     <p class="mb-3 font-medium text-slate-800">3. What is the value of <strong>"name"</strong> in this object?</p>
-    <div class="mx-auto mb-3 max-w-xs rounded-xl border-2 border-green-400 bg-green-50 p-3">
+    <div class="mb-3 max-w-xs rounded-xl border-2 border-green-400 bg-green-50 p-3">
       <div class="space-y-1 text-sm">
         <div class="flex gap-2"><span class="font-semibold text-green-700">name:</span><span class="text-slate-700">"Bob"</span></div>
         <div class="flex gap-2"><span class="font-semibold text-green-700">age:</span><span class="text-slate-700">30</span></div>
@@ -102,10 +102,10 @@
         <button onclick={checkC3} class="rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-700 active:scale-95">Check</button>
       {/if}
     </div>
-    {#if c3Result === 'correct'}<p class="mt-2 text-center text-sm font-medium text-green-600">Correct! The name is "Bob".</p>{:else if c3Result === 'wrong'}<p class="mt-2 text-center text-sm text-red-600">Look at the value next to "name"!</p>{/if}
+    {#if c3Result === 'correct'}<p class="mt-2 text-sm font-medium text-green-600">Correct! The name is "Bob".</p>{:else if c3Result === 'wrong'}<p class="mt-2 text-sm text-red-600">Look at the value next to "name"!</p>{/if}
   </div>
 
   {#if allDone}
-    <div class="text-center"><p class="text-lg font-bold text-green-600">All challenges complete!</p></div>
+    <div><p class="text-lg font-bold text-green-600">All challenges complete!</p></div>
   {/if}
 </div>

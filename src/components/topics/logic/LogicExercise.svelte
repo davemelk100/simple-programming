@@ -34,7 +34,7 @@
 </script>
 
 <div class="space-y-8">
-  <div class="text-center">
+  <div>
     <h2 class="mb-2 text-2xl font-bold text-slate-800">Practice: Logic</h2>
     <p class="text-slate-600">Predict the output of these logic expressions!</p>
   </div>
@@ -56,7 +56,7 @@
         <button onclick={checkC1} class="rounded-lg bg-yellow-500 px-4 py-2 text-sm font-semibold text-white hover:bg-yellow-600 active:scale-95">Check</button>
       {/if}
     </div>
-    {#if c1Result === 'correct'}<p class="mt-2 text-center text-sm font-medium text-green-600">Correct! AND needs BOTH to be true.</p>{:else if c1Result === 'wrong'}<p class="mt-2 text-center text-sm text-red-600">With AND, both sides must be true for the result to be true.</p>{/if}
+    {#if c1Result === 'correct'}<p class="mt-2 text-sm font-medium text-green-600">Correct! AND needs BOTH to be true.</p>{:else if c1Result === 'wrong'}<p class="mt-2 text-sm text-red-600">With AND, both sides must be true for the result to be true.</p>{/if}
   </div>
 
   <!-- C2 -->
@@ -76,7 +76,7 @@
         <button onclick={checkC2} class="rounded-lg bg-yellow-500 px-4 py-2 text-sm font-semibold text-white hover:bg-yellow-600 active:scale-95">Check</button>
       {/if}
     </div>
-    {#if c2Result === 'correct'}<p class="mt-2 text-center text-sm font-medium text-green-600">Correct! NOT flips true to false.</p>{:else if c2Result === 'wrong'}<p class="mt-2 text-center text-sm text-red-600">NOT flips the value to its opposite!</p>{/if}
+    {#if c2Result === 'correct'}<p class="mt-2 text-sm font-medium text-green-600">Correct! NOT flips true to false.</p>{:else if c2Result === 'wrong'}<p class="mt-2 text-sm text-red-600">NOT flips the value to its opposite!</p>{/if}
   </div>
 
   <!-- C3 -->
@@ -96,10 +96,10 @@
         <button onclick={checkC3} class="rounded-lg bg-yellow-500 px-4 py-2 text-sm font-semibold text-white hover:bg-yellow-600 active:scale-95">Check</button>
       {/if}
     </div>
-    {#if c3Result === 'correct'}<p class="mt-2 text-center text-sm font-medium text-green-600">Correct! OR only needs ONE to be true.</p>{:else if c3Result === 'wrong'}<p class="mt-2 text-center text-sm text-red-600">With OR, the result is true if at least one side is true.</p>{/if}
+    {#if c3Result === 'correct'}<p class="mt-2 text-sm font-medium text-green-600">Correct! OR only needs ONE to be true.</p>{:else if c3Result === 'wrong'}<p class="mt-2 text-sm text-red-600">With OR, the result is true if at least one side is true.</p>{/if}
   </div>
 
   {#if allDone}
-    <div class="text-center"><p class="text-lg font-bold text-green-600">All challenges complete!</p></div>
+    <div><p class="text-lg font-bold text-green-600">All challenges complete!</p></div>
   {/if}
 </div>

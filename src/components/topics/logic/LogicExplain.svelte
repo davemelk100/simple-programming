@@ -24,16 +24,16 @@
 </script>
 
 <div class="space-y-8">
-  <div class="text-center">
+  <div>
     <h2 class="mb-3 text-2xl font-bold text-slate-800">True or False: Logic</h2>
-    <p class="mx-auto max-w-lg text-slate-600">
+    <p class="max-w-lg text-slate-600">
       Computers make decisions using <strong>boolean logic</strong> -- everything is either <strong>true</strong> or <strong>false</strong>.
       Think of it like light switches and a light bulb!
     </p>
   </div>
 
   <!-- Interactive switches and bulb -->
-  <div class="mx-auto max-w-md rounded-xl border-2 border-yellow-300 bg-yellow-50 p-6 shadow-md">
+  <div class="max-w-md rounded-xl border-2 border-yellow-300 bg-yellow-50 p-6 shadow-md">
     <!-- Operator selector -->
     <div class="mb-4 flex items-center justify-center gap-2">
       {#each ['AND', 'OR', 'NOT'] as op}
@@ -119,7 +119,7 @@
     </div>
   </div>
 
-  <div class="text-center">
+  <div>
     <button onclick={oncomplete} class="rounded-full bg-yellow-500 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-yellow-600 active:scale-95">
       I've read this
     </button>

@@ -1,13 +1,11 @@
 <script lang="ts">
   import { supabase } from '../../lib/supabase';
   import { signOut } from '../../lib/auth';
-  import { topics } from '../../lib/topics';
   import type { User } from '@supabase/supabase-js';
 
   let user: User | null = $state(null);
   let signingOut = $state(false);
 
-  // Load initial user and subscribe to auth changes
   $effect(() => {
     supabase.auth.getUser().then(({ data }) => {
       user = data.user;
@@ -30,8 +28,8 @@
 </script>
 
 <header class="border-b border-slate-200 bg-white shadow-sm">
-  <div class="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-    <a href="/" class="text-xl font-bold text-slate-900 no-underline hover:text-indigo-600">
+  <div class="mx-auto flex items-center justify-between px-4 py-3">
+    <a href="/" class="text-4xl font-bold text-slate-900 no-underline hover:text-indigo-600" style="font-family: 'Permanent Marker', cursive;">
       Programming, Except Easy
     </a>
 
@@ -55,18 +53,4 @@
       {/if}
     </div>
   </div>
-
-  <nav class="border-t border-slate-100 bg-slate-50">
-    <div class="mx-auto flex max-w-5xl gap-1 overflow-x-auto px-4 py-2">
-      {#each topics as topic}
-        <a
-          href={`/topics/${topic.slug}`}
-          class="whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 no-underline hover:bg-white hover:text-slate-900"
-        >
-          <span class="mr-1">{topic.icon}</span>
-          {topic.title}
-        </a>
-      {/each}
-    </div>
-  </nav>
 </header>

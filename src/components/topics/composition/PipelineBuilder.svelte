@@ -73,13 +73,13 @@
 </script>
 
 <div class="space-y-6">
-  <div class="text-center">
+  <div>
     <h2 class="mb-2 text-2xl font-bold text-slate-800">Try It: Pipeline Builder</h2>
     <p class="text-slate-600">Build a chain of functions and watch data flow through!</p>
   </div>
 
   <!-- Available blocks -->
-  <div class="text-center">
+  <div>
     <p class="mb-2 text-sm font-medium text-slate-600">Click to add a function block:</p>
     <div class="flex flex-wrap items-center justify-center gap-2">
       {#each availableBlocks as block}
@@ -94,7 +94,7 @@
   </div>
 
   <!-- Pipeline display -->
-  <div class="mx-auto max-w-lg">
+  <div class="max-w-lg">
     <div class="flex items-center gap-2 overflow-x-auto pb-2">
       <!-- Input -->
       <div class="shrink-0">
@@ -156,7 +156,7 @@
   </div>
 
   <!-- Run button -->
-  <div class="text-center">
+  <div>
     <button
       onclick={runPipeline}
       disabled={pipeline.length === 0 || isRunning}
@@ -166,9 +166,9 @@
     </button>
   </div>
 
-  <p class="text-center text-xs text-slate-400">Hover over blocks to reorder or remove them.</p>
+  <p class="text-xs text-slate-400">Hover over blocks to reorder or remove them.</p>
 
-  <div class="text-center">
+  <div>
     <button onclick={oncomplete} class="rounded-full bg-indigo-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-indigo-700 active:scale-95">
       I've tried this
     </button>

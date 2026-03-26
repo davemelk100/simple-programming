@@ -52,8 +52,48 @@ export const topics: Topic[] = [
   },
 ];
 
+export const oopTopics: Topic[] = [
+  {
+    slug: 'classes',
+    title: 'Classes & Objects',
+    description: 'Blueprints for creating things with data and behavior',
+    icon: '🏗️',
+    color: 'blue',
+  },
+  {
+    slug: 'encapsulation',
+    title: 'Encapsulation',
+    description: 'Hide the details, expose what matters',
+    icon: '🔒',
+    color: 'green',
+  },
+  {
+    slug: 'inheritance',
+    title: 'Inheritance',
+    description: 'Build new things from existing ones',
+    icon: '🌳',
+    color: 'purple',
+  },
+  {
+    slug: 'polymorphism',
+    title: 'Polymorphism',
+    description: 'Same interface, different behavior',
+    icon: '🎭',
+    color: 'orange',
+  },
+  {
+    slug: 'abstraction',
+    title: 'Abstraction',
+    description: 'Focus on what something does, not how',
+    icon: '☁️',
+    color: 'indigo',
+  },
+];
+
+const allTopics = [...topics, ...oopTopics];
+
 export function getTopicBySlug(slug: string): Topic | undefined {
-  return topics.find((t) => t.slug === slug);
+  return allTopics.find((t) => t.slug === slug);
 }
 
 export function getNextTopic(currentSlug: string): Topic | undefined {

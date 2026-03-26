@@ -67,13 +67,13 @@
 </script>
 
 <div class="space-y-6">
-  <div class="text-center">
+  <div>
     <h2 class="mb-2 text-2xl font-bold text-slate-800">Try It: Storage Boxes</h2>
     <p class="text-slate-600">Create your own labeled boxes, read their values, and update them!</p>
   </div>
 
   <!-- Create new box -->
-  <div class="mx-auto flex max-w-md flex-col items-center gap-3 rounded-xl bg-blue-50 p-5">
+  <div class="flex max-w-md flex-col items-center gap-3 rounded-xl bg-blue-50 p-5">
     <div class="flex w-full gap-2">
       <input
         type="text"
@@ -147,10 +147,10 @@
   </div>
 
   {#if boxes.length > 0}
-    <p class="text-center text-xs text-slate-400">Click a box to read its value. Double-click to edit.</p>
+    <p class="text-xs text-slate-400">Click a box to read its value. Double-click to edit.</p>
   {/if}
 
-  <div class="text-center">
+  <div>
     <button
       onclick={oncomplete}
       class="rounded-full bg-blue-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-blue-700 active:scale-95"

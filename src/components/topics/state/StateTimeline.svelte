@@ -27,7 +27,7 @@
 </script>
 
 <div class="space-y-6">
-  <div class="text-center">
+  <div>
     <h2 class="mb-2 text-2xl font-bold text-slate-800">Try It: State Timeline</h2>
     <p class="text-slate-600">Change the counter and watch the history build!</p>
   </div>
@@ -53,13 +53,13 @@
     </button>
   </div>
 
-  <div class="text-center">
+  <div>
     <button onclick={resetAll} class="text-sm text-slate-400 hover:text-slate-600 underline">Reset</button>
   </div>
 
   <!-- Timeline -->
-  <div class="mx-auto max-w-lg overflow-x-auto">
-    <h3 class="mb-3 text-center text-sm font-bold text-pink-600">History Timeline</h3>
+  <div class="max-w-lg overflow-x-auto">
+    <h3 class="mb-3 text-sm font-bold text-pink-600">History Timeline</h3>
 
     <div class="flex items-center gap-1 pb-2">
       {#each timeline as node, i (i)}
@@ -82,11 +82,11 @@
     </div>
   </div>
 
-  <p class="text-center text-xs text-slate-400">
+  <p class="text-xs text-slate-400">
     {timeline.length} step{timeline.length !== 1 ? 's' : ''} recorded. Current state: <strong>{count}</strong>
   </p>
 
-  <div class="text-center">
+  <div>
     <button onclick={oncomplete} class="rounded-full bg-pink-500 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-pink-600 active:scale-95">
       I've tried this
     </button>

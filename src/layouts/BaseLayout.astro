@@ -1,5 +1,7 @@
 ---
 import Header from '../components/layout/Header.svelte';
+import Sidebar from '../components/layout/Sidebar.svelte';
+import MobileSidebar from '../components/layout/MobileSidebar.svelte';
 
 interface Props {
   title?: string;
@@ -18,17 +20,27 @@ const { title = 'Simple Programming' } = Astro.props;
       content="Learn programming through visual, interactive lessons"
     />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
     <title>{title}</title>
     <link rel="stylesheet" href="/src/styles/global.css" />
   </head>
   <body class="flex min-h-screen flex-col">
     <Header client:load />
+    <MobileSidebar client:load currentPath={Astro.url.pathname} />
 
-    <main class="mx-auto w-full max-w-5xl flex-1 px-4 py-8">
-      <slot />
-    </main>
+    <div class="flex flex-1">
+      <aside class="hidden lg:flex">
+        <Sidebar currentPath={Astro.url.pathname} />
+      </aside>
 
-    <footer class="border-t border-slate-200 bg-white py-6 text-center text-sm text-slate-500">
+      <main class="w-full flex-1 px-4 py-4 lg:px-8 lg:py-5">
+        <slot />
+      </main>
+    </div>
+
+    <footer class="border-t border-slate-200 bg-white py-3 text-center text-sm text-slate-500">
       <p>Simple Programming &mdash; Learn to code, one concept at a time.</p>
     </footer>
   </body>

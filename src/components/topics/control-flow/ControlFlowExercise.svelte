@@ -34,7 +34,7 @@
 </script>
 
 <div class="space-y-8">
-  <div class="text-center">
+  <div>
     <h2 class="mb-2 text-2xl font-bold text-slate-800">Practice: Control Flow</h2>
     <p class="text-slate-600">Predict what happens in these scenarios!</p>
   </div>
@@ -48,7 +48,7 @@
         <button onclick={checkC1} class="rounded-lg bg-orange-600 px-4 py-2 text-sm font-semibold text-white hover:bg-orange-700 active:scale-95">Check</button>
       {/if}
     </div>
-    {#if c1Result === 'correct'}<p class="mt-2 text-center text-sm font-medium text-green-600">Correct! It's raining, so grab that umbrella!</p>{:else if c1Result === 'wrong'}<p class="mt-2 text-center text-sm text-red-600">Think about which branch happens when the condition is true.</p>{/if}
+    {#if c1Result === 'correct'}<p class="mt-2 text-sm font-medium text-green-600">Correct! It's raining, so grab that umbrella!</p>{:else if c1Result === 'wrong'}<p class="mt-2 text-sm text-red-600">Think about which branch happens when the condition is true.</p>{/if}
   </div>
 
   <!-- C2 -->
@@ -60,7 +60,7 @@
         <button onclick={checkC2} class="rounded-lg bg-orange-600 px-4 py-2 text-sm font-semibold text-white hover:bg-orange-700 active:scale-95">Check</button>
       {/if}
     </div>
-    {#if c2Result === 'correct'}<p class="mt-2 text-center text-sm font-medium text-green-600">Correct! The loop repeats exactly 5 times.</p>{:else if c2Result === 'wrong'}<p class="mt-2 text-center text-sm text-red-600">The loop repeats the exact number of times it says!</p>{/if}
+    {#if c2Result === 'correct'}<p class="mt-2 text-sm font-medium text-green-600">Correct! The loop repeats exactly 5 times.</p>{:else if c2Result === 'wrong'}<p class="mt-2 text-sm text-red-600">The loop repeats the exact number of times it says!</p>{/if}
   </div>
 
   <!-- C3 -->
@@ -82,10 +82,10 @@
         <button onclick={checkC3} class="rounded-lg bg-orange-600 px-4 py-2 text-sm font-semibold text-white hover:bg-orange-700 active:scale-95">Check</button>
       {/if}
     </div>
-    {#if c3Result === 'correct'}<p class="mt-2 text-center text-sm font-medium text-green-600">Correct! 3 is not greater than 10, so we say "small".</p>{:else if c3Result === 'wrong'}<p class="mt-2 text-center text-sm text-red-600">Is 3 greater than 10? Think again!</p>{/if}
+    {#if c3Result === 'correct'}<p class="mt-2 text-sm font-medium text-green-600">Correct! 3 is not greater than 10, so we say "small".</p>{:else if c3Result === 'wrong'}<p class="mt-2 text-sm text-red-600">Is 3 greater than 10? Think again!</p>{/if}
   </div>
 
   {#if allDone}
-    <div class="text-center"><p class="text-lg font-bold text-green-600">All challenges complete!</p></div>
+    <div><p class="text-lg font-bold text-green-600">All challenges complete!</p></div>
   {/if}
 </div>

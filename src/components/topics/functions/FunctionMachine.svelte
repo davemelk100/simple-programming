@@ -35,13 +35,13 @@
 </script>
 
 <div class="space-y-6">
-  <div class="text-center">
+  <div>
     <h2 class="mb-2 text-2xl font-bold text-slate-800">Try It: Function Machine</h2>
     <p class="text-slate-600">Pick a function, give it an input, and watch it work!</p>
   </div>
 
   <!-- Function selector -->
-  <div class="mx-auto flex max-w-sm flex-col items-center gap-3">
+  <div class="flex max-w-sm flex-col items-center gap-3">
     <label class="text-sm font-medium text-slate-600">Choose a function:</label>
     <select
       bind:value={selectedFn}
@@ -104,7 +104,7 @@
   </div>
 
   <!-- Run button -->
-  <div class="text-center">
+  <div>
     <button
       onclick={run}
       disabled={isRunning}
@@ -114,7 +114,7 @@
     </button>
   </div>
 
-  <div class="text-center">
+  <div>
     <button
       onclick={oncomplete}
       class="rounded-full bg-purple-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-purple-700 active:scale-95"

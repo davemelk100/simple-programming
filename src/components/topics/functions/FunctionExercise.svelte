@@ -35,7 +35,7 @@
 </script>
 
 <div class="space-y-8">
-  <div class="text-center">
+  <div>
     <h2 class="mb-2 text-2xl font-bold text-slate-800">Practice: Functions</h2>
     <p class="text-slate-600">Predict what each machine will output!</p>
   </div>
@@ -58,7 +58,7 @@
         <button onclick={checkC1} class="rounded-lg bg-purple-600 px-4 py-2 text-sm font-semibold text-white hover:bg-purple-700 active:scale-95">Check</button>
       {/if}
     </div>
-    {#if c1Result === 'correct'}<p class="mt-2 text-center text-sm font-medium text-green-600">Correct! 7 x 2 = 14</p>{:else if c1Result === 'wrong'}<p class="mt-2 text-center text-sm text-red-600">Not quite. Double means multiply by 2!</p>{/if}
+    {#if c1Result === 'correct'}<p class="mt-2 text-sm font-medium text-green-600">Correct! 7 x 2 = 14</p>{:else if c1Result === 'wrong'}<p class="mt-2 text-sm text-red-600">Not quite. Double means multiply by 2!</p>{/if}
   </div>
 
   <!-- Challenge 2 -->
@@ -79,7 +79,7 @@
         <button onclick={checkC2} class="rounded-lg bg-purple-600 px-4 py-2 text-sm font-semibold text-white hover:bg-purple-700 active:scale-95">Check</button>
       {/if}
     </div>
-    {#if c2Result === 'correct'}<p class="mt-2 text-center text-sm font-medium text-green-600">Correct! 3 + 5 = 8</p>{:else if c2Result === 'wrong'}<p class="mt-2 text-center text-sm text-red-600">Try again. Add 5 to the input!</p>{/if}
+    {#if c2Result === 'correct'}<p class="mt-2 text-sm font-medium text-green-600">Correct! 3 + 5 = 8</p>{:else if c2Result === 'wrong'}<p class="mt-2 text-sm text-red-600">Try again. Add 5 to the input!</p>{/if}
   </div>
 
   <!-- Challenge 3 -->
@@ -100,16 +100,16 @@
         </button>
       {/each}
     </div>
-    <div class="mt-3 text-center">
+    <div class="mt-3">
       {#if c3Result !== 'correct'}
         <button onclick={checkC3} class="rounded-lg bg-purple-600 px-4 py-2 text-sm font-semibold text-white hover:bg-purple-700 active:scale-95">Check</button>
       {/if}
     </div>
-    {#if c3Result === 'correct'}<p class="mt-2 text-center text-sm font-medium text-green-600">Correct! Uppercase turns all letters to capitals.</p>{:else if c3Result === 'wrong'}<p class="mt-2 text-center text-sm text-red-600">Think about which function changes letter case.</p>{/if}
+    {#if c3Result === 'correct'}<p class="mt-2 text-sm font-medium text-green-600">Correct! Uppercase turns all letters to capitals.</p>{:else if c3Result === 'wrong'}<p class="mt-2 text-sm text-red-600">Think about which function changes letter case.</p>{/if}
   </div>
 
   {#if allDone}
-    <div class="text-center">
+    <div>
       <p class="text-lg font-bold text-green-600">All challenges complete!</p>
     </div>
   {/if}

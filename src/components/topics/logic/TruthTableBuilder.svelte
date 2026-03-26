@@ -41,13 +41,13 @@
 </script>
 
 <div class="space-y-6">
-  <div class="text-center">
+  <div>
     <h2 class="mb-2 text-2xl font-bold text-slate-800">Try It: Truth Table Builder</h2>
     <p class="text-slate-600">Toggle switches and build the truth table row by row!</p>
   </div>
 
   <!-- Controls -->
-  <div class="mx-auto max-w-sm rounded-xl border-2 border-yellow-300 bg-yellow-50 p-5">
+  <div class="max-w-sm rounded-xl border-2 border-yellow-300 bg-yellow-50 p-5">
     <div class="mb-4 flex justify-center gap-2">
       {#each ['AND', 'OR', 'NOT'] as op}
         <button
@@ -91,7 +91,7 @@
 
   <!-- Built truth table -->
   {#if history.length > 0}
-    <div class="mx-auto max-w-sm">
+    <div class="max-w-sm">
       <div class="mb-2 flex items-center justify-between">
         <h3 class="text-sm font-bold text-slate-700">Your Truth Table ({operator})</h3>
         <button onclick={clearHistory} class="text-xs text-slate-400 hover:text-slate-600">Clear</button>
@@ -119,9 +119,9 @@
     </div>
   {/if}
 
-  <p class="text-center text-xs text-slate-400">Toggle through all combinations to complete the truth table!</p>
+  <p class="text-xs text-slate-400">Toggle through all combinations to complete the truth table!</p>
 
-  <div class="text-center">
+  <div>
     <button onclick={oncomplete} class="rounded-full bg-yellow-500 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-yellow-600 active:scale-95">
       I've tried this
     </button>

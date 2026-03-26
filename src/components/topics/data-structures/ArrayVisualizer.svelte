@@ -30,13 +30,13 @@
 </script>
 
 <div class="space-y-6">
-  <div class="text-center">
+  <div>
     <h2 class="mb-2 text-2xl font-bold text-slate-800">Try It: Array Visualizer</h2>
     <p class="text-slate-600">Add, remove, and inspect items in an array!</p>
   </div>
 
   <!-- Controls -->
-  <div class="mx-auto flex max-w-md items-center justify-center gap-2">
+  <div class="flex max-w-md items-center justify-center gap-2">
     <input
       type="text"
       bind:value={newItem}
@@ -53,7 +53,7 @@
   </div>
 
   <!-- Length -->
-  <p class="text-center text-sm text-slate-500">
+  <p class="text-sm text-slate-500">
     Length: <span class="font-bold text-green-700">{items.length}</span>
   </p>
 
@@ -85,16 +85,16 @@
   </div>
 
   {#if highlightedIndex !== null}
-    <div class="text-center rounded-lg bg-yellow-50 border border-yellow-200 p-3">
+    <div class="rounded-lg bg-yellow-50 border border-yellow-200 p-3">
       <p class="text-sm text-yellow-800">
         Index <strong>[{highlightedIndex}]</strong> contains: <strong>"{items[highlightedIndex]}"</strong>
       </p>
     </div>
   {/if}
 
-  <p class="text-center text-xs text-slate-400">Click any box to read its value.</p>
+  <p class="text-xs text-slate-400">Click any box to read its value.</p>
 
-  <div class="text-center">
+  <div>
     <button onclick={oncomplete} class="rounded-full bg-green-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-green-700 active:scale-95">
       I've tried this
     </button>

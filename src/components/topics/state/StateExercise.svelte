@@ -34,7 +34,7 @@
 </script>
 
 <div class="space-y-8">
-  <div class="text-center">
+  <div>
     <h2 class="mb-2 text-2xl font-bold text-slate-800">Practice: State</h2>
     <p class="text-slate-600">Predict what the state will be after these operations!</p>
   </div>
@@ -59,7 +59,7 @@
         <button onclick={checkC1} class="rounded-lg bg-pink-500 px-4 py-2 text-sm font-semibold text-white hover:bg-pink-600 active:scale-95">Check</button>
       {/if}
     </div>
-    {#if c1Result === 'correct'}<p class="mt-2 text-center text-sm font-medium text-green-600">Correct! 0 +1 +1 -1 = 1</p>{:else if c1Result === 'wrong'}<p class="mt-2 text-center text-sm text-red-600">Walk through each step: 0, then +1=1, then +1=2, then -1=?</p>{/if}
+    {#if c1Result === 'correct'}<p class="mt-2 text-sm font-medium text-green-600">Correct! 0 +1 +1 -1 = 1</p>{:else if c1Result === 'wrong'}<p class="mt-2 text-sm text-red-600">Walk through each step: 0, then +1=1, then +1=2, then -1=?</p>{/if}
   </div>
 
   <!-- C2 -->
@@ -71,7 +71,7 @@
         <button onclick={checkC2} class="rounded-lg bg-pink-500 px-4 py-2 text-sm font-semibold text-white hover:bg-pink-600 active:scale-95">Check</button>
       {/if}
     </div>
-    {#if c2Result === 'correct'}<p class="mt-2 text-center text-sm font-medium text-green-600">Correct! 5 -1 -1 = 3</p>{:else if c2Result === 'wrong'}<p class="mt-2 text-center text-sm text-red-600">Start at 5, subtract 1 twice.</p>{/if}
+    {#if c2Result === 'correct'}<p class="mt-2 text-sm font-medium text-green-600">Correct! 5 -1 -1 = 3</p>{:else if c2Result === 'wrong'}<p class="mt-2 text-sm text-red-600">Start at 5, subtract 1 twice.</p>{/if}
   </div>
 
   <!-- C3 -->
@@ -83,10 +83,10 @@
         <button onclick={checkC3} class="rounded-lg bg-pink-500 px-4 py-2 text-sm font-semibold text-white hover:bg-pink-600 active:scale-95">Check</button>
       {/if}
     </div>
-    {#if c3Result === 'correct'}<p class="mt-2 text-center text-sm font-medium text-green-600">Correct! Three ups and three downs cancel out: 0!</p>{:else if c3Result === 'wrong'}<p class="mt-2 text-center text-sm text-red-600">Add 1 three times, then subtract 1 three times. Where do you end up?</p>{/if}
+    {#if c3Result === 'correct'}<p class="mt-2 text-sm font-medium text-green-600">Correct! Three ups and three downs cancel out: 0!</p>{:else if c3Result === 'wrong'}<p class="mt-2 text-sm text-red-600">Add 1 three times, then subtract 1 three times. Where do you end up?</p>{/if}
   </div>
 
   {#if allDone}
-    <div class="text-center"><p class="text-lg font-bold text-green-600">All challenges complete!</p></div>
+    <div><p class="text-lg font-bold text-green-600">All challenges complete!</p></div>
   {/if}
 </div>

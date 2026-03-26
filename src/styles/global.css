@@ -10,8 +10,17 @@
   --color-topic-indigo: #6366f1;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Permanent Marker", cursive;
+  letter-spacing: 0.05em;
+}
+
+h3 {
+  font-size: 1.35rem;
+}
+
 body {
-  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+  font-family: "Roboto", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   background-color: #f8fafc; /* slate-50 */
   color: #0f172a; /* slate-900 */

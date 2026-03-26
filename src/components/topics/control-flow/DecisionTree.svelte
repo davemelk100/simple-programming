@@ -46,7 +46,7 @@
 </script>
 
 <div class="space-y-6">
-  <div class="text-center">
+  <div>
     <h2 class="mb-2 text-2xl font-bold text-slate-800">Try It: Decision Tree</h2>
     <p class="text-slate-600">Toggle the condition and watch the path change!</p>
   </div>
@@ -117,13 +117,13 @@
     </div>
   </div>
 
-  <div class="text-center">
+  <div>
     <button onclick={nextScenario} class="mr-2 rounded-lg bg-slate-200 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-300 active:scale-95">
       Next Scenario
     </button>
   </div>
 
-  <div class="text-center">
+  <div>
     <button onclick={oncomplete} class="rounded-full bg-orange-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-orange-700 active:scale-95">
       I've tried this
     </button>

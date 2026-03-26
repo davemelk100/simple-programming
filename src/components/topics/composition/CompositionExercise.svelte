@@ -37,7 +37,7 @@
 </script>
 
 <div class="space-y-8">
-  <div class="text-center">
+  <div>
     <h2 class="mb-2 text-2xl font-bold text-slate-800">Practice: Composition</h2>
     <p class="text-slate-600">Predict what comes out of these pipelines!</p>
   </div>
@@ -60,7 +60,7 @@
         <button onclick={checkC1} class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 active:scale-95">Check</button>
       {/if}
     </div>
-    {#if c1Result === 'correct'}<p class="mt-2 text-center text-sm font-medium text-green-600">Correct! 3 * 2 = 6, then 6 + 1 = 7</p>{:else if c1Result === 'wrong'}<p class="mt-2 text-center text-sm text-red-600">First double 3 to get 6, then add 1.</p>{/if}
+    {#if c1Result === 'correct'}<p class="mt-2 text-sm font-medium text-green-600">Correct! 3 * 2 = 6, then 6 + 1 = 7</p>{:else if c1Result === 'wrong'}<p class="mt-2 text-sm text-red-600">First double 3 to get 6, then add 1.</p>{/if}
   </div>
 
   <!-- C2 -->
@@ -81,7 +81,7 @@
         <button onclick={checkC2} class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 active:scale-95">Check</button>
       {/if}
     </div>
-    {#if c2Result === 'correct'}<p class="mt-2 text-center text-sm font-medium text-green-600">Correct! 2 squared = 4, then 4 * 2 = 8</p>{:else if c2Result === 'wrong'}<p class="mt-2 text-center text-sm text-red-600">First square 2 (= 4), then double it.</p>{/if}
+    {#if c2Result === 'correct'}<p class="mt-2 text-sm font-medium text-green-600">Correct! 2 squared = 4, then 4 * 2 = 8</p>{:else if c2Result === 'wrong'}<p class="mt-2 text-sm text-red-600">First square 2 (= 4), then double it.</p>{/if}
   </div>
 
   <!-- C3 -->
@@ -104,15 +104,15 @@
         </button>
       {/each}
     </div>
-    <div class="mt-3 text-center">
+    <div class="mt-3">
       {#if c3Result !== 'correct' && c3Answer}
         <button onclick={checkC3} class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 active:scale-95">Check</button>
       {/if}
     </div>
-    {#if c3Result === 'correct'}<p class="mt-2 text-center text-sm font-medium text-green-600">Correct! 5 * 2 = 10, then 10 + 1 = 11</p>{:else if c3Result === 'wrong'}<p class="mt-2 text-center text-sm text-red-600">Try each pipeline with input 5 and see which gives 11.</p>{/if}
+    {#if c3Result === 'correct'}<p class="mt-2 text-sm font-medium text-green-600">Correct! 5 * 2 = 10, then 10 + 1 = 11</p>{:else if c3Result === 'wrong'}<p class="mt-2 text-sm text-red-600">Try each pipeline with input 5 and see which gives 11.</p>{/if}
   </div>
 
   {#if allDone}
-    <div class="text-center"><p class="text-lg font-bold text-green-600">All challenges complete!</p></div>
+    <div><p class="text-lg font-bold text-green-600">All challenges complete!</p></div>
   {/if}
 </div>

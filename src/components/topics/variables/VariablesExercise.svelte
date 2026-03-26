@@ -45,7 +45,7 @@
 </script>
 
 <div class="space-y-8">
-  <div class="text-center">
+  <div>
     <h2 class="mb-2 text-2xl font-bold text-slate-800">Practice: Variables</h2>
     <p class="text-slate-600">Test what you've learned about labeled storage boxes!</p>
   </div>
@@ -110,9 +110,9 @@
       {/if}
     </div>
     {#if c2Result === 'correct'}
-      <p class="mt-2 text-center text-sm font-medium text-green-600">Correct! The box labeled "age" holds 25.</p>
+      <p class="mt-2 text-sm font-medium text-green-600">Correct! The box labeled "age" holds 25.</p>
     {:else if c2Result === 'wrong'}
-      <p class="mt-2 text-center text-sm text-red-600">Look at what's inside the box and try again!</p>
+      <p class="mt-2 text-sm text-red-600">Look at what's inside the box and try again!</p>
     {/if}
   </div>
 
@@ -138,14 +138,14 @@
       {/if}
     </div>
     {#if c3Result === 'correct'}
-      <p class="mt-2 text-center text-sm font-medium text-green-600">Correct! You updated the value to 20.</p>
+      <p class="mt-2 text-sm font-medium text-green-600">Correct! You updated the value to 20.</p>
     {:else if c3Result === 'wrong'}
-      <p class="mt-2 text-center text-sm text-red-600">Change the value inside the box to 20!</p>
+      <p class="mt-2 text-sm text-red-600">Change the value inside the box to 20!</p>
     {/if}
   </div>
 
   {#if allDone}
-    <div class="text-center">
+    <div>
       <p class="mb-3 text-lg font-bold text-green-600">All challenges complete!</p>
     </div>
   {/if}

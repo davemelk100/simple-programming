@@ -36,6 +36,40 @@
   import PipelineBuilder from './composition/PipelineBuilder.svelte';
   import CompositionExercise from './composition/CompositionExercise.svelte';
 
+  import VariablesCode from './variables/VariablesCode.svelte';
+  import FunctionsCode from './functions/FunctionsCode.svelte';
+  import DataStructuresCode from './data-structures/DataStructuresCode.svelte';
+  import ControlFlowCode from './control-flow/ControlFlowCode.svelte';
+  import LogicCode from './logic/LogicCode.svelte';
+  import StateCode from './state/StateCode.svelte';
+  import CompositionCode from './composition/CompositionCode.svelte';
+
+  // OOP topic components
+  import ClassesExplain from './classes/ClassesExplain.svelte';
+  import ClassesDemo from './classes/ClassesDemo.svelte';
+  import ClassesExercise from './classes/ClassesExercise.svelte';
+  import ClassesCode from './classes/ClassesCode.svelte';
+
+  import EncapsulationExplain from './encapsulation/EncapsulationExplain.svelte';
+  import EncapsulationDemo from './encapsulation/EncapsulationDemo.svelte';
+  import EncapsulationExercise from './encapsulation/EncapsulationExercise.svelte';
+  import EncapsulationCode from './encapsulation/EncapsulationCode.svelte';
+
+  import InheritanceExplain from './inheritance/InheritanceExplain.svelte';
+  import InheritanceDemo from './inheritance/InheritanceDemo.svelte';
+  import InheritanceExercise from './inheritance/InheritanceExercise.svelte';
+  import InheritanceCode from './inheritance/InheritanceCode.svelte';
+
+  import PolymorphismExplain from './polymorphism/PolymorphismExplain.svelte';
+  import PolymorphismDemo from './polymorphism/PolymorphismDemo.svelte';
+  import PolymorphismExercise from './polymorphism/PolymorphismExercise.svelte';
+  import PolymorphismCode from './polymorphism/PolymorphismCode.svelte';
+
+  import AbstractionExplain from './abstraction/AbstractionExplain.svelte';
+  import AbstractionDemo from './abstraction/AbstractionDemo.svelte';
+  import AbstractionExercise from './abstraction/AbstractionExercise.svelte';
+  import AbstractionCode from './abstraction/AbstractionCode.svelte';
+
   interface Props {
     topicSlug: string;
   }
@@ -47,7 +81,7 @@
   let nextTopic = $derived(getNextTopic(topicSlug));
 
   let activeSection = $state<SectionType>('explain');
-  let completedSections = $state({ explain: false, demo: false, exercise: false });
+  let completedSections = $state({ explain: false, demo: false, exercise: false, code: false });
   let userId = $state<string | null>(null);
   let showSuccess = $state(false);
 
@@ -73,6 +107,7 @@
             explain: topicProgress.explain?.completed ?? false,
             demo: topicProgress.demo?.completed ?? false,
             exercise: topicProgress.exercise?.completed ?? false,
+            code: topicProgress.code?.completed ?? false,
           };
         }
       }
@@ -99,34 +134,40 @@
 
   // Component map
   const components: Record<string, Record<SectionType, any>> = {
-    variables: { explain: VariablesExplain, demo: StorageBoxes, exercise: VariablesExercise },
-    functions: { explain: FunctionExplain, demo: FunctionMachine, exercise: FunctionExercise },
-    'data-structures': { explain: DataStructuresExplain, demo: ArrayVisualizer, exercise: DataStructuresExercise },
-    'control-flow': { explain: ControlFlowExplain, demo: DecisionTree, exercise: ControlFlowExercise },
-    logic: { explain: LogicExplain, demo: TruthTableBuilder, exercise: LogicExercise },
-    state: { explain: StateExplain, demo: StateTimeline, exercise: StateExercise },
-    composition: { explain: CompositionExplain, demo: PipelineBuilder, exercise: CompositionExercise },
+    variables: { explain: VariablesExplain, demo: StorageBoxes, exercise: VariablesExercise, code: VariablesCode },
+    functions: { explain: FunctionExplain, demo: FunctionMachine, exercise: FunctionExercise, code: FunctionsCode },
+    'data-structures': { explain: DataStructuresExplain, demo: ArrayVisualizer, exercise: DataStructuresExercise, code: DataStructuresCode },
+    'control-flow': { explain: ControlFlowExplain, demo: DecisionTree, exercise: ControlFlowExercise, code: ControlFlowCode },
+    logic: { explain: LogicExplain, demo: TruthTableBuilder, exercise: LogicExercise, code: LogicCode },
+    state: { explain: StateExplain, demo: StateTimeline, exercise: StateExercise, code: StateCode },
+    composition: { explain: CompositionExplain, demo: PipelineBuilder, exercise: CompositionExercise, code: CompositionCode },
+    classes: { explain: ClassesExplain, demo: ClassesDemo, exercise: ClassesExercise, code: ClassesCode },
+    encapsulation: { explain: EncapsulationExplain, demo: EncapsulationDemo, exercise: EncapsulationExercise, code: EncapsulationCode },
+    inheritance: { explain: InheritanceExplain, demo: InheritanceDemo, exercise: InheritanceExercise, code: InheritanceCode },
+    polymorphism: { explain: PolymorphismExplain, demo: PolymorphismDemo, exercise: PolymorphismExercise, code: PolymorphismCode },
+    abstraction: { explain: AbstractionExplain, demo: AbstractionDemo, exercise: AbstractionExercise, code: AbstractionCode },
   };
 </script>
 
 {#if topic}
-  <div class="space-y-6">
-    <!-- Header -->
-    <div class="text-center">
-      <span class="text-4xl">{topic.icon}</span>
-      <h1 class="mt-2 text-3xl font-black {colorMap[topic.color] ?? 'text-slate-800'}">{topic.title}</h1>
-      <p class="mt-1 text-slate-500">{topic.description}</p>
+  <div class="space-y-4">
+    <!-- Header + Tabs -->
+    <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+        <span class="text-2xl">{topic.icon}</span>
+        <h1 class="text-2xl font-black {colorMap[topic.color] ?? 'text-slate-800'}">{topic.title}</h1>
+        <p class="text-sm text-slate-500">&mdash; {topic.description}</p>
+      </div>
+
+      <SectionTabs
+        {activeSection}
+        {completedSections}
+        onchange={handleTabChange}
+      />
     </div>
 
-    <!-- Tabs -->
-    <SectionTabs
-      {activeSection}
-      {completedSections}
-      onchange={handleTabChange}
-    />
-
     <!-- Content area -->
-    <div class="min-h-[400px] rounded-2xl bg-white p-6 shadow-sm border border-slate-100">
+    <div class="min-h-[300px] rounded-2xl bg-white p-4 lg:p-5 shadow-sm border border-slate-100">
       {#if components[topicSlug]}
         {#if activeSection === 'explain'}
           <svelte:component
@@ -143,6 +184,11 @@
             this={components[topicSlug].exercise}
             oncomplete={(score) => handleSectionComplete('exercise', score)}
           />
+        {:else if activeSection === 'code'}
+          <svelte:component
+            this={components[topicSlug].code}
+            oncomplete={() => handleSectionComplete('code')}
+          />
         {/if}
       {:else}
         <p class="text-center text-slate-400">Content coming soon!</p>
@@ -150,7 +196,7 @@
     </div>
 
     <!-- Navigation -->
-    <div class="flex items-center justify-between pt-4">
+    <div class="flex items-center justify-between pt-2">
       {#if prevTopic}
         <a
           href={`/topics/${prevTopic.slug}`}

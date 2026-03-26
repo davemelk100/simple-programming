@@ -41,8 +41,8 @@
     100% { transform: scale(1); }
   }
   @keyframes textPop {
-    0% { transform: scale(0) translateY(10px); opacity: 0; }
-    100% { transform: scale(1) translateY(0); opacity: 1; }
+    0% { transform: scale(0) translateX(-10px); opacity: 0; }
+    100% { transform: scale(1) translateX(0); opacity: 1; }
   }
   @keyframes drawCheck {
     0% { stroke-dashoffset: 30; }
