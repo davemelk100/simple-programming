@@ -1,11 +1,21 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { getAdvanced, onAdvancedChange } from '../../../lib/mode';
+
+  let advanced = $state(false);
+
+  onMount(() => {
+    advanced = getAdvanced();
+    return onAdvancedChange((v) => (advanced = v));
+  });
+
 
   interface Props {
     oncomplete?: () => void;
   }
 
   let { oncomplete }: Props = $props();
+
 
   const examples = [
     { name: 'double', input: '5', output: '10', color: 'purple', desc: 'The double machine takes a number and multiplies it by 2.' },
@@ -27,6 +37,7 @@
 </script>
 
 <div class="space-y-8">
+  {#if !advanced}
   <div>
     <p class="text-slate-600">
       Think of a function like a machine in a factory. You put something <strong>in</strong>, the machine does its work, and something comes <strong>out</strong>. Every function has a <strong>name</strong>, takes some <strong>input</strong>, and produces an <strong>output</strong>. For simple functions like these, the same input always gives the same output!
@@ -83,6 +94,98 @@
       I've read this
     </button>
   </div>
+
+  {:else}
+  <div class="space-y-8">
+    <div>
+      <p class="text-slate-600">
+        Functions are <strong>reusable blocks of code</strong> that accept <strong>parameters</strong> (the declared inputs) and receive <strong>arguments</strong> (the actual values passed in). They can specify <strong>return types</strong>, be <strong>pure</strong> (no side effects, same input always yields same output), or be <strong>higher-order</strong> (accept or return other functions).
+      </p>
+    </div>
+
+    <!-- Code example -->
+    <div class="rounded-xl bg-slate-800 p-5 font-mono text-sm">
+      <div class="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-400">TypeScript</div>
+      <pre class="text-green-400">// Parameters vs arguments
+function greet(name: string): string {'{'} // "name" is a parameter
+  return `Hello, ${'{'} name {'}'}!`;
+{'}'}
+greet("Alice"); // "Alice" is an argument
+
+// Pure function - no side effects, deterministic
+function add(a: number, b: number): number {'{'}
+  return a + b;
+{'}'}
+
+// Higher-order function - takes a function as input
+function map&lt;T, U&gt;(
+  arr: T[],
+  transform: (item: T) =&gt; U
+): U[] {'{'}
+  return arr.map(transform);
+{'}'}
+
+const doubled = map([1, 2, 3], (n) =&gt; n * 2);
+// [2, 4, 6]
+
+// Arrow functions &amp; closures
+const multiplier = (factor: number) =&gt;
+  (n: number) =&gt; n * factor;
+
+const triple = multiplier(3);
+triple(5); // 15</pre>
+    </div>
+
+    <!-- Function types illustration -->
+    <div class="grid grid-cols-2 gap-4">
+      <div class="rounded-xl border-2 border-green-300 bg-green-50 p-4">
+        <h4 class="mb-2 text-sm font-bold text-green-700">Pure Function</h4>
+        <div class="space-y-1 text-xs text-slate-600">
+          <p>Same input &rarr; same output</p>
+          <p>No side effects</p>
+          <p>Easy to test &amp; reason about</p>
+        </div>
+      </div>
+      <div class="rounded-xl border-2 border-purple-300 bg-purple-50 p-4">
+        <h4 class="mb-2 text-sm font-bold text-purple-700">Higher-Order Function</h4>
+        <div class="space-y-1 text-xs text-slate-600">
+          <p>Takes functions as arguments</p>
+          <p>Or returns a function</p>
+          <p>Enables composition &amp; abstraction</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Key concepts list -->
+    <div class="space-y-2">
+      <h3 class="text-lg font-bold text-slate-800">Key Concepts</h3>
+      <ul class="space-y-2 text-slate-600">
+        <li class="flex items-start gap-2">
+          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-green-500"></span>
+          <strong>Parameters vs arguments</strong>: parameters are the variable names in the function definition; arguments are the actual values you pass when calling it.
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-green-500"></span>
+          <strong>Return types</strong> declare what a function gives back. TypeScript infers them, but explicit annotations improve readability and catch bugs.
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-green-500"></span>
+          <strong>Closures</strong> allow inner functions to capture variables from their enclosing scope, enabling patterns like factories and private state.
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-green-500"></span>
+          <strong>Higher-order functions</strong> like <code class="text-sm">map</code>, <code class="text-sm">filter</code>, and <code class="text-sm">reduce</code> are the foundation of functional programming in JavaScript.
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <button onclick={oncomplete} class="rounded-full bg-green-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-green-700 active:scale-95">
+        I've read this
+      </button>
+    </div>
+  </div>
+  {/if}
 </div>
 
 <style>

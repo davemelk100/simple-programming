@@ -1,11 +1,21 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { getAdvanced, onAdvancedChange } from '../../../lib/mode';
+
+  let advanced = $state(false);
+
+  onMount(() => {
+    advanced = getAdvanced();
+    return onAdvancedChange((v) => (advanced = v));
+  });
+
 
   interface Props {
     oncomplete?: (score?: number) => void;
   }
 
   let { oncomplete }: Props = $props();
+
 
   const examples = [
     {
@@ -42,6 +52,7 @@
 </script>
 
 <div class="space-y-8">
+  {#if !advanced}
   <div>
     <p class="text-slate-600">
       Think of a class like a <strong>cookie cutter</strong>. The cookie cutter is the blueprint &mdash; it defines the <strong>shape</strong>. Each cookie you stamp out is an <strong>object</strong>, a real thing made from that blueprint. One class can create as many objects as you need &mdash; each with its own unique values. Objects also have <strong>methods</strong> (behaviors) &mdash; things they can <em>do</em>, like <code>car.drive()</code> or <code>dog.bark()</code>.
@@ -107,6 +118,112 @@
       I've read this
     </button>
   </div>
+
+  {:else}
+  <div class="space-y-8">
+    <div>
+      <p class="text-slate-600">
+        Classes in JavaScript/TypeScript are syntactic sugar over prototypal inheritance. They support <strong>constructors</strong> for initialization, <strong>static methods</strong> that belong to the class itself, <strong>private fields</strong> for true encapsulation, and <strong>getters/setters</strong> for computed or validated properties.
+      </p>
+    </div>
+
+    <!-- Code example -->
+    <div class="rounded-xl bg-slate-800 p-5 font-mono text-sm">
+      <div class="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-400">TypeScript</div>
+      <pre class="text-green-400">class BankAccount {'{'}
+  // Private fields (true encapsulation)
+  #balance: number;
+  #owner: string;
+
+  // Constructor - called with `new`
+  constructor(owner: string, initial: number = 0) {'{'}
+    this.#owner = owner;
+    this.#balance = initial;
+  {'}'}
+
+  // Getter - computed property
+  get balance(): number {'{'}
+    return this.#balance;
+  {'}'}
+
+  // Setter with validation
+  set owner(name: string) {'{'}
+    if (name.length === 0) throw new Error("Invalid");
+    this.#owner = name;
+  {'}'}
+
+  // Instance method
+  deposit(amount: number): void {'{'}
+    if (amount &lt;= 0) throw new Error("Invalid");
+    this.#balance += amount;
+  {'}'}
+
+  // Static method - belongs to the class, not instances
+  static fromJSON(json: string): BankAccount {'{'}
+    const {'{'} owner, balance {'}'} = JSON.parse(json);
+    return new BankAccount(owner, balance);
+  {'}'}
+{'}'}
+
+const acct = new BankAccount("Alice", 1000);
+acct.balance;     // 1000 (getter)
+acct.deposit(50); // OK
+// acct.#balance;  // Error! Private field</pre>
+    </div>
+
+    <!-- Class anatomy illustration -->
+    <div class="rounded-xl border-2 border-blue-200 bg-blue-50 p-5">
+      <h3 class="mb-3 text-sm font-bold uppercase tracking-wider text-blue-600">Anatomy of a Class</h3>
+      <div class="space-y-2">
+        <div class="flex items-center gap-3">
+          <div class="w-24 rounded bg-blue-600 px-2 py-1 text-center text-xs font-bold text-white">constructor</div>
+          <div class="flex-1 text-sm text-slate-600">Initializes new instances. Called automatically with <code class="text-sm">new</code>.</div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="w-24 rounded bg-blue-500 px-2 py-1 text-center text-xs font-bold text-white">#private</div>
+          <div class="flex-1 text-sm text-slate-600">Truly private fields. Not accessible outside the class, even by subclasses.</div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="w-24 rounded bg-blue-400 px-2 py-1 text-center text-xs font-bold text-white">get / set</div>
+          <div class="flex-1 text-sm text-slate-600">Computed properties. Run code when reading or writing a value.</div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="w-24 rounded bg-indigo-500 px-2 py-1 text-center text-xs font-bold text-white">static</div>
+          <div class="flex-1 text-sm text-slate-600">Belongs to the class itself. Called as <code class="text-sm">ClassName.method()</code>. Useful for factories.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Key concepts list -->
+    <div class="space-y-2">
+      <h3 class="text-lg font-bold text-slate-800">Key Concepts</h3>
+      <ul class="space-y-2 text-slate-600">
+        <li class="flex items-start gap-2">
+          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-blue-500"></span>
+          <strong>Constructors</strong> set up initial state. Use parameter defaults and validation to ensure objects start in a valid state.
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-blue-500"></span>
+          <strong>Static methods</strong> are utility functions tied to the class (like factory methods) that don't need an instance.
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-blue-500"></span>
+          <strong>Private fields</strong> (<code class="text-sm">#field</code>) provide true runtime encapsulation in JS. TypeScript's <code class="text-sm">private</code> keyword is compile-time only.
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-blue-500"></span>
+          <strong>Getters/setters</strong> let you add validation, computation, or logging when properties are accessed -- without changing the caller's syntax.
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <button onclick={oncomplete} class="rounded-full bg-blue-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-blue-700 active:scale-95">
+        I've read this
+      </button>
+    </div>
+  </div>
+  {/if}
 </div>
 
 <style>

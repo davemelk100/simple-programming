@@ -1,11 +1,21 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { getAdvanced, onAdvancedChange } from '../../../lib/mode';
+
+  let advanced = $state(false);
+
+  onMount(() => {
+    advanced = getAdvanced();
+    return onAdvancedChange((v) => (advanced = v));
+  });
+
 
   interface Props {
     oncomplete?: () => void;
   }
 
   let { oncomplete }: Props = $props();
+
 
   let switchA = $state(true);
   let switchB = $state(false);
@@ -24,6 +34,7 @@
 </script>
 
 <div class="space-y-8">
+  {#if !advanced}
   <div>
     <p class="text-slate-600">
       Computers make decisions using <strong>boolean logic</strong> -- everything is either <strong>true</strong> or <strong>false</strong>.
@@ -123,6 +134,96 @@
       I've read this
     </button>
   </div>
+
+  {:else}
+  <div class="space-y-8">
+    <div>
+      <p class="text-slate-600">
+        Boolean logic goes deeper than AND, OR, and NOT. JavaScript uses <strong>short-circuit evaluation</strong> to optimize boolean expressions, <strong>De Morgan's laws</strong> help simplify complex conditions, and <strong>bitwise operations</strong> manipulate individual bits for performance-critical code like flags and permissions.
+      </p>
+    </div>
+
+    <!-- Code example -->
+    <div class="rounded-xl bg-slate-800 p-5 font-mono text-sm">
+      <div class="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-400">JavaScript</div>
+      <pre class="text-green-400">// Short-circuit evaluation
+const name = user?.name || "Anonymous";
+const name2 = user?.name ?? "Anonymous"; // nullish coalescing
+
+// && returns first falsy or last truthy
+const result = a &amp;&amp; b &amp;&amp; c; // stops at first false
+
+// || returns first truthy or last falsy
+const fallback = null || undefined || "default"; // "default"
+
+// De Morgan's Laws
+// !(A &amp;&amp; B) === !A || !B
+// !(A || B) === !A &amp;&amp; !B
+if (!(isAdmin &amp;&amp; isActive)) {'{'} /* ... */ {'}'}
+// equivalent to:
+if (!isAdmin || !isActive) {'{'} /* ... */ {'}'}
+
+// Bitwise operations for flags/permissions
+const READ    = 0b001; // 1
+const WRITE   = 0b010; // 2
+const EXECUTE = 0b100; // 4
+
+let perms = READ | WRITE;     // 0b011 = 3
+perms &amp;  READ;                 // truthy - has read
+perms &amp;  EXECUTE;              // 0 - no execute
+perms |= EXECUTE;              // add execute
+perms &amp;= ~WRITE;              // remove write</pre>
+    </div>
+
+    <!-- De Morgan's Laws illustration -->
+    <div class="rounded-xl border-2 border-yellow-200 bg-yellow-50 p-5">
+      <h3 class="mb-3 text-sm font-bold uppercase tracking-wider text-yellow-600">De Morgan's Laws</h3>
+      <div class="space-y-3">
+        <div class="flex items-center gap-3 rounded-lg bg-white p-3">
+          <code class="text-sm font-bold text-yellow-700">!(A &amp;&amp; B)</code>
+          <span class="text-slate-400">=</span>
+          <code class="text-sm font-bold text-yellow-700">!A || !B</code>
+          <span class="text-xs text-slate-500 ml-2">"not both" = "either one missing"</span>
+        </div>
+        <div class="flex items-center gap-3 rounded-lg bg-white p-3">
+          <code class="text-sm font-bold text-yellow-700">!(A || B)</code>
+          <span class="text-slate-400">=</span>
+          <code class="text-sm font-bold text-yellow-700">!A &amp;&amp; !B</code>
+          <span class="text-xs text-slate-500 ml-2">"neither" = "both missing"</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Key concepts list -->
+    <div class="space-y-2">
+      <h3 class="text-lg font-bold text-slate-800">Key Concepts</h3>
+      <ul class="space-y-2 text-slate-600">
+        <li class="flex items-start gap-2">
+          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-yellow-500"></span>
+          <strong>Short-circuit evaluation</strong>: <code class="text-sm">&amp;&amp;</code> stops at the first falsy value; <code class="text-sm">||</code> stops at the first truthy value. This enables patterns like default values and conditional execution.
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-yellow-500"></span>
+          <strong>Nullish coalescing</strong> (<code class="text-sm">??</code>) only falls back on <code class="text-sm">null</code>/<code class="text-sm">undefined</code>, unlike <code class="text-sm">||</code> which treats <code class="text-sm">0</code>, <code class="text-sm">""</code>, and <code class="text-sm">false</code> as falsy.
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-yellow-500"></span>
+          <strong>Bitwise flags</strong> use OR to combine, AND to check, AND-NOT to remove. Common in permissions systems, feature flags, and game engines.
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-yellow-500"></span>
+          <strong>De Morgan's laws</strong> let you simplify negated compound conditions, making complex boolean expressions more readable.
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <button onclick={oncomplete} class="rounded-full bg-yellow-500 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-yellow-600 active:scale-95">
+        I've read this
+      </button>
+    </div>
+  </div>
+  {/if}
 </div>
 
 <style>

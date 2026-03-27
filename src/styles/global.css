@@ -16,9 +16,13 @@
   --color-topic-indigo: #6366f1;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: "Permanent Marker", cursive;
+h1, h2, h3, h5, h6 {
+  font-family: "Permanent Marker", "Inter", sans-serif;
   letter-spacing: 0.05em;
+}
+
+h4 {
+  font-family: "Roboto", ui-sans-serif, system-ui, sans-serif;
 }
 
 h3 {

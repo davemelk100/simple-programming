@@ -1,11 +1,21 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { getAdvanced, onAdvancedChange } from '../../../lib/mode';
+
+  let advanced = $state(false);
+
+  onMount(() => {
+    advanced = getAdvanced();
+    return onAdvancedChange((v) => (advanced = v));
+  });
+
 
   interface Props {
     oncomplete?: () => void;
   }
 
   let { oncomplete }: Props = $props();
+
 
   let showDecision = $state(false);
   let decisionPath = $state<'yes' | 'no' | null>(null);
@@ -31,6 +41,7 @@
 </script>
 
 <div class="space-y-8">
+  {#if !advanced}
   <div>
     <p class="text-slate-600">
       Programs need to <strong>choose</strong> what to do and sometimes <strong>repeat</strong> actions. <strong>If/else</strong> lets your program pick a path, while <strong>loops</strong> let it repeat steps without writing the same code over and over!
@@ -59,7 +70,7 @@
             <div class="h-8 w-0.5 transition-colors duration-300 {decisionPath === 'yes' ? 'bg-green-400' : 'bg-slate-200'}"></div>
             <div class="rounded-lg px-4 py-2 text-sm font-medium shadow-sm transition-all duration-300
               {decisionPath === 'yes' ? 'bg-green-100 text-green-700 border-2 border-green-400 scale-105' : 'bg-slate-50 text-slate-500 border border-slate-200'}">
-              Take umbrella ☂️
+              Take umbrella
             </div>
           </div>
 
@@ -72,7 +83,7 @@
             <div class="h-8 w-0.5 transition-colors duration-300 {decisionPath === 'no' ? 'bg-blue-400' : 'bg-slate-200'}"></div>
             <div class="rounded-lg px-4 py-2 text-sm font-medium shadow-sm transition-all duration-300
               {decisionPath === 'no' ? 'bg-blue-100 text-blue-700 border-2 border-blue-400 scale-105' : 'bg-slate-50 text-slate-500 border border-slate-200'}">
-              Wear sunglasses 😎
+              Wear sunglasses
             </div>
           </div>
         </div>
@@ -109,4 +120,103 @@
       I've read this
     </button>
   </div>
+
+  {:else}
+  <div class="space-y-8">
+    <div>
+      <p class="text-slate-600">
+        Beyond basic if/else and loops, control flow includes <strong>switch statements</strong> for multi-branch logic, <strong>ternary operators</strong> for inline conditions, <strong>early returns</strong> to reduce nesting, and <strong>guard clauses</strong> to handle edge cases upfront.
+      </p>
+    </div>
+
+    <!-- Code example -->
+    <div class="rounded-xl bg-slate-800 p-5 font-mono text-sm">
+      <div class="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-400">TypeScript</div>
+      <pre class="text-green-400">// Switch statement
+function getStatusText(code: number): string {'{'}
+  switch (code) {'{'}
+    case 200: return "OK";
+    case 404: return "Not Found";
+    case 500: return "Server Error";
+    default:  return "Unknown";
+  {'}'}
+{'}'}
+
+// Ternary operator - inline conditional
+const label = count === 0 ? "empty" : "has items";
+const fee = age &gt;= 18 ? 10 : 0;
+
+// Guard clauses &amp; early returns
+function processUser(user: User | null) {'{'}
+  if (!user) return null;          // guard
+  if (!user.active) return null;   // guard
+  if (user.banned) throw new Error("Banned");
+
+  // Happy path - no nesting needed
+  return calculateScore(user);
+{'}'}
+
+// for...of, for...in, while
+for (const item of items) {'{'} /* iterate values */ {'}'}
+for (const key in obj) {'{'} /* iterate keys */ {'}'}
+
+// Labeled break for nested loops
+outer: for (const row of grid) {'{'}
+  for (const cell of row) {'{'}
+    if (cell === target) break outer;
+  {'}'}
+{'}'}</pre>
+    </div>
+
+    <!-- Pattern comparison -->
+    <div class="grid grid-cols-2 gap-4">
+      <div class="rounded-xl border-2 border-red-200 bg-red-50 p-4">
+        <h4 class="mb-2 text-sm font-bold text-red-700">Deeply Nested (avoid)</h4>
+        <pre class="text-xs text-red-600">if (user) {'{'}
+  if (user.active) {'{'}
+    if (!user.banned) {'{'}
+      // logic here
+    {'}'}
+  {'}'}
+{'}'}</pre>
+      </div>
+      <div class="rounded-xl border-2 border-green-200 bg-green-50 p-4">
+        <h4 class="mb-2 text-sm font-bold text-green-700">Guard Clauses (prefer)</h4>
+        <pre class="text-xs text-green-600">if (!user) return;
+if (!user.active) return;
+if (user.banned) return;
+// logic here</pre>
+      </div>
+    </div>
+
+    <!-- Key concepts list -->
+    <div class="space-y-2">
+      <h3 class="text-lg font-bold text-slate-800">Key Concepts</h3>
+      <ul class="space-y-2 text-slate-600">
+        <li class="flex items-start gap-2">
+          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-orange-500"></span>
+          <strong>Switch statements</strong> are cleaner than long if/else chains when comparing one value against many possibilities. Always include a <code class="text-sm">default</code> case.
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-orange-500"></span>
+          <strong>Ternary operators</strong> (<code class="text-sm">condition ? a : b</code>) are great for simple inline conditionals but should not be nested for readability.
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-orange-500"></span>
+          <strong>Early returns</strong> and <strong>guard clauses</strong> reduce nesting depth, making the "happy path" of your code easy to follow.
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-orange-500"></span>
+          <strong>Exhaustive checks</strong>: TypeScript can verify that a switch handles all union members using the <code class="text-sm">never</code> type in the default case.
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <button onclick={oncomplete} class="rounded-full bg-orange-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-orange-700 active:scale-95">
+        I've read this
+      </button>
+    </div>
+  </div>
+  {/if}
 </div>

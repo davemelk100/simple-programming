@@ -1,11 +1,21 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { getAdvanced, onAdvancedChange } from '../../../lib/mode';
+
+  let advanced = $state(false);
+
+  onMount(() => {
+    advanced = getAdvanced();
+    return onAdvancedChange((v) => (advanced = v));
+  });
+
 
   interface Props {
     oncomplete?: (score?: number) => void;
   }
 
   let { oncomplete }: Props = $props();
+
 
   const examples = [
     {
@@ -38,6 +48,7 @@
 </script>
 
 <div class="space-y-8">
+  {#if !advanced}
   <div>
     <p class="text-slate-600">
       Think of a <strong>TV remote</strong>. You press buttons &mdash; power, volume, channel &mdash; without knowing how the circuits inside work. That's <strong>encapsulation</strong>: hiding the complex internals and only exposing a simple interface. It protects data from being changed in unexpected ways, preventing bugs and keeping your code safe and predictable.
@@ -125,4 +136,120 @@
       I've read this
     </button>
   </div>
+
+  {:else}
+  <div class="space-y-8">
+    <div>
+      <p class="text-slate-600">
+        Encapsulation is about <strong>controlling access</strong> to internal state. Through <strong>access modifiers</strong>, <strong>information hiding</strong>, well-designed <strong>APIs</strong>, and <strong>interface contracts</strong>, you create boundaries that make code safer, more maintainable, and easier to refactor without breaking consumers.
+      </p>
+    </div>
+
+    <!-- Code example -->
+    <div class="rounded-xl bg-slate-800 p-5 font-mono text-sm">
+      <div class="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-400">TypeScript</div>
+      <pre class="text-green-400">// Interface contract - defines the public API
+interface ICache&lt;T&gt; {'{'}
+  get(key: string): T | undefined;
+  set(key: string, value: T): void;
+  clear(): void;
+{'}'}
+
+// Implementation hides internal details
+class LRUCache&lt;T&gt; implements ICache&lt;T&gt; {'{'}
+  private map = new Map&lt;string, T&gt;();
+  private readonly maxSize: number;
+
+  constructor(maxSize: number = 100) {'{'}
+    this.maxSize = maxSize;
+  {'}'}
+
+  // Public API - consumers use only these
+  get(key: string): T | undefined {'{'}
+    const value = this.map.get(key);
+    if (value !== undefined) {'{'}
+      // Move to end (most recently used)
+      this.map.delete(key);
+      this.map.set(key, value);
+    {'}'}
+    return value;
+  {'}'}
+
+  set(key: string, value: T): void {'{'}
+    this.map.delete(key);
+    this.map.set(key, value);
+    this.evictIfNeeded(); // internal detail
+  {'}'}
+
+  clear(): void {'{'} this.map.clear(); {'}'}
+
+  // Private - hidden implementation detail
+  private evictIfNeeded(): void {'{'}
+    while (this.map.size &gt; this.maxSize) {'{'}
+      const oldest = this.map.keys().next().value;
+      this.map.delete(oldest!);
+    {'}'}
+  {'}'}
+{'}'}
+
+// Consumer only sees ICache interface
+function loadData(cache: ICache&lt;string&gt;) {'{'}
+  cache.set("key", "value"); // OK
+  // cache.evictIfNeeded();  // Error! Private
+{'}'}</pre>
+    </div>
+
+    <!-- Access modifiers illustration -->
+    <div class="rounded-xl border-2 border-purple-200 bg-purple-50 p-5">
+      <h3 class="mb-3 text-sm font-bold uppercase tracking-wider text-purple-600">Access Modifiers</h3>
+      <div class="space-y-2">
+        <div class="flex items-center gap-3">
+          <div class="w-24 rounded bg-green-600 px-2 py-1 text-center text-xs font-bold text-white">public</div>
+          <div class="flex-1 text-sm text-slate-600">Accessible from anywhere. The default in TypeScript classes.</div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="w-24 rounded bg-yellow-500 px-2 py-1 text-center text-xs font-bold text-white">protected</div>
+          <div class="flex-1 text-sm text-slate-600">Accessible within the class and its subclasses only.</div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="w-24 rounded bg-red-500 px-2 py-1 text-center text-xs font-bold text-white">private</div>
+          <div class="flex-1 text-sm text-slate-600">Accessible only within the class itself. Use <code class="text-sm">#field</code> for runtime enforcement.</div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="w-24 rounded bg-slate-500 px-2 py-1 text-center text-xs font-bold text-white">readonly</div>
+          <div class="flex-1 text-sm text-slate-600">Can only be set in the constructor. Prevents mutation after initialization.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Key concepts list -->
+    <div class="space-y-2">
+      <h3 class="text-lg font-bold text-slate-800">Key Concepts</h3>
+      <ul class="space-y-2 text-slate-600">
+        <li class="flex items-start gap-2">
+          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-purple-500"></span>
+          <strong>Information hiding</strong> means exposing the minimum surface area. Internal data structures can change without breaking consumers.
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-purple-500"></span>
+          <strong>Interface contracts</strong> define what a class promises to do, without specifying how. Consumers depend on the interface, not the implementation.
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-purple-500"></span>
+          <strong>API design</strong>: a good public API is small, consistent, and hard to misuse. Validate inputs at the boundary and keep invariants private.
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-purple-500"></span>
+          <strong>Encapsulation enables refactoring</strong>: if internals are hidden, you can change the implementation (e.g., swap a Map for a database) without any consumer knowing.
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <button onclick={oncomplete} class="rounded-full bg-purple-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-purple-700 active:scale-95">
+        I've read this
+      </button>
+    </div>
+  </div>
+  {/if}
 </div>

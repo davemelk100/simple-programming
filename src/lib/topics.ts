@@ -90,7 +90,7 @@ export const oopTopics: Topic[] = [
   },
 ];
 
-const allTopics = [...topics, ...oopTopics];
+export const allTopics = [...topics, ...oopTopics];
 
 export function getTopicBySlug(slug: string): Topic | undefined {
   return allTopics.find((t) => t.slug === slug);
