@@ -200,18 +200,18 @@
 
   <!-- Create new box -->
   <div class="flex max-w-md flex-col items-center gap-3 rounded-xl bg-blue-50 p-5">
-    <div class="flex w-full gap-2">
+    <div class="flex w-full flex-col gap-2 sm:flex-row">
       <input
         type="text"
         bind:value={newLabel}
         placeholder="Label (e.g. name)"
-        class="flex-1 rounded-lg border border-blue-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+        class="min-w-0 flex-1 rounded-lg border border-blue-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
       />
       <input
         type="text"
         bind:value={newValue}
         placeholder="Value (e.g. Alice)"
-        class="flex-1 rounded-lg border border-blue-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+        class="min-w-0 flex-1 rounded-lg border border-blue-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
       />
     </div>
     <button

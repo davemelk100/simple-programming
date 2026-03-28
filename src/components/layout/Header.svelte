@@ -38,20 +38,20 @@
 </script>
 
 <header class="border-b border-slate-200 bg-white shadow-sm">
-  <div class="mx-auto flex items-center justify-between px-4 py-3">
+  <div class="mx-auto flex flex-wrap items-center justify-between gap-2 px-4 py-3">
     <a
       href="/"
-      class="text-4xl font-bold text-slate-900 no-underline hover:text-indigo-600"
+      class="text-2xl font-bold text-slate-900 no-underline hover:text-indigo-600 sm:text-4xl"
       style="font-family: 'Permanent Marker', cursive;"
     >
       Programming Is Easy
     </a>
 
-    <div class="flex items-center gap-4">
+    <div class="flex items-center gap-2 sm:gap-4">
       <!-- Mode toggle -->
       <button
         onclick={() => toggleAdvanced()}
-        class="flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors
+        class="flex items-center gap-1.5 rounded-full border px-2 py-1 text-sm font-medium transition-colors sm:gap-2 sm:px-3 sm:py-1.5
           {advanced ? 'border-indigo-300 bg-indigo-50 text-indigo-700' : 'border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100'}"
       >
         <span class="text-xs">{advanced ? 'Advanced' : 'Basic'}</span>
@@ -76,13 +76,17 @@
           {signingOut ? "Signing out..." : "Sign Out"}
         </button>
       {:else}
+        <span class="hidden text-sm text-slate-400 lg:inline">Sign in to track your progress across lessons.</span>
         <a
           href="/auth/login"
-          class="rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white no-underline hover:bg-indigo-700"
+          class="rounded-lg bg-indigo-600 px-2.5 py-1 text-sm font-medium text-white no-underline hover:bg-indigo-700 sm:px-3 sm:py-1.5"
         >
           Sign In
         </a>
       {/if}
     </div>
+  </div>
+  <div class="hidden px-4 pb-2 sm:block">
+    <p class="text-sm text-slate-400">No jargon. No boring tutorials. Just colorful, interactive lessons that make programming click.</p>
   </div>
 </header>

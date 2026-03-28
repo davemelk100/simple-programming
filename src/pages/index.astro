@@ -2,27 +2,21 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import TopicCard from '../components/ui/TopicCard.svelte';
 import ProgressBar from '../components/ui/ProgressBar.svelte';
+import ArchitectureDiagram from '../components/ui/ArchitectureDiagram.svelte';
 import { topics } from '../lib/topics';
 ---
 
 <BaseLayout title="Simple Programming - Learn the Visual Way">
   <!-- Hero -->
   <section class="mb-8 lg:mb-12">
-    <h1 class="mb-2 text-3xl font-black text-slate-800 sm:text-4xl lg:text-5xl">
-      Learn Programming<br />
-      <span class="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-        the Visual Way
-      </span>
+    <h1 class="text-3xl font-black text-slate-800">
+      Learn Programming <span class="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">the Visual Way</span>
     </h1>
-    <p class="max-w-lg text-lg text-slate-500">
-      No jargon. No boring tutorials. Just colorful, interactive lessons that make programming click.
-    </p>
+  </section>
 
-    <div id="auth-hint" class="mt-3">
-      <p class="text-sm text-slate-500">
-        Sign in to track your progress across lessons.
-      </p>
-    </div>
+  <!-- Architecture diagram -->
+  <section class="mb-10">
+    <ArchitectureDiagram client:visible />
   </section>
 
   <!-- Progress bar (filled by client-side JS if logged in) -->
@@ -32,16 +26,10 @@ import { topics } from '../lib/topics';
 
   <!-- Topic grid -->
   <section>
-    <h2 class="mb-6 text-xl font-bold text-slate-700">Choose a Topic</h2>
     <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
       {topics.map((topic) => (
         <TopicCard client:load topic={topic} completed={false} />
       ))}
     </div>
   </section>
-
-  <!-- Footer spacer -->
-  <div class="mt-6 text-sm text-slate-500">
-    <p>7 topics, 21 interactive lessons. Start anywhere!</p>
-  </div>
 </BaseLayout>

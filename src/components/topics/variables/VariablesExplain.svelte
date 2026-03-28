@@ -45,7 +45,7 @@
     </p>
   </div>
 
-  <div class="flex items-start justify-evenly">
+  <div class="flex flex-wrap items-start justify-center gap-6 sm:justify-evenly sm:gap-0">
     {#each boxes as box, i}
       <div
         class="flex flex-col items-center gap-2 transition-all duration-700

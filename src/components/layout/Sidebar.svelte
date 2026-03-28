@@ -1,5 +1,8 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { topics, oopTopics } from '../../lib/topics';
+  import { syntaxStyles } from '../../lib/syntax-styles';
+  import { principles } from '../../lib/principles';
 
   interface Props {
     currentPath?: string;
@@ -20,36 +23,168 @@
   function isActive(slug: string): boolean {
     return currentPath.replace(/\/$/, '') === `/topics/${slug}`;
   }
+
+  const STORAGE_KEY = 'sidebar-collapsed';
+
+  type SectionKey = 'basics' | 'blocks' | 'syntax' | 'principles' | 'languages';
+
+  let collapsed = $state<Record<SectionKey, boolean>>({
+    basics: false,
+    blocks: false,
+    syntax: false,
+    principles: false,
+    languages: false,
+  });
+
+  onMount(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) collapsed = { ...collapsed, ...JSON.parse(stored) };
+    } catch {}
+  });
+
+  function toggle(key: SectionKey) {
+    collapsed[key] = !collapsed[key];
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(collapsed)); } catch {}
+  }
 </script>
 
 <nav class="flex h-full w-64 shrink-0 flex-col gap-1 overflow-y-auto border-r border-slate-200 bg-white px-4 py-5">
-  <span class="mb-2 px-2 text-sm font-semibold uppercase tracking-wider text-slate-500" style="font-family: 'Permanent Marker', cursive;">Basics</span>
-  {#each topics as topic}
-    {@const active = isActive(topic.slug)}
-    {@const colors = colorMap[topic.color]}
-    <a
-      href={`/topics/${topic.slug}`}
-      class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-light no-underline transition-colors {active ? `${colors?.active} font-medium` : `text-slate-600 ${colors?.hover ?? 'hover:bg-slate-50'}`}"
-      aria-current={active ? 'page' : undefined}
-    >
-      <span class="text-base">{topic.icon}</span>
-      {topic.title}
-    </a>
-  {/each}
+  <!-- Basics -->
+  <button
+    onclick={() => toggle('basics')}
+    class="mb-1 flex w-full cursor-pointer items-center justify-between px-2"
+  >
+    <span class="text-sm font-semibold uppercase tracking-wider text-slate-500" style="font-family: 'Permanent Marker', cursive;">Basics</span>
+    <svg class="h-4 w-4 text-slate-400 transition-transform duration-200 {collapsed.basics ? '-rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+    </svg>
+  </button>
+  {#if !collapsed.basics}
+    {#each topics as topic}
+      {@const active = isActive(topic.slug)}
+      {@const colors = colorMap[topic.color]}
+      <a
+        href={`/topics/${topic.slug}`}
+        class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-light no-underline transition-colors {active ? `${colors?.active} font-medium` : `text-slate-600 ${colors?.hover ?? 'hover:bg-slate-50'}`}"
+        aria-current={active ? 'page' : undefined}
+      >
+        <span class="text-base">{topic.icon}</span>
+        {topic.title}
+      </a>
+    {/each}
+  {/if}
 
   <hr class="my-3 border-slate-200" />
 
-  <span class="mb-2 px-2 text-sm font-semibold uppercase tracking-wider text-slate-500" style="font-family: 'Permanent Marker', cursive;">Building Blocks</span>
-  {#each oopTopics as topic}
-    {@const active = isActive(topic.slug)}
-    {@const colors = colorMap[topic.color]}
-    <a
-      href={`/topics/${topic.slug}`}
-      class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-light no-underline transition-colors {active ? `${colors?.active} font-medium` : `text-slate-600 ${colors?.hover ?? 'hover:bg-slate-50'}`}"
-      aria-current={active ? 'page' : undefined}
-    >
-      <span class="text-base">{topic.icon}</span>
-      {topic.title}
-    </a>
-  {/each}
+  <!-- Building Blocks -->
+  <button
+    onclick={() => toggle('blocks')}
+    class="mb-1 flex w-full cursor-pointer items-center justify-between px-2"
+  >
+    <span class="text-sm font-semibold uppercase tracking-wider text-slate-500" style="font-family: 'Permanent Marker', cursive;">Building Blocks</span>
+    <svg class="h-4 w-4 text-slate-400 transition-transform duration-200 {collapsed.blocks ? '-rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+    </svg>
+  </button>
+  {#if !collapsed.blocks}
+    {#each oopTopics as topic}
+      {@const active = isActive(topic.slug)}
+      {@const colors = colorMap[topic.color]}
+      <a
+        href={`/topics/${topic.slug}`}
+        class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-light no-underline transition-colors {active ? `${colors?.active} font-medium` : `text-slate-600 ${colors?.hover ?? 'hover:bg-slate-50'}`}"
+        aria-current={active ? 'page' : undefined}
+      >
+        <span class="text-base">{topic.icon}</span>
+        {topic.title}
+      </a>
+    {/each}
+  {/if}
+
+  <hr class="my-3 border-slate-200" />
+
+  <!-- Syntax Styles -->
+  <button
+    onclick={() => toggle('syntax')}
+    class="mb-1 flex w-full cursor-pointer items-center justify-between px-2"
+  >
+    <span class="text-sm font-semibold uppercase tracking-wider text-slate-500" style="font-family: 'Permanent Marker', cursive;">Syntax Styles</span>
+    <svg class="h-4 w-4 text-slate-400 transition-transform duration-200 {collapsed.syntax ? '-rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+    </svg>
+  </button>
+  {#if !collapsed.syntax}
+    {#each syntaxStyles as style}
+      {@const active = currentPath.replace(/\/$/, '') === `/syntax-styles/${style.slug}`}
+      {@const colors = colorMap[style.color]}
+      <a
+        href={`/syntax-styles/${style.slug}`}
+        class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-light no-underline transition-colors {active ? `${colors?.active} font-medium` : `text-slate-600 ${colors?.hover ?? 'hover:bg-slate-50'}`}"
+        aria-current={active ? 'page' : undefined}
+      >
+        <span class="text-base">{style.icon}</span>
+        {style.title}
+      </a>
+    {/each}
+  {/if}
+
+  <hr class="my-3 border-slate-200" />
+
+  <!-- Principles -->
+  <button
+    onclick={() => toggle('principles')}
+    class="mb-1 flex w-full cursor-pointer items-center justify-between px-2"
+  >
+    <span class="text-sm font-semibold uppercase tracking-wider text-slate-500" style="font-family: 'Permanent Marker', cursive;">Principles</span>
+    <svg class="h-4 w-4 text-slate-400 transition-transform duration-200 {collapsed.principles ? '-rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+    </svg>
+  </button>
+  {#if !collapsed.principles}
+    {#each principles as principle}
+      {@const active = currentPath.replace(/\/$/, '') === `/principles/${principle.slug}`}
+      {@const colors = colorMap[principle.color]}
+      <a
+        href={`/principles/${principle.slug}`}
+        class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-light no-underline transition-colors {active ? `${colors?.active} font-medium` : `text-slate-600 ${colors?.hover ?? 'hover:bg-slate-50'}`}"
+        aria-current={active ? 'page' : undefined}
+      >
+        <span class="text-base">{principle.icon}</span>
+        {principle.title}
+      </a>
+    {/each}
+  {/if}
+
+  <hr class="my-3 border-slate-200" />
+
+  <!-- Languages -->
+  <button
+    onclick={() => toggle('languages')}
+    class="mb-1 flex w-full cursor-pointer items-center justify-between px-2"
+  >
+    <span class="text-sm font-semibold uppercase tracking-wider text-slate-500" style="font-family: 'Permanent Marker', cursive;">Languages</span>
+    <svg class="h-4 w-4 text-slate-400 transition-transform duration-200 {collapsed.languages ? '-rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+    </svg>
+  </button>
+  {#if !collapsed.languages}
+    {#each [
+      { slug: 'typescript', icon: '🟦', title: 'TypeScript / JavaScript', color: 'blue' },
+      { slug: 'python', icon: '🐍', title: 'Python', color: 'green' },
+      { slug: 'go', icon: '🐹', title: 'Go', color: 'blue' },
+      { slug: 'csharp', icon: '🟪', title: 'C#', color: 'purple' },
+    ] as lang}
+      {@const active = currentPath.replace(/\/$/, '') === `/languages/${lang.slug}`}
+      {@const colors = colorMap[lang.color]}
+      <a
+        href={`/languages/${lang.slug}`}
+        class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-light no-underline transition-colors {active ? `${colors?.active} font-medium` : `text-slate-600 ${colors?.hover ?? 'hover:bg-slate-50'}`}"
+        aria-current={active ? 'page' : undefined}
+      >
+        <span class="text-base">{lang.icon}</span>
+        {lang.title}
+      </a>
+    {/each}
+  {/if}
 </nav>

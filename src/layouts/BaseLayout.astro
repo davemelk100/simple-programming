@@ -34,7 +34,7 @@ const { title = 'Simple Programming' } = Astro.props;
 
     <div class="flex flex-1">
       <aside class="hidden lg:flex">
-        <Sidebar currentPath={Astro.url.pathname} />
+        <Sidebar client:load currentPath={Astro.url.pathname} />
       </aside>
 
       <main class="w-full flex-1 px-6 py-6 lg:px-12 lg:py-8">
