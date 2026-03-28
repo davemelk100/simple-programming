@@ -39,7 +39,7 @@
 
   <hr class="my-3 border-slate-200" />
 
-  <span class="mb-2 px-2 text-sm font-semibold uppercase tracking-wider text-slate-500" style="font-family: 'Permanent Marker', cursive;">Object-Oriented</span>
+  <span class="mb-2 px-2 text-sm font-semibold uppercase tracking-wider text-slate-500" style="font-family: 'Permanent Marker', cursive;">Building Blocks</span>
   {#each oopTopics as topic}
     {@const active = isActive(topic.slug)}
     {@const colors = colorMap[topic.color]}
