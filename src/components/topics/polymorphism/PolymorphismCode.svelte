@@ -1,11 +1,20 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
+  import { getAdvanced, onAdvancedChange } from '../../../lib/mode';
+
   interface Props {
     oncomplete?: (score?: number) => void;
   }
 
   let { oncomplete }: Props = $props();
+  let advanced = $state(false);
+  onMount(() => {
+    advanced = getAdvanced();
+    return onAdvancedChange((v) => (advanced = v));
+  });
 </script>
 
+{#if !advanced}
 <div class="space-y-6">
   <div>
     <h2 class="mb-3 text-xl font-bold text-slate-800">Polymorphism in Code</h2>
@@ -139,6 +148,126 @@
     </button>
   </div>
 </div>
+
+{:else}
+
+<div class="space-y-6">
+  <div>
+    <h2 class="mb-3 text-xl font-bold text-slate-800">Advanced Polymorphism Patterns</h2>
+    <p class="text-sm text-slate-600">Interface-based dispatch, generics with constraints, overloading, and discriminated unions in TypeScript.</p>
+  </div>
+
+  <!-- 1: Interface-based polymorphism with multiple implementations -->
+  <div>
+    <h3 class="mb-2 text-sm font-semibold text-slate-500">Interface-Based Polymorphism</h3>
+    <pre class="code-block"><code>{@html `<span class="comment">// A single interface, multiple implementations</span>
+<span class="keyword">interface</span> <span class="variable">Serializer</span> <span class="punctuation">{</span>
+  <span class="variable">serialize</span><span class="punctuation">(</span><span class="variable">data</span><span class="punctuation">:</span> <span class="variable">unknown</span><span class="punctuation">):</span> <span class="variable">string</span><span class="punctuation">;</span>
+  <span class="variable">deserialize</span><span class="punctuation">(</span><span class="variable">raw</span><span class="punctuation">:</span> <span class="variable">string</span><span class="punctuation">):</span> <span class="variable">unknown</span><span class="punctuation">;</span>
+<span class="punctuation">}</span>
+
+<span class="keyword">class</span> <span class="variable">JsonSerializer</span> <span class="keyword">implements</span> <span class="variable">Serializer</span> <span class="punctuation">{</span>
+  <span class="variable">serialize</span><span class="punctuation">(</span><span class="variable">data</span><span class="punctuation">:</span> <span class="variable">unknown</span><span class="punctuation">)</span> <span class="punctuation">{</span>
+    <span class="keyword">return</span> <span class="variable">JSON</span><span class="punctuation">.</span><span class="variable">stringify</span><span class="punctuation">(</span><span class="variable">data</span><span class="punctuation">);</span>
+  <span class="punctuation">}</span>
+  <span class="variable">deserialize</span><span class="punctuation">(</span><span class="variable">raw</span><span class="punctuation">:</span> <span class="variable">string</span><span class="punctuation">)</span> <span class="punctuation">{</span>
+    <span class="keyword">return</span> <span class="variable">JSON</span><span class="punctuation">.</span><span class="variable">parse</span><span class="punctuation">(</span><span class="variable">raw</span><span class="punctuation">);</span>
+  <span class="punctuation">}</span>
+<span class="punctuation">}</span>
+
+<span class="keyword">class</span> <span class="variable">CsvSerializer</span> <span class="keyword">implements</span> <span class="variable">Serializer</span> <span class="punctuation">{</span>
+  <span class="variable">serialize</span><span class="punctuation">(</span><span class="variable">data</span><span class="punctuation">:</span> <span class="variable">unknown</span><span class="punctuation">)</span> <span class="punctuation">{</span>
+    <span class="keyword">const</span> <span class="variable">arr</span> <span class="punctuation">=</span> <span class="variable">data</span> <span class="keyword">as</span> <span class="variable">string</span><span class="punctuation">[][];</span>
+    <span class="keyword">return</span> <span class="variable">arr</span><span class="punctuation">.</span><span class="variable">map</span><span class="punctuation">(</span><span class="variable">r</span> <span class="punctuation">=></span> <span class="variable">r</span><span class="punctuation">.</span><span class="variable">join</span><span class="punctuation">(</span><span class="string">","</span><span class="punctuation">)).</span><span class="variable">join</span><span class="punctuation">(</span><span class="string">"\\n"</span><span class="punctuation">);</span>
+  <span class="punctuation">}</span>
+  <span class="variable">deserialize</span><span class="punctuation">(</span><span class="variable">raw</span><span class="punctuation">:</span> <span class="variable">string</span><span class="punctuation">)</span> <span class="punctuation">{</span>
+    <span class="keyword">return</span> <span class="variable">raw</span><span class="punctuation">.</span><span class="variable">split</span><span class="punctuation">(</span><span class="string">"\\n"</span><span class="punctuation">).</span><span class="variable">map</span><span class="punctuation">(</span><span class="variable">l</span> <span class="punctuation">=></span> <span class="variable">l</span><span class="punctuation">.</span><span class="variable">split</span><span class="punctuation">(</span><span class="string">","</span><span class="punctuation">));</span>
+  <span class="punctuation">}</span>
+<span class="punctuation">}</span>
+
+<span class="comment">// Consumer doesn't care which implementation</span>
+<span class="keyword">function</span> <span class="variable">save</span><span class="punctuation">(</span><span class="variable">s</span><span class="punctuation">:</span> <span class="variable">Serializer</span><span class="punctuation">,</span> <span class="variable">data</span><span class="punctuation">:</span> <span class="variable">unknown</span><span class="punctuation">)</span> <span class="punctuation">{</span>
+  <span class="keyword">return</span> <span class="variable">s</span><span class="punctuation">.</span><span class="variable">serialize</span><span class="punctuation">(</span><span class="variable">data</span><span class="punctuation">);</span>
+<span class="punctuation">}</span>`}</code></pre>
+  </div>
+
+  <!-- 2: Generic functions and classes with constraints -->
+  <div>
+    <h3 class="mb-2 text-sm font-semibold text-slate-500">Generics with Constraints</h3>
+    <pre class="code-block"><code>{@html `<span class="comment">// Generic function constrained to types with .length</span>
+<span class="keyword">function</span> <span class="variable">longest</span><span class="punctuation">&lt;</span><span class="variable">T</span> <span class="keyword">extends</span> <span class="punctuation">{</span> <span class="variable">length</span><span class="punctuation">:</span> <span class="variable">number</span> <span class="punctuation">}&gt;(</span>
+  <span class="variable">a</span><span class="punctuation">:</span> <span class="variable">T</span><span class="punctuation">,</span> <span class="variable">b</span><span class="punctuation">:</span> <span class="variable">T</span>
+<span class="punctuation">):</span> <span class="variable">T</span> <span class="punctuation">{</span>
+  <span class="keyword">return</span> <span class="variable">a</span><span class="punctuation">.</span><span class="variable">length</span> <span class="punctuation">>=</span> <span class="variable">b</span><span class="punctuation">.</span><span class="variable">length</span> <span class="punctuation">?</span> <span class="variable">a</span> <span class="punctuation">:</span> <span class="variable">b</span><span class="punctuation">;</span>
+<span class="punctuation">}</span>
+
+<span class="variable">longest</span><span class="punctuation">(</span><span class="string">"hello"</span><span class="punctuation">,</span> <span class="string">"world!"</span><span class="punctuation">);</span> <span class="comment">// "world!"</span>
+<span class="variable">longest</span><span class="punctuation">([</span><span class="string">1</span><span class="punctuation">,</span> <span class="string">2</span><span class="punctuation">],</span> <span class="punctuation">[</span><span class="string">1</span><span class="punctuation">,</span> <span class="string">2</span><span class="punctuation">,</span> <span class="string">3</span><span class="punctuation">]);</span>  <span class="comment">// [1, 2, 3]</span>
+
+<span class="comment">// Generic class with constraint</span>
+<span class="keyword">class</span> <span class="variable">Repository</span><span class="punctuation">&lt;</span><span class="variable">T</span> <span class="keyword">extends</span> <span class="punctuation">{</span> <span class="variable">id</span><span class="punctuation">:</span> <span class="variable">string</span> <span class="punctuation">}&gt;</span> <span class="punctuation">{</span>
+  <span class="keyword">private</span> <span class="variable">items</span> <span class="punctuation">=</span> <span class="keyword">new</span> <span class="variable">Map</span><span class="punctuation">&lt;</span><span class="variable">string</span><span class="punctuation">,</span> <span class="variable">T</span><span class="punctuation">&gt;();</span>
+  <span class="variable">add</span><span class="punctuation">(</span><span class="variable">item</span><span class="punctuation">:</span> <span class="variable">T</span><span class="punctuation">)</span> <span class="punctuation">{</span> <span class="keyword">this</span><span class="punctuation">.</span><span class="variable">items</span><span class="punctuation">.</span><span class="variable">set</span><span class="punctuation">(</span><span class="variable">item</span><span class="punctuation">.</span><span class="variable">id</span><span class="punctuation">,</span> <span class="variable">item</span><span class="punctuation">);</span> <span class="punctuation">}</span>
+  <span class="variable">get</span><span class="punctuation">(</span><span class="variable">id</span><span class="punctuation">:</span> <span class="variable">string</span><span class="punctuation">):</span> <span class="variable">T</span> <span class="punctuation">|</span> <span class="variable">undefined</span> <span class="punctuation">{</span>
+    <span class="keyword">return</span> <span class="keyword">this</span><span class="punctuation">.</span><span class="variable">items</span><span class="punctuation">.</span><span class="variable">get</span><span class="punctuation">(</span><span class="variable">id</span><span class="punctuation">);</span>
+  <span class="punctuation">}</span>
+<span class="punctuation">}</span>`}</code></pre>
+  </div>
+
+  <!-- 3: Method overloading in TypeScript -->
+  <div>
+    <h3 class="mb-2 text-sm font-semibold text-slate-500">Method Overloading (Ad-Hoc Polymorphism)</h3>
+    <pre class="code-block"><code>{@html `<span class="comment">// Overload signatures</span>
+<span class="keyword">function</span> <span class="variable">format</span><span class="punctuation">(</span><span class="variable">value</span><span class="punctuation">:</span> <span class="variable">string</span><span class="punctuation">):</span> <span class="variable">string</span><span class="punctuation">;</span>
+<span class="keyword">function</span> <span class="variable">format</span><span class="punctuation">(</span><span class="variable">value</span><span class="punctuation">:</span> <span class="variable">number</span><span class="punctuation">):</span> <span class="variable">string</span><span class="punctuation">;</span>
+<span class="keyword">function</span> <span class="variable">format</span><span class="punctuation">(</span><span class="variable">value</span><span class="punctuation">:</span> <span class="variable">Date</span><span class="punctuation">):</span> <span class="variable">string</span><span class="punctuation">;</span>
+
+<span class="comment">// Implementation signature</span>
+<span class="keyword">function</span> <span class="variable">format</span><span class="punctuation">(</span><span class="variable">value</span><span class="punctuation">:</span> <span class="variable">string</span> <span class="punctuation">|</span> <span class="variable">number</span> <span class="punctuation">|</span> <span class="variable">Date</span><span class="punctuation">):</span> <span class="variable">string</span> <span class="punctuation">{</span>
+  <span class="keyword">if</span> <span class="punctuation">(</span><span class="keyword">typeof</span> <span class="variable">value</span> <span class="punctuation">===</span> <span class="string">"string"</span><span class="punctuation">)</span>
+    <span class="keyword">return</span> <span class="variable">value</span><span class="punctuation">.</span><span class="variable">toUpperCase</span><span class="punctuation">();</span>
+  <span class="keyword">if</span> <span class="punctuation">(</span><span class="keyword">typeof</span> <span class="variable">value</span> <span class="punctuation">===</span> <span class="string">"number"</span><span class="punctuation">)</span>
+    <span class="keyword">return</span> <span class="variable">value</span><span class="punctuation">.</span><span class="variable">toFixed</span><span class="punctuation">(</span><span class="string">2</span><span class="punctuation">);</span>
+  <span class="keyword">return</span> <span class="variable">value</span><span class="punctuation">.</span><span class="variable">toISOString</span><span class="punctuation">();</span>
+<span class="punctuation">}</span>
+
+<span class="variable">format</span><span class="punctuation">(</span><span class="string">"hello"</span><span class="punctuation">);</span>   <span class="comment">// "HELLO"</span>
+<span class="variable">format</span><span class="punctuation">(</span><span class="string">3.14159</span><span class="punctuation">);</span>  <span class="comment">// "3.14"</span>
+<span class="variable">format</span><span class="punctuation">(</span><span class="keyword">new</span> <span class="variable">Date</span><span class="punctuation">());</span> <span class="comment">// ISO string</span>`}</code></pre>
+  </div>
+
+  <!-- 4: Discriminated unions as compile-time polymorphism -->
+  <div>
+    <h3 class="mb-2 text-sm font-semibold text-slate-500">Discriminated Unions (Compile-Time Polymorphism)</h3>
+    <pre class="code-block"><code>{@html `<span class="keyword">type</span> <span class="variable">Shape</span> <span class="punctuation">=</span>
+  <span class="punctuation">|</span> <span class="punctuation">{</span> <span class="variable">kind</span><span class="punctuation">:</span> <span class="string">"circle"</span><span class="punctuation">;</span>    <span class="variable">radius</span><span class="punctuation">:</span> <span class="variable">number</span> <span class="punctuation">}</span>
+  <span class="punctuation">|</span> <span class="punctuation">{</span> <span class="variable">kind</span><span class="punctuation">:</span> <span class="string">"rectangle"</span><span class="punctuation">;</span> <span class="variable">w</span><span class="punctuation">:</span> <span class="variable">number</span><span class="punctuation">;</span> <span class="variable">h</span><span class="punctuation">:</span> <span class="variable">number</span> <span class="punctuation">}</span>
+  <span class="punctuation">|</span> <span class="punctuation">{</span> <span class="variable">kind</span><span class="punctuation">:</span> <span class="string">"triangle"</span><span class="punctuation">;</span>  <span class="variable">base</span><span class="punctuation">:</span> <span class="variable">number</span><span class="punctuation">;</span> <span class="variable">height</span><span class="punctuation">:</span> <span class="variable">number</span> <span class="punctuation">};</span>
+
+<span class="comment">// Exhaustive pattern matching via the discriminant</span>
+<span class="keyword">function</span> <span class="variable">area</span><span class="punctuation">(</span><span class="variable">shape</span><span class="punctuation">:</span> <span class="variable">Shape</span><span class="punctuation">):</span> <span class="variable">number</span> <span class="punctuation">{</span>
+  <span class="keyword">switch</span> <span class="punctuation">(</span><span class="variable">shape</span><span class="punctuation">.</span><span class="variable">kind</span><span class="punctuation">)</span> <span class="punctuation">{</span>
+    <span class="keyword">case</span> <span class="string">"circle"</span><span class="punctuation">:</span>
+      <span class="keyword">return</span> Math<span class="punctuation">.</span>PI <span class="punctuation">*</span> <span class="variable">shape</span><span class="punctuation">.</span><span class="variable">radius</span> <span class="punctuation">**</span> <span class="string">2</span><span class="punctuation">;</span>
+    <span class="keyword">case</span> <span class="string">"rectangle"</span><span class="punctuation">:</span>
+      <span class="keyword">return</span> <span class="variable">shape</span><span class="punctuation">.</span><span class="variable">w</span> <span class="punctuation">*</span> <span class="variable">shape</span><span class="punctuation">.</span><span class="variable">h</span><span class="punctuation">;</span>
+    <span class="keyword">case</span> <span class="string">"triangle"</span><span class="punctuation">:</span>
+      <span class="keyword">return</span> <span class="variable">shape</span><span class="punctuation">.</span><span class="variable">base</span> <span class="punctuation">*</span> <span class="variable">shape</span><span class="punctuation">.</span><span class="variable">height</span> <span class="punctuation">/</span> <span class="string">2</span><span class="punctuation">;</span>
+  <span class="punctuation">}</span>
+<span class="punctuation">}</span>
+
+<span class="comment">// TypeScript narrows the type in each branch</span>
+<span class="comment">// Adding a new variant without handling it causes</span>
+<span class="comment">// a compile-time error (exhaustiveness check)</span>`}</code></pre>
+  </div>
+
+  <div>
+    <button onclick={oncomplete} class="rounded-full bg-orange-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-orange-700 active:scale-95">
+      Got it
+    </button>
+  </div>
+</div>
+{/if}
 
 <style>
   .code-block {

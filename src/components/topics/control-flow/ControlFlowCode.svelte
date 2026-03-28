@@ -1,11 +1,21 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
+  import { getAdvanced, onAdvancedChange } from '../../../lib/mode';
+
   interface Props {
     oncomplete?: () => void;
   }
 
   let { oncomplete }: Props = $props();
+
+  let advanced = $state(false);
+  onMount(() => {
+    advanced = getAdvanced();
+    return onAdvancedChange((v) => (advanced = v));
+  });
 </script>
 
+{#if !advanced}
 <div class="space-y-6">
   <div>
     <h2 class="mb-3 text-xl font-bold text-slate-800">Control Flow in Code</h2>
@@ -67,6 +77,91 @@
     </button>
   </div>
 </div>
+{:else}
+<div class="space-y-6">
+  <div>
+    <h2 class="mb-3 text-xl font-bold text-slate-800">Advanced Control Flow</h2>
+    <p class="text-sm text-slate-600">Beyond if/else: <strong>switch</strong>, <strong>ternary operators</strong>, <strong>optional chaining</strong>, and <strong>guard clauses</strong>.</p>
+  </div>
+
+  <!-- Switch with break and fall-through -->
+  <div>
+    <h3 class="mb-2 text-sm font-semibold text-slate-500">Switch Statements &amp; Fall-Through</h3>
+    <pre class="code-block"><code>{@html `<span class="kw">switch</span> (<span class="var">status</span>) {
+  <span class="kw">case</span> <span class="str">"loading"</span>:
+    <span class="fn">showSpinner</span>();
+    <span class="kw">break</span>;
+  <span class="kw">case</span> <span class="str">"success"</span>:
+    <span class="fn">showData</span>();
+    <span class="kw">break</span>;
+  <span class="kw">case</span> <span class="str">"error"</span>:       <span class="cmt">// fall-through!</span>
+  <span class="kw">case</span> <span class="str">"timeout"</span>:
+    <span class="fn">showError</span>();     <span class="cmt">// handles both error &amp; timeout</span>
+    <span class="kw">break</span>;
+  <span class="kw">default</span>:
+    <span class="fn">showDefault</span>();
+}`}</code></pre>
+  </div>
+
+  <!-- Ternary and nested ternary -->
+  <div>
+    <h3 class="mb-2 text-sm font-semibold text-slate-500">Ternary &amp; Nested Ternary Operators</h3>
+    <pre class="code-block"><code>{@html `<span class="cmt">// Simple ternary</span>
+<span class="kw">const</span> <span class="var">access</span> <span class="op">=</span> <span class="var">age</span> <span class="op">>=</span> <span class="num">18</span> <span class="op">?</span> <span class="str">"allowed"</span> <span class="op">:</span> <span class="str">"denied"</span>;
+
+<span class="cmt">// Nested ternary (use sparingly!)</span>
+<span class="kw">const</span> <span class="var">tier</span> <span class="op">=</span> <span class="var">score</span> <span class="op">>=</span> <span class="num">90</span> <span class="op">?</span> <span class="str">"gold"</span>
+            <span class="op">:</span> <span class="var">score</span> <span class="op">>=</span> <span class="num">70</span> <span class="op">?</span> <span class="str">"silver"</span>
+            <span class="op">:</span> <span class="str">"bronze"</span>;`}</code></pre>
+  </div>
+
+  <!-- Optional chaining as control flow -->
+  <div>
+    <h3 class="mb-2 text-sm font-semibold text-slate-500">Optional Chaining as Control Flow</h3>
+    <pre class="code-block"><code>{@html `<span class="cmt">// Without optional chaining -- crashes if user is null</span>
+<span class="kw">const</span> <span class="var">city</span> <span class="op">=</span> <span class="var">user</span>.<span class="var">address</span>.<span class="var">city</span>;
+
+<span class="cmt">// With optional chaining -- safely returns undefined</span>
+<span class="kw">const</span> <span class="var">city</span> <span class="op">=</span> <span class="var">user</span><span class="op">?.</span><span class="var">address</span><span class="op">?.</span><span class="var">city</span>;
+
+<span class="cmt">// Combined with nullish coalescing for a default</span>
+<span class="kw">const</span> <span class="var">city</span> <span class="op">=</span> <span class="var">user</span><span class="op">?.</span><span class="var">address</span><span class="op">?.</span><span class="var">city</span> <span class="op">??</span> <span class="str">"Unknown"</span>;
+
+<span class="cmt">// Optional method calls</span>
+<span class="var">user</span><span class="op">?.</span><span class="fn">getProfile</span><span class="op">?.</span>();`}</code></pre>
+  </div>
+
+  <!-- Guard clauses and early returns -->
+  <div>
+    <h3 class="mb-2 text-sm font-semibold text-slate-500">Guard Clauses &amp; Early Returns</h3>
+    <pre class="code-block"><code>{@html `<span class="cmt">// Deeply nested (hard to read)</span>
+<span class="kw">function</span> <span class="fn">processOrder</span>(<span class="arg">order</span>) {
+  <span class="kw">if</span> (<span class="var">order</span>) {
+    <span class="kw">if</span> (<span class="var">order</span>.<span class="var">items</span>.<span class="var">length</span> <span class="op">></span> <span class="num">0</span>) {
+      <span class="kw">if</span> (<span class="var">order</span>.<span class="var">isPaid</span>) {
+        <span class="fn">ship</span>(<span class="var">order</span>);
+      }
+    }
+  }
+}
+
+<span class="cmt">// Guard clauses (clean &amp; flat)</span>
+<span class="kw">function</span> <span class="fn">processOrder</span>(<span class="arg">order</span>) {
+  <span class="kw">if</span> (<span class="op">!</span><span class="var">order</span>) <span class="kw">return</span>;
+  <span class="kw">if</span> (<span class="var">order</span>.<span class="var">items</span>.<span class="var">length</span> <span class="op">===</span> <span class="num">0</span>) <span class="kw">return</span>;
+  <span class="kw">if</span> (<span class="op">!</span><span class="var">order</span>.<span class="var">isPaid</span>) <span class="kw">return</span>;
+
+  <span class="fn">ship</span>(<span class="var">order</span>);
+}`}</code></pre>
+  </div>
+
+  <div>
+    <button onclick={oncomplete} class="rounded-full bg-orange-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-orange-700 active:scale-95">
+      Got it
+    </button>
+  </div>
+</div>
+{/if}
 
 <style>
   .code-block {
@@ -85,4 +180,5 @@
   .code-block :global(.cmt) { color: #475569; }
   .code-block :global(.fn)  { color: #93c5fd; }
   .code-block :global(.arg) { color: #fdba74; }
+  .code-block :global(.op)  { color: #67e8f9; }
 </style>

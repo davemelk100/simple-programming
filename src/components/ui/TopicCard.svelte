@@ -23,7 +23,7 @@
 
 <a
   href={`/topics/${topic.slug}`}
-  class="group relative block rounded-xl border-l-4 bg-white p-4 lg:p-5 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg {colors.border}"
+  class="group relative block rounded-xl border-l-4 bg-white p-5 lg:p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg {colors.border}"
 >
   {#if completed}
     <div class="absolute top-3 right-3 flex h-7 w-7 items-center justify-center rounded-full bg-green-500 text-white shadow-sm">

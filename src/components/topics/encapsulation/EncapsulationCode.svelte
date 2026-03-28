@@ -1,11 +1,21 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
+  import { getAdvanced, onAdvancedChange } from '../../../lib/mode';
+
   interface Props {
     oncomplete?: (score?: number) => void;
   }
 
   let { oncomplete }: Props = $props();
+
+  let advanced = $state(false);
+  onMount(() => {
+    advanced = getAdvanced();
+    return onAdvancedChange((v) => (advanced = v));
+  });
 </script>
 
+{#if !advanced}
 <div class="space-y-6">
   <div>
     <h2 class="mb-3 text-xl font-bold text-slate-800">Encapsulation in Code</h2>
@@ -123,6 +133,133 @@
     </button>
   </div>
 </div>
+
+{:else}
+
+<div class="space-y-6">
+  <div>
+    <h2 class="mb-3 text-xl font-bold text-slate-800">Encapsulation in Code (Advanced)</h2>
+    <p class="text-sm text-slate-600">TypeScript access modifiers, private class fields, readonly patterns, and information hiding with interfaces.</p>
+  </div>
+
+  <!-- TypeScript access modifiers -->
+  <div>
+    <h3 class="mb-2 text-sm font-semibold text-slate-500">TypeScript: private, protected, public</h3>
+    <pre class="code-block"><code>{@html `<span class="keyword">class</span> <span class="variable">BankAccount</span> <span class="punctuation">{</span>
+  <span class="keyword">private</span> <span class="variable">balance</span>: <span class="variable">number</span>;
+  <span class="keyword">protected</span> <span class="variable">owner</span>: <span class="variable">string</span>;
+  <span class="keyword">public</span> <span class="variable">id</span>: <span class="variable">string</span>;
+
+  <span class="keyword">constructor</span>(<span class="variable">owner</span>: <span class="variable">string</span>, <span class="variable">initial</span>: <span class="variable">number</span>) <span class="punctuation">{</span>
+    <span class="keyword">this</span>.<span class="variable">balance</span> = <span class="variable">initial</span>;
+    <span class="keyword">this</span>.<span class="variable">owner</span> = <span class="variable">owner</span>;
+    <span class="keyword">this</span>.<span class="variable">id</span> = <span class="variable">crypto</span>.<span class="variable">randomUUID</span>();
+  <span class="punctuation">}</span>
+<span class="punctuation">}</span>
+
+<span class="keyword">class</span> <span class="variable">SavingsAccount</span> <span class="keyword">extends</span> <span class="variable">BankAccount</span> <span class="punctuation">{</span>
+  <span class="variable">showOwner</span>() <span class="punctuation">{</span>
+    <span class="keyword">return</span> <span class="keyword">this</span>.<span class="variable">owner</span>;    <span class="comment">// OK -- protected</span>
+  <span class="punctuation">}</span>
+  <span class="variable">showBalance</span>() <span class="punctuation">{</span>
+    <span class="keyword">return</span> <span class="keyword">this</span>.<span class="variable">balance</span>;  <span class="comment">// ERROR -- private</span>
+  <span class="punctuation">}</span>
+<span class="punctuation">}</span>`}</code></pre>
+  </div>
+
+  <!-- Private class fields (#) -->
+  <div>
+    <h3 class="mb-2 text-sm font-semibold text-slate-500">Private Class Fields (# syntax)</h3>
+    <pre class="code-block"><code>{@html `<span class="keyword">class</span> <span class="variable">Wallet</span> <span class="punctuation">{</span>
+  <span class="keyword">#</span><span class="variable">funds</span>: <span class="variable">number</span> = <span class="string">0</span>;
+  <span class="keyword">#</span><span class="variable">history</span>: <span class="variable">string</span>[] = [];
+
+  <span class="variable">deposit</span>(<span class="variable">amount</span>: <span class="variable">number</span>) <span class="punctuation">{</span>
+    <span class="keyword">if</span> (<span class="variable">amount</span> &lt;= <span class="string">0</span>) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="variable">Error</span>(<span class="string">"Invalid"</span>);
+    <span class="keyword">this</span>.<span class="keyword">#</span><span class="variable">funds</span> += <span class="variable">amount</span>;
+    <span class="keyword">this</span>.<span class="keyword">#</span><span class="variable">history</span>.<span class="variable">push</span>(<span class="string">\`+\${amount}\`</span>);
+  <span class="punctuation">}</span>
+
+  <span class="keyword">get</span> <span class="variable">balance</span>() <span class="punctuation">{</span> <span class="keyword">return</span> <span class="keyword">this</span>.<span class="keyword">#</span><span class="variable">funds</span>; <span class="punctuation">}</span>
+<span class="punctuation">}</span>
+
+<span class="keyword">const</span> <span class="variable">w</span> = <span class="keyword">new</span> <span class="variable">Wallet</span>();
+<span class="variable">w</span>.<span class="variable">deposit</span>(<span class="string">100</span>);
+<span class="variable">w</span>.<span class="variable">balance</span>;      <span class="comment">// 100</span>
+<span class="variable">w</span>.<span class="keyword">#</span><span class="variable">funds</span>;       <span class="comment">// SyntaxError at runtime</span>`}</code></pre>
+  </div>
+
+  <!-- Readonly properties and immutable patterns -->
+  <div>
+    <h3 class="mb-2 text-sm font-semibold text-slate-500">Readonly Properties and Immutable Patterns</h3>
+    <pre class="code-block"><code>{@html `<span class="keyword">class</span> <span class="variable">Config</span> <span class="punctuation">{</span>
+  <span class="keyword">readonly</span> <span class="variable">apiUrl</span>: <span class="variable">string</span>;
+  <span class="keyword">readonly</span> <span class="variable">maxRetries</span>: <span class="variable">number</span>;
+
+  <span class="keyword">constructor</span>(<span class="variable">url</span>: <span class="variable">string</span>, <span class="variable">retries</span>: <span class="variable">number</span>) <span class="punctuation">{</span>
+    <span class="keyword">this</span>.<span class="variable">apiUrl</span> = <span class="variable">url</span>;
+    <span class="keyword">this</span>.<span class="variable">maxRetries</span> = <span class="variable">retries</span>;
+  <span class="punctuation">}</span>
+<span class="punctuation">}</span>
+
+<span class="keyword">const</span> <span class="variable">cfg</span> = <span class="keyword">new</span> <span class="variable">Config</span>(<span class="string">"/api"</span>, <span class="string">3</span>);
+<span class="variable">cfg</span>.<span class="variable">apiUrl</span>;      <span class="comment">// "/api"</span>
+<span class="variable">cfg</span>.<span class="variable">apiUrl</span> = <span class="string">"x"</span>; <span class="comment">// ERROR -- readonly</span>
+
+<span class="comment">// Immutable return pattern</span>
+<span class="keyword">class</span> <span class="variable">Registry</span> <span class="punctuation">{</span>
+  <span class="keyword">private</span> <span class="variable">items</span>: <span class="variable">string</span>[] = [];
+
+  <span class="variable">add</span>(<span class="variable">item</span>: <span class="variable">string</span>) <span class="punctuation">{</span> <span class="keyword">this</span>.<span class="variable">items</span>.<span class="variable">push</span>(<span class="variable">item</span>); <span class="punctuation">}</span>
+
+  <span class="variable">getAll</span>(): <span class="keyword">readonly</span> <span class="variable">string</span>[] <span class="punctuation">{</span>
+    <span class="keyword">return</span> <span class="punctuation">[</span>...<span class="keyword">this</span>.<span class="variable">items</span><span class="punctuation">]</span>; <span class="comment">// defensive copy</span>
+  <span class="punctuation">}</span>
+<span class="punctuation">}</span>`}</code></pre>
+  </div>
+
+  <!-- Information hiding with interfaces -->
+  <div>
+    <h3 class="mb-2 text-sm font-semibold text-slate-500">Information Hiding with Interfaces</h3>
+    <pre class="code-block"><code>{@html `<span class="comment">// Interface exposes only what consumers need</span>
+<span class="keyword">interface</span> <span class="variable">Logger</span> <span class="punctuation">{</span>
+  <span class="variable">log</span>(<span class="variable">msg</span>: <span class="variable">string</span>): <span class="keyword">void</span>;
+  <span class="variable">getLogs</span>(): <span class="keyword">readonly</span> <span class="variable">string</span>[];
+<span class="punctuation">}</span>
+
+<span class="comment">// Implementation hides all internal details</span>
+<span class="keyword">class</span> <span class="variable">FileLogger</span> <span class="keyword">implements</span> <span class="variable">Logger</span> <span class="punctuation">{</span>
+  <span class="keyword">#</span><span class="variable">buffer</span>: <span class="variable">string</span>[] = [];
+  <span class="keyword">#</span><span class="variable">maxSize</span> = <span class="string">1000</span>;
+
+  <span class="variable">log</span>(<span class="variable">msg</span>: <span class="variable">string</span>) <span class="punctuation">{</span>
+    <span class="keyword">if</span> (<span class="keyword">this</span>.<span class="keyword">#</span><span class="variable">buffer</span>.<span class="variable">length</span> >= <span class="keyword">this</span>.<span class="keyword">#</span><span class="variable">maxSize</span>) <span class="punctuation">{</span>
+      <span class="keyword">this</span>.<span class="keyword">#</span><span class="variable">flush</span>();
+    <span class="punctuation">}</span>
+    <span class="keyword">this</span>.<span class="keyword">#</span><span class="variable">buffer</span>.<span class="variable">push</span>(<span class="variable">msg</span>);
+  <span class="punctuation">}</span>
+
+  <span class="variable">getLogs</span>() <span class="punctuation">{</span> <span class="keyword">return</span> <span class="punctuation">[</span>...<span class="keyword">this</span>.<span class="keyword">#</span><span class="variable">buffer</span><span class="punctuation">]</span>; <span class="punctuation">}</span>
+
+  <span class="keyword">#</span><span class="variable">flush</span>() <span class="punctuation">{</span> <span class="keyword">this</span>.<span class="keyword">#</span><span class="variable">buffer</span> = []; <span class="punctuation">}</span>
+<span class="punctuation">}</span>
+
+<span class="comment">// Consumers only see the Logger interface</span>
+<span class="keyword">function</span> <span class="variable">processData</span>(<span class="variable">logger</span>: <span class="variable">Logger</span>) <span class="punctuation">{</span>
+  <span class="variable">logger</span>.<span class="variable">log</span>(<span class="string">"Processing..."</span>);
+  <span class="comment">// logger.#buffer -- impossible!</span>
+  <span class="comment">// logger.#flush() -- impossible!</span>
+<span class="punctuation">}</span>`}</code></pre>
+  </div>
+
+  <div>
+    <button onclick={oncomplete} class="rounded-full bg-green-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-green-700 active:scale-95">
+      Got it
+    </button>
+  </div>
+</div>
+
+{/if}
 
 <style>
   .code-block {

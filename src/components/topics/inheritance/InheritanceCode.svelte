@@ -1,11 +1,20 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
+  import { getAdvanced, onAdvancedChange } from '../../../lib/mode';
+
   interface Props {
     oncomplete?: (score?: number) => void;
   }
 
   let { oncomplete }: Props = $props();
+  let advanced = $state(false);
+  onMount(() => {
+    advanced = getAdvanced();
+    return onAdvancedChange((v) => (advanced = v));
+  });
 </script>
 
+{#if !advanced}
 <div class="space-y-6">
   <div>
     <h2 class="mb-3 text-xl font-bold text-slate-800">Inheritance in Code</h2>
@@ -109,6 +118,147 @@
   </div>
 </div>
 
+{:else}
+
+<div class="space-y-6">
+  <div>
+    <h2 class="mb-3 text-xl font-bold text-slate-800">Inheritance in Code (Advanced)</h2>
+    <p class="text-sm text-slate-600">Method overriding, abstract classes, protected members, and mixins.</p>
+  </div>
+
+  <!-- Method overriding with super calls -->
+  <div>
+    <h3 class="mb-2 text-sm font-semibold uppercase tracking-wider text-slate-500">Method Overriding with super</h3>
+    <pre class="code-block"><code>{@html `<span class="kw">class</span> <span class="fn">Animal</span> {
+  <span class="fn">constructor</span>(<span class="arg">name</span>) {
+    <span class="kw">this</span>.<span class="var">name</span> <span class="op">=</span> <span class="arg">name</span>;
+  }
+  <span class="fn">describe</span>() {
+    <span class="kw">return</span> <span class="str">\`I am \${<span class="kw">this</span>.<span class="var">name</span>}\`</span>;
+  }
+}
+
+<span class="kw">class</span> <span class="fn">Dog</span> <span class="kw">extends</span> <span class="fn">Animal</span> {
+  <span class="fn">constructor</span>(<span class="arg">name</span>, <span class="arg">breed</span>) {
+    <span class="kw">super</span>(<span class="arg">name</span>);          <span class="cmt">// must call super() first</span>
+    <span class="kw">this</span>.<span class="var">breed</span> <span class="op">=</span> <span class="arg">breed</span>;
+  }
+  <span class="fn">describe</span>() {
+    <span class="kw">const</span> <span class="var">base</span> <span class="op">=</span> <span class="kw">super</span>.<span class="fn">describe</span>();  <span class="cmt">// "I am Buddy"</span>
+    <span class="kw">return</span> <span class="str">\`\${<span class="var">base</span>}, a \${<span class="kw">this</span>.<span class="var">breed</span>}\`</span>;
+  }
+}
+
+<span class="kw">const</span> <span class="var">dog</span> <span class="op">=</span> <span class="kw">new</span> <span class="fn">Dog</span>(<span class="str">"Buddy"</span>, <span class="str">"Labrador"</span>);
+<span class="var">dog</span>.<span class="fn">describe</span>(); <span class="cmt">// "I am Buddy, a Labrador"</span>`}</code></pre>
+  </div>
+
+  <!-- Abstract classes and required implementations -->
+  <div>
+    <h3 class="mb-2 text-sm font-semibold uppercase tracking-wider text-slate-500">Abstract Classes &amp; Required Implementations</h3>
+    <pre class="code-block"><code>{@html `<span class="cmt">// Simulate an abstract class in JavaScript</span>
+<span class="kw">class</span> <span class="fn">Shape</span> {
+  <span class="fn">constructor</span>(<span class="arg">color</span>) {
+    <span class="kw">if</span> (<span class="kw">new</span>.<span class="var">target</span> <span class="op">===</span> <span class="fn">Shape</span>) {
+      <span class="kw">throw new</span> <span class="fn">Error</span>(<span class="str">"Cannot instantiate Shape directly"</span>);
+    }
+    <span class="kw">this</span>.<span class="var">color</span> <span class="op">=</span> <span class="arg">color</span>;
+  }
+  <span class="fn">area</span>() {
+    <span class="kw">throw new</span> <span class="fn">Error</span>(<span class="str">"Subclass must implement area()"</span>);
+  }
+}
+
+<span class="kw">class</span> <span class="fn">Circle</span> <span class="kw">extends</span> <span class="fn">Shape</span> {
+  <span class="fn">constructor</span>(<span class="arg">color</span>, <span class="arg">radius</span>) {
+    <span class="kw">super</span>(<span class="arg">color</span>);
+    <span class="kw">this</span>.<span class="var">radius</span> <span class="op">=</span> <span class="arg">radius</span>;
+  }
+  <span class="fn">area</span>() {
+    <span class="kw">return</span> <span class="var">Math</span>.<span class="var">PI</span> <span class="op">*</span> <span class="kw">this</span>.<span class="var">radius</span> <span class="op">**</span> <span class="num">2</span>;
+  }
+}
+
+<span class="kw">new</span> <span class="fn">Shape</span>(<span class="str">"red"</span>);       <span class="cmt">// Error!</span>
+<span class="kw">new</span> <span class="fn">Circle</span>(<span class="str">"red"</span>, <span class="num">5</span>);  <span class="cmt">// OK &mdash; area() = 78.54</span>`}</code></pre>
+  </div>
+
+  <!-- Protected members and inheritance chains -->
+  <div>
+    <h3 class="mb-2 text-sm font-semibold uppercase tracking-wider text-slate-500">Protected Members &amp; Inheritance Chains</h3>
+    <pre class="code-block"><code>{@html `<span class="cmt">// Convention: _prefix marks "protected" members</span>
+<span class="kw">class</span> <span class="fn">Account</span> {
+  <span class="var">_balance</span> <span class="op">=</span> <span class="num">0</span>;  <span class="cmt">// intended for subclasses only</span>
+
+  <span class="fn">deposit</span>(<span class="arg">amount</span>) {
+    <span class="kw">this</span>.<span class="var">_balance</span> <span class="op">+=</span> <span class="arg">amount</span>;
+  }
+  <span class="kw">get</span> <span class="fn">balance</span>() {
+    <span class="kw">return</span> <span class="kw">this</span>.<span class="var">_balance</span>;
+  }
+}
+
+<span class="kw">class</span> <span class="fn">SavingsAccount</span> <span class="kw">extends</span> <span class="fn">Account</span> {
+  <span class="var">_interestRate</span>;
+
+  <span class="fn">constructor</span>(<span class="arg">rate</span>) {
+    <span class="kw">super</span>();
+    <span class="kw">this</span>.<span class="var">_interestRate</span> <span class="op">=</span> <span class="arg">rate</span>;
+  }
+  <span class="fn">applyInterest</span>() {
+    <span class="cmt">// Access parent's protected _balance</span>
+    <span class="kw">this</span>.<span class="var">_balance</span> <span class="op">*=</span> <span class="num">1</span> <span class="op">+</span> <span class="kw">this</span>.<span class="var">_interestRate</span>;
+  }
+}
+
+<span class="kw">class</span> <span class="fn">HighYieldSavings</span> <span class="kw">extends</span> <span class="fn">SavingsAccount</span> {
+  <span class="fn">constructor</span>() { <span class="kw">super</span>(<span class="num">0.05</span>); }  <span class="cmt">// 5% rate</span>
+  <span class="fn">applyInterest</span>() {
+    <span class="kw">super</span>.<span class="fn">applyInterest</span>();         <span class="cmt">// chain up</span>
+    <span class="kw">this</span>.<span class="var">_balance</span> <span class="op">+=</span> <span class="num">10</span>;           <span class="cmt">// bonus</span>
+  }
+}`}</code></pre>
+  </div>
+
+  <!-- Mixins as alternative to multiple inheritance -->
+  <div>
+    <h3 class="mb-2 text-sm font-semibold uppercase tracking-wider text-slate-500">Mixins &mdash; Alternative to Multiple Inheritance</h3>
+    <pre class="code-block"><code>{@html `<span class="cmt">// JS has single inheritance, but mixins add behavior</span>
+<span class="kw">const</span> <span class="fn">Serializable</span> <span class="op">=</span> (<span class="arg">Base</span>) <span class="op">=></span> <span class="kw">class extends</span> <span class="arg">Base</span> {
+  <span class="fn">toJSON</span>() {
+    <span class="kw">return</span> <span class="var">JSON</span>.<span class="fn">stringify</span>(<span class="kw">this</span>);
+  }
+};
+
+<span class="kw">const</span> <span class="fn">Loggable</span> <span class="op">=</span> (<span class="arg">Base</span>) <span class="op">=></span> <span class="kw">class extends</span> <span class="arg">Base</span> {
+  <span class="fn">log</span>() {
+    <span class="var">console</span>.<span class="fn">log</span>(<span class="str">\`[\${<span class="kw">this</span>.<span class="var">constructor</span>.<span class="var">name</span>}]\`</span>, <span class="kw">this</span>);
+  }
+};
+
+<span class="cmt">// Compose multiple mixins onto a base class</span>
+<span class="kw">class</span> <span class="fn">User</span> <span class="kw">extends</span> <span class="fn">Serializable</span>(<span class="fn">Loggable</span>(<span class="fn">Account</span>)) {
+  <span class="fn">constructor</span>(<span class="arg">name</span>) {
+    <span class="kw">super</span>();
+    <span class="kw">this</span>.<span class="var">name</span> <span class="op">=</span> <span class="arg">name</span>;
+  }
+}
+
+<span class="kw">const</span> <span class="var">u</span> <span class="op">=</span> <span class="kw">new</span> <span class="fn">User</span>(<span class="str">"Alice"</span>);
+<span class="var">u</span>.<span class="fn">deposit</span>(<span class="num">100</span>);  <span class="cmt">// from Account</span>
+<span class="var">u</span>.<span class="fn">log</span>();         <span class="cmt">// from Loggable</span>
+<span class="var">u</span>.<span class="fn">toJSON</span>();      <span class="cmt">// from Serializable</span>`}</code></pre>
+  </div>
+
+  <div>
+    <button onclick={oncomplete} class="rounded-full bg-purple-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-purple-700 active:scale-95">
+      Got it
+    </button>
+  </div>
+</div>
+
+{/if}
+
 <style>
   .code-block {
     background-color: #0f172a;
@@ -124,4 +274,12 @@
   .code-block :global(.string)      { color: #86efac; }
   .code-block :global(.comment)     { color: #64748b; }
   .code-block :global(.punctuation) { color: #fde047; }
+  .code-block :global(.kw)  { color: #c084fc; }
+  .code-block :global(.var) { color: #93c5fd; }
+  .code-block :global(.str) { color: #fcd34d; }
+  .code-block :global(.num) { color: #fcd34d; }
+  .code-block :global(.cmt) { color: #475569; }
+  .code-block :global(.fn)  { color: #93c5fd; }
+  .code-block :global(.op)  { color: #f472b6; }
+  .code-block :global(.arg) { color: #fdba74; }
 </style>

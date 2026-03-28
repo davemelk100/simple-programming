@@ -1,11 +1,21 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
+  import { getAdvanced, onAdvancedChange } from '../../../lib/mode';
+
   interface Props {
     oncomplete?: (score?: number) => void;
   }
 
   let { oncomplete }: Props = $props();
+
+  let advanced = $state(false);
+  onMount(() => {
+    advanced = getAdvanced();
+    return onAdvancedChange((v) => (advanced = v));
+  });
 </script>
 
+{#if !advanced}
 <div class="space-y-6">
   <div>
     <h2 class="mb-3 text-xl font-bold text-slate-800">Abstraction in Code</h2>
@@ -105,6 +115,118 @@
     </button>
   </div>
 </div>
+{:else}
+<div class="space-y-6">
+  <div>
+    <h2 class="mb-3 text-xl font-bold text-slate-800">Advanced Abstraction Patterns</h2>
+    <p class="text-sm text-slate-600">Interfaces as contracts, dependency injection, facade pattern, and the repository pattern.</p>
+  </div>
+
+  <!-- 1: Abstract classes and interfaces as contracts -->
+  <div>
+    <h3 class="mb-2 text-sm font-semibold text-slate-500">Interfaces as Contracts</h3>
+    <pre class="code-block"><code>{@html `<span class="kw">interface</span> <span class="var">Logger</span> {
+  <span class="fn">info</span>(<span class="arg">msg</span>: <span class="var">string</span>): <span class="kw">void</span>;
+  <span class="fn">error</span>(<span class="arg">msg</span>: <span class="var">string</span>, <span class="arg">err</span>?: <span class="var">Error</span>): <span class="kw">void</span>;
+}
+
+<span class="cmt">// Any class that implements Logger must provide info() and error()</span>
+<span class="kw">class</span> <span class="var">ConsoleLogger</span> <span class="kw">implements</span> <span class="var">Logger</span> {
+  <span class="fn">info</span>(<span class="arg">msg</span>: <span class="var">string</span>) { <span class="var">console</span>.<span class="fn">log</span>(<span class="str">"[INFO]"</span>, <span class="arg">msg</span>); }
+  <span class="fn">error</span>(<span class="arg">msg</span>: <span class="var">string</span>, <span class="arg">err</span>?: <span class="var">Error</span>) { <span class="var">console</span>.<span class="fn">error</span>(<span class="str">"[ERR]"</span>, <span class="arg">msg</span>, <span class="arg">err</span>); }
+}
+
+<span class="kw">class</span> <span class="var">FileLogger</span> <span class="kw">implements</span> <span class="var">Logger</span> {
+  <span class="fn">info</span>(<span class="arg">msg</span>: <span class="var">string</span>) { <span class="var">fs</span>.<span class="fn">appendFileSync</span>(<span class="str">"app.log"</span>, <span class="arg">msg</span>); }
+  <span class="fn">error</span>(<span class="arg">msg</span>: <span class="var">string</span>, <span class="arg">err</span>?: <span class="var">Error</span>) { <span class="var">fs</span>.<span class="fn">appendFileSync</span>(<span class="str">"err.log"</span>, <span class="arg">msg</span>); }
+}`}</code></pre>
+    <p class="mt-2 text-xs text-slate-500">The interface defines <em>what</em> a logger does. Each class decides <em>how</em>. Callers depend only on the contract.</p>
+  </div>
+
+  <!-- 2: Dependency injection -->
+  <div>
+    <h3 class="mb-2 text-sm font-semibold text-slate-500">Dependency Injection</h3>
+    <pre class="code-block"><code>{@html `<span class="cmt">// The service depends on an abstraction, not a concrete class</span>
+<span class="kw">class</span> <span class="var">OrderService</span> {
+  <span class="kw">private</span> <span class="var">logger</span>: <span class="var">Logger</span>;
+
+  <span class="fn">constructor</span>(<span class="arg">logger</span>: <span class="var">Logger</span>) {
+    <span class="kw">this</span>.<span class="var">logger</span> <span class="op">=</span> <span class="arg">logger</span>;
+  }
+
+  <span class="fn">placeOrder</span>(<span class="arg">order</span>: <span class="var">Order</span>) {
+    <span class="cmt">// ... business logic ...</span>
+    <span class="kw">this</span>.<span class="var">logger</span>.<span class="fn">info</span>(<span class="str">\`Order \${<span class="arg">order</span>.id} placed\`</span>);
+  }
+}
+
+<span class="cmt">// Swap implementations without changing OrderService</span>
+<span class="kw">const</span> <span class="var">svc</span> <span class="op">=</span> <span class="kw">new</span> <span class="var">OrderService</span>(<span class="kw">new</span> <span class="var">ConsoleLogger</span>());
+<span class="kw">const</span> <span class="var">svc2</span> <span class="op">=</span> <span class="kw">new</span> <span class="var">OrderService</span>(<span class="kw">new</span> <span class="var">FileLogger</span>());`}</code></pre>
+    <p class="mt-2 text-xs text-slate-500">Dependencies are injected from the outside. The class never creates its own dependencies, making it testable and flexible.</p>
+  </div>
+
+  <!-- 3: Facade pattern -->
+  <div>
+    <h3 class="mb-2 text-sm font-semibold text-slate-500">Facade Pattern</h3>
+    <pre class="code-block"><code>{@html `<span class="cmt">// Complex subsystems hidden behind a simple interface</span>
+<span class="kw">class</span> <span class="var">MediaPlayerFacade</span> {
+  <span class="kw">private</span> <span class="var">decoder</span> <span class="op">=</span> <span class="kw">new</span> <span class="var">AudioDecoder</span>();
+  <span class="kw">private</span> <span class="var">buffer</span> <span class="op">=</span> <span class="kw">new</span> <span class="var">StreamBuffer</span>();
+  <span class="kw">private</span> <span class="var">output</span> <span class="op">=</span> <span class="kw">new</span> <span class="var">AudioOutput</span>();
+  <span class="kw">private</span> <span class="var">equalizer</span> <span class="op">=</span> <span class="kw">new</span> <span class="var">Equalizer</span>();
+
+  <span class="cmt">// One simple method hides four complex subsystems</span>
+  <span class="fn">play</span>(<span class="arg">file</span>: <span class="var">string</span>) {
+    <span class="kw">const</span> <span class="var">raw</span> <span class="op">=</span> <span class="kw">this</span>.<span class="var">decoder</span>.<span class="fn">decode</span>(<span class="arg">file</span>);
+    <span class="kw">const</span> <span class="var">stream</span> <span class="op">=</span> <span class="kw">this</span>.<span class="var">buffer</span>.<span class="fn">fill</span>(<span class="var">raw</span>);
+    <span class="kw">const</span> <span class="var">audio</span> <span class="op">=</span> <span class="kw">this</span>.<span class="var">equalizer</span>.<span class="fn">process</span>(<span class="var">stream</span>);
+    <span class="kw">this</span>.<span class="var">output</span>.<span class="fn">send</span>(<span class="var">audio</span>);
+  }
+}
+
+<span class="cmt">// Caller only sees the facade</span>
+<span class="kw">const</span> <span class="var">player</span> <span class="op">=</span> <span class="kw">new</span> <span class="var">MediaPlayerFacade</span>();
+<span class="var">player</span>.<span class="fn">play</span>(<span class="str">"song.mp3"</span>); <span class="cmt">// simple!</span>`}</code></pre>
+    <p class="mt-2 text-xs text-slate-500">The facade wraps multiple subsystems behind a single, clean interface. Callers never interact with decoders, buffers, or equalizers directly.</p>
+  </div>
+
+  <!-- 4: Repository pattern -->
+  <div>
+    <h3 class="mb-2 text-sm font-semibold text-slate-500">Repository Pattern</h3>
+    <pre class="code-block"><code>{@html `<span class="cmt">// Abstract data access behind a clean interface</span>
+<span class="kw">interface</span> <span class="var">UserRepository</span> {
+  <span class="fn">findById</span>(<span class="arg">id</span>: <span class="var">number</span>): <span class="var">Promise</span><span class="op">&lt;</span><span class="var">User</span> <span class="op">|</span> <span class="kw">null</span><span class="op">&gt;</span>;
+  <span class="fn">save</span>(<span class="arg">user</span>: <span class="var">User</span>): <span class="var">Promise</span><span class="op">&lt;</span><span class="kw">void</span><span class="op">&gt;</span>;
+  <span class="fn">findByEmail</span>(<span class="arg">email</span>: <span class="var">string</span>): <span class="var">Promise</span><span class="op">&lt;</span><span class="var">User</span> <span class="op">|</span> <span class="kw">null</span><span class="op">&gt;</span>;
+}
+
+<span class="cmt">// SQL implementation</span>
+<span class="kw">class</span> <span class="var">SqlUserRepo</span> <span class="kw">implements</span> <span class="var">UserRepository</span> {
+  <span class="kw">async</span> <span class="fn">findById</span>(<span class="arg">id</span>: <span class="var">number</span>) {
+    <span class="kw">return</span> <span class="var">db</span>.<span class="fn">query</span>(<span class="str">"SELECT * FROM users WHERE id = ?"</span>, [<span class="arg">id</span>]);
+  }
+  <span class="cmt">// ... save, findByEmail ...</span>
+}
+
+<span class="cmt">// In-memory implementation (for tests)</span>
+<span class="kw">class</span> <span class="var">InMemoryUserRepo</span> <span class="kw">implements</span> <span class="var">UserRepository</span> {
+  <span class="kw">private</span> <span class="var">users</span>: <span class="var">User</span>[] <span class="op">=</span> [];
+  <span class="kw">async</span> <span class="fn">findById</span>(<span class="arg">id</span>: <span class="var">number</span>) {
+    <span class="kw">return</span> <span class="kw">this</span>.<span class="var">users</span>.<span class="fn">find</span>(<span class="arg">u</span> <span class="op">=&gt;</span> <span class="arg">u</span>.<span class="var">id</span> <span class="op">===</span> <span class="arg">id</span>) <span class="op">??</span> <span class="kw">null</span>;
+  }
+  <span class="cmt">// ... save, findByEmail ...</span>
+}`}</code></pre>
+    <p class="mt-2 text-xs text-slate-500">Business logic depends on UserRepository, not on SQL or any specific database. Swap SqlUserRepo for InMemoryUserRepo in tests with zero code changes.</p>
+  </div>
+
+  <div>
+    <button onclick={oncomplete} class="rounded-full bg-indigo-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-indigo-700 active:scale-95">
+      Got it
+    </button>
+  </div>
+</div>
+{/if}
 
 <style>
   .code-block {
@@ -121,4 +243,12 @@
   .code-block :global(.string)      { color: #4ade80; }
   .code-block :global(.comment)     { color: #475569; }
   .code-block :global(.punctuation) { color: #fcd34d; }
+  .code-block :global(.kw)    { color: #c084fc; }
+  .code-block :global(.var)   { color: #93c5fd; }
+  .code-block :global(.str)   { color: #fcd34d; }
+  .code-block :global(.num)   { color: #fcd34d; }
+  .code-block :global(.cmt)   { color: #475569; }
+  .code-block :global(.fn)    { color: #93c5fd; }
+  .code-block :global(.op)    { color: #c084fc; }
+  .code-block :global(.arg)   { color: #fca5a5; }
 </style>

@@ -1,11 +1,21 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
+  import { getAdvanced, onAdvancedChange } from '../../../lib/mode';
+
   interface Props {
     oncomplete?: (score?: number) => void;
   }
 
   let { oncomplete }: Props = $props();
+
+  let advanced = $state(false);
+  onMount(() => {
+    advanced = getAdvanced();
+    return onAdvancedChange((v) => (advanced = v));
+  });
 </script>
 
+{#if !advanced}
 <div class="space-y-6">
   <div>
     <h2 class="mb-3 text-xl font-bold text-slate-800">Classes & Objects in Code</h2>
@@ -112,6 +122,153 @@
   </div>
 </div>
 
+{:else}
+
+<div class="space-y-6">
+  <div>
+    <h2 class="mb-3 text-xl font-bold text-slate-800">Classes in Code (Advanced)</h2>
+    <p class="text-sm text-slate-600">TypeScript classes with constructors, static members, getters/setters, and abstract patterns.</p>
+  </div>
+
+  <!-- Full TypeScript class with constructor, properties, methods -->
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">Typed class with constructor &amp; methods</p>
+    <pre class="code-block"><code>{@html `<span class="kw">class</span> <span class="var">User</span> {
+  <span class="kw">private</span> <span class="var">name</span>: <span class="var">string</span>;
+  <span class="kw">private</span> <span class="var">age</span>: <span class="num">number</span>;
+
+  <span class="fn">constructor</span>(<span class="arg">name</span>: <span class="var">string</span>, <span class="arg">age</span>: <span class="num">number</span>) {
+    <span class="kw">this</span>.<span class="var">name</span> <span class="op">=</span> <span class="arg">name</span>;
+    <span class="kw">this</span>.<span class="var">age</span> <span class="op">=</span> <span class="arg">age</span>;
+  }
+
+  <span class="fn">greet</span>(): <span class="var">string</span> {
+    <span class="kw">return</span> <span class="str">\`Hello, I'm \${<span class="kw">this</span>.<span class="var">name</span>}\`</span>;
+  }
+
+  <span class="fn">isAdult</span>(): <span class="var">boolean</span> {
+    <span class="kw">return</span> <span class="kw">this</span>.<span class="var">age</span> <span class="op">>=</span> <span class="num">18</span>;
+  }
+}
+
+<span class="kw">const</span> <span class="var">u</span> <span class="op">=</span> <span class="kw">new</span> <span class="fn">User</span>(<span class="str">"Alice"</span>, <span class="num">30</span>);
+<span class="var">u</span>.<span class="fn">greet</span>();   <span class="cmt">// → "Hello, I'm Alice"</span>
+<span class="var">u</span>.<span class="fn">isAdult</span>(); <span class="cmt">// → true</span>`}</code></pre>
+  </div>
+
+  <!-- Static members and class-level state -->
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">Static members &amp; class-level state</p>
+    <pre class="code-block"><code>{@html `<span class="kw">class</span> <span class="var">Counter</span> {
+  <span class="kw">static</span> <span class="var">total</span> <span class="op">=</span> <span class="num">0</span>;           <span class="cmt">// shared across all instances</span>
+  <span class="kw">private</span> <span class="var">count</span> <span class="op">=</span> <span class="num">0</span>;          <span class="cmt">// per-instance state</span>
+
+  <span class="fn">increment</span>(): <span class="var">void</span> {
+    <span class="kw">this</span>.<span class="var">count</span><span class="op">++</span>;
+    <span class="var">Counter</span>.<span class="var">total</span><span class="op">++</span>;           <span class="cmt">// update class-level counter</span>
+  }
+
+  <span class="kw">static</span> <span class="fn">getTotal</span>(): <span class="num">number</span> {
+    <span class="kw">return</span> <span class="var">Counter</span>.<span class="var">total</span>;
+  }
+
+  <span class="kw">static</span> <span class="fn">resetAll</span>(): <span class="var">void</span> {
+    <span class="var">Counter</span>.<span class="var">total</span> <span class="op">=</span> <span class="num">0</span>;
+  }
+}
+
+<span class="kw">const</span> <span class="var">a</span> <span class="op">=</span> <span class="kw">new</span> <span class="fn">Counter</span>();
+<span class="kw">const</span> <span class="var">b</span> <span class="op">=</span> <span class="kw">new</span> <span class="fn">Counter</span>();
+<span class="var">a</span>.<span class="fn">increment</span>();
+<span class="var">b</span>.<span class="fn">increment</span>();
+<span class="var">Counter</span>.<span class="fn">getTotal</span>(); <span class="cmt">// → 2</span>`}</code></pre>
+  </div>
+
+  <!-- Getters, setters, and computed properties -->
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">Getters, setters &amp; computed properties</p>
+    <pre class="code-block"><code>{@html `<span class="kw">class</span> <span class="var">Temperature</span> {
+  <span class="kw">private</span> <span class="var">_celsius</span>: <span class="num">number</span>;
+
+  <span class="fn">constructor</span>(<span class="arg">celsius</span>: <span class="num">number</span>) {
+    <span class="kw">this</span>.<span class="var">_celsius</span> <span class="op">=</span> <span class="arg">celsius</span>;
+  }
+
+  <span class="cmt">// Getter: computed property (read)</span>
+  <span class="kw">get</span> <span class="fn">fahrenheit</span>(): <span class="num">number</span> {
+    <span class="kw">return</span> <span class="kw">this</span>.<span class="var">_celsius</span> <span class="op">*</span> <span class="num">9</span> <span class="op">/</span> <span class="num">5</span> <span class="op">+</span> <span class="num">32</span>;
+  }
+
+  <span class="cmt">// Setter: validates on write</span>
+  <span class="kw">set</span> <span class="fn">celsius</span>(<span class="arg">value</span>: <span class="num">number</span>) {
+    <span class="kw">if</span> (<span class="arg">value</span> <span class="op">&lt;</span> <span class="op">-</span><span class="num">273.15</span>) <span class="kw">throw</span> <span class="kw">new</span> <span class="fn">Error</span>(<span class="str">"Below absolute zero"</span>);
+    <span class="kw">this</span>.<span class="var">_celsius</span> <span class="op">=</span> <span class="arg">value</span>;
+  }
+
+  <span class="kw">get</span> <span class="fn">celsius</span>(): <span class="num">number</span> {
+    <span class="kw">return</span> <span class="kw">this</span>.<span class="var">_celsius</span>;
+  }
+}
+
+<span class="kw">const</span> <span class="var">t</span> <span class="op">=</span> <span class="kw">new</span> <span class="fn">Temperature</span>(<span class="num">100</span>);
+<span class="var">t</span>.<span class="var">fahrenheit</span>;  <span class="cmt">// → 212 (computed on access)</span>
+<span class="var">t</span>.<span class="var">celsius</span> <span class="op">=</span> <span class="num">0</span>;
+<span class="var">t</span>.<span class="var">fahrenheit</span>;  <span class="cmt">// → 32  (recomputed)</span>`}</code></pre>
+  </div>
+
+  <!-- Abstract classes and implementation patterns -->
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">Abstract classes &amp; implementation</p>
+    <pre class="code-block"><code>{@html `<span class="kw">abstract class</span> <span class="var">Shape</span> {
+  <span class="kw">abstract</span> <span class="fn">area</span>(): <span class="num">number</span>;      <span class="cmt">// subclasses must implement</span>
+  <span class="kw">abstract</span> <span class="fn">perimeter</span>(): <span class="num">number</span>;
+
+  <span class="cmt">// Concrete method shared by all shapes</span>
+  <span class="fn">describe</span>(): <span class="var">string</span> {
+    <span class="kw">return</span> <span class="str">\`Area: \${<span class="kw">this</span>.<span class="fn">area</span>()}, Perimeter: \${<span class="kw">this</span>.<span class="fn">perimeter</span>()}\`</span>;
+  }
+}
+
+<span class="kw">class</span> <span class="var">Circle</span> <span class="kw">extends</span> <span class="var">Shape</span> {
+  <span class="fn">constructor</span>(<span class="kw">private</span> <span class="arg">radius</span>: <span class="num">number</span>) {
+    <span class="kw">super</span>();
+  }
+
+  <span class="fn">area</span>(): <span class="num">number</span> {
+    <span class="kw">return</span> <span class="var">Math</span>.<span class="var">PI</span> <span class="op">*</span> <span class="kw">this</span>.<span class="var">radius</span> <span class="op">**</span> <span class="num">2</span>;
+  }
+
+  <span class="fn">perimeter</span>(): <span class="num">number</span> {
+    <span class="kw">return</span> <span class="num">2</span> <span class="op">*</span> <span class="var">Math</span>.<span class="var">PI</span> <span class="op">*</span> <span class="kw">this</span>.<span class="var">radius</span>;
+  }
+}
+
+<span class="kw">class</span> <span class="var">Rect</span> <span class="kw">extends</span> <span class="var">Shape</span> {
+  <span class="fn">constructor</span>(
+    <span class="kw">private</span> <span class="arg">w</span>: <span class="num">number</span>,
+    <span class="kw">private</span> <span class="arg">h</span>: <span class="num">number</span>
+  ) {
+    <span class="kw">super</span>();
+  }
+
+  <span class="fn">area</span>(): <span class="num">number</span> { <span class="kw">return</span> <span class="kw">this</span>.<span class="var">w</span> <span class="op">*</span> <span class="kw">this</span>.<span class="var">h</span>; }
+  <span class="fn">perimeter</span>(): <span class="num">number</span> { <span class="kw">return</span> <span class="num">2</span> <span class="op">*</span> (<span class="kw">this</span>.<span class="var">w</span> <span class="op">+</span> <span class="kw">this</span>.<span class="var">h</span>); }
+}
+
+<span class="cmt">// new Shape();        // Error: cannot instantiate abstract class</span>
+<span class="kw">const</span> <span class="var">c</span> <span class="op">=</span> <span class="kw">new</span> <span class="fn">Circle</span>(<span class="num">5</span>);
+<span class="var">c</span>.<span class="fn">describe</span>(); <span class="cmt">// → "Area: 78.54, Perimeter: 31.42"</span>`}</code></pre>
+  </div>
+
+  <div>
+    <button onclick={oncomplete} class="rounded-full bg-blue-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-blue-700 active:scale-95">
+      Got it
+    </button>
+  </div>
+</div>
+
+{/if}
+
 <style>
   .code-block {
     background-color: #0f172a;
@@ -127,4 +284,12 @@
   .code-block :global(.string)      { color: #4ade80; }
   .code-block :global(.comment)     { color: #475569; }
   .code-block :global(.punctuation) { color: #fcd34d; }
+  .code-block :global(.kw)  { color: #60a5fa; }
+  .code-block :global(.var) { color: #67e8f9; }
+  .code-block :global(.str) { color: #4ade80; }
+  .code-block :global(.num) { color: #fcd34d; }
+  .code-block :global(.cmt) { color: #475569; }
+  .code-block :global(.fn)  { color: #67e8f9; }
+  .code-block :global(.op)  { color: #94a3b8; }
+  .code-block :global(.arg) { color: #fdba74; }
 </style>

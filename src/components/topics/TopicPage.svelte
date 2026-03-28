@@ -152,7 +152,7 @@
 </script>
 
 {#if topic}
-  <div class="space-y-4">
+  <div class="space-y-6">
     <!-- Header + Tabs -->
     <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
       <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
@@ -168,7 +168,7 @@
     </div>
 
     <!-- Content area -->
-    <div class="min-h-[300px] rounded-2xl bg-white p-4 lg:p-5 shadow-sm border border-slate-100">
+    <div class="min-h-[300px] rounded-2xl bg-white p-6 lg:p-8 shadow-sm border border-slate-100">
       {#if components[topicSlug]}
         {#if activeSection === 'explain'}
           <svelte:component

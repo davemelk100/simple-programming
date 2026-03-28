@@ -22,14 +22,14 @@
   }
 </script>
 
-<nav class="flex h-full w-64 shrink-0 flex-col gap-0.5 overflow-y-auto border-r border-slate-200 bg-white px-3 py-4">
+<nav class="flex h-full w-64 shrink-0 flex-col gap-1 overflow-y-auto border-r border-slate-200 bg-white px-4 py-5">
   <span class="mb-2 px-2 text-sm font-semibold uppercase tracking-wider text-slate-500" style="font-family: 'Permanent Marker', cursive;">Basics</span>
   {#each topics as topic}
     {@const active = isActive(topic.slug)}
     {@const colors = colorMap[topic.color]}
     <a
       href={`/topics/${topic.slug}`}
-      class="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm font-light no-underline transition-colors {active ? `${colors?.active} font-medium` : `text-slate-600 ${colors?.hover ?? 'hover:bg-slate-50'}`}"
+      class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-light no-underline transition-colors {active ? `${colors?.active} font-medium` : `text-slate-600 ${colors?.hover ?? 'hover:bg-slate-50'}`}"
       aria-current={active ? 'page' : undefined}
     >
       <span class="text-base">{topic.icon}</span>
@@ -45,7 +45,7 @@
     {@const colors = colorMap[topic.color]}
     <a
       href={`/topics/${topic.slug}`}
-      class="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm font-light no-underline transition-colors {active ? `${colors?.active} font-medium` : `text-slate-600 ${colors?.hover ?? 'hover:bg-slate-50'}`}"
+      class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-light no-underline transition-colors {active ? `${colors?.active} font-medium` : `text-slate-600 ${colors?.hover ?? 'hover:bg-slate-50'}`}"
       aria-current={active ? 'page' : undefined}
     >
       <span class="text-base">{topic.icon}</span>

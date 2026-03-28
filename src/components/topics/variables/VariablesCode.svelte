@@ -1,11 +1,21 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
+  import { getAdvanced, onAdvancedChange } from '../../../lib/mode';
+
   interface Props {
     oncomplete?: () => void;
   }
 
   let { oncomplete }: Props = $props();
+
+  let advanced = $state(false);
+  onMount(() => {
+    advanced = getAdvanced();
+    return onAdvancedChange((v) => (advanced = v));
+  });
 </script>
 
+{#if !advanced}
 <div class="space-y-6">
   <div>
     <h2 class="mb-3 text-xl font-bold text-slate-800">Variables in Code</h2>
@@ -51,6 +61,78 @@
     </button>
   </div>
 </div>
+
+{:else}
+
+<div class="space-y-6">
+  <div>
+    <h2 class="mb-3 text-xl font-bold text-slate-800">Variables in Code (Advanced)</h2>
+    <p class="text-sm text-slate-600">TypeScript annotations, destructuring, template literals, and modern operators.</p>
+  </div>
+
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">TypeScript type annotations &amp; inference</p>
+    <pre class="code-block"><code>{@html `<span class="kw">let</span> <span class="var">name</span>: <span class="fn">string</span> = <span class="str">"Alice"</span>;       <span class="cmt">// explicit annotation</span>
+<span class="kw">let</span> <span class="var">age</span> = <span class="num">25</span>;                        <span class="cmt">// inferred as number</span>
+<span class="kw">const</span> <span class="var">PI</span>: <span class="fn">number</span> = <span class="num">3.14159</span>;         <span class="cmt">// const with annotation</span>
+<span class="kw">let</span> <span class="var">scores</span>: <span class="fn">number</span>[] = [<span class="num">90</span>, <span class="num">85</span>, <span class="num">92</span>]; <span class="cmt">// typed array</span>
+<span class="kw">let</span> <span class="var">active</span>: <span class="fn">boolean</span> <span class="op">|</span> <span class="fn">null</span> = <span class="kw">null</span>;  <span class="cmt">// union type</span>`}</code></pre>
+  </div>
+
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">Destructuring assignments</p>
+    <pre class="code-block"><code>{@html `<span class="cmt">// Object destructuring</span>
+<span class="kw">const</span> <span class="var">user</span> = { <span class="var">name</span>: <span class="str">"Alice"</span>, <span class="var">age</span>: <span class="num">25</span>, <span class="var">role</span>: <span class="str">"admin"</span> };
+<span class="kw">const</span> { <span class="var">name</span>, <span class="var">age</span>, <span class="var">role</span> } = <span class="var">user</span>;
+
+<span class="cmt">// With renaming and defaults</span>
+<span class="kw">const</span> { <span class="var">name</span>: <span class="var">userName</span>, <span class="var">level</span> = <span class="num">1</span> } = <span class="var">user</span>;
+
+<span class="cmt">// Array destructuring</span>
+<span class="kw">const</span> [<span class="var">first</span>, <span class="var">second</span>, ...<span class="var">rest</span>] = [<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>, <span class="num">40</span>];
+<span class="cmt">// first = 10, second = 20, rest = [30, 40]</span>`}</code></pre>
+  </div>
+
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">Template literals</p>
+    <pre class="code-block"><code>{@html `<span class="kw">const</span> <span class="var">name</span> = <span class="str">"Alice"</span>;
+<span class="kw">const</span> <span class="var">age</span> = <span class="num">25</span>;
+
+<span class="cmt">// Embed expressions with \${ }</span>
+<span class="kw">const</span> <span class="var">greeting</span> = <span class="str">\`Hello, \${<span class="var">name</span>}!\`</span>;
+<span class="kw">const</span> <span class="var">info</span> = <span class="str">\`\${<span class="var">name</span>} is \${<span class="var">age</span>} years old\`</span>;
+
+<span class="cmt">// Multi-line strings</span>
+<span class="kw">const</span> <span class="var">html</span> = <span class="str">\`
+  &lt;div&gt;
+    &lt;h1&gt;\${<span class="var">name</span>}&lt;/h1&gt;
+  &lt;/div&gt;
+\`</span>;`}</code></pre>
+  </div>
+
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">Nullish coalescing &amp; optional chaining</p>
+    <pre class="code-block"><code>{@html `<span class="kw">const</span> <span class="var">user</span> = { <span class="var">name</span>: <span class="str">"Alice"</span>, <span class="var">address</span>: <span class="kw">null</span> };
+
+<span class="cmt">// Optional chaining (?.) — safe property access</span>
+<span class="kw">const</span> <span class="var">city</span> = <span class="var">user</span><span class="op">?.</span><span class="var">address</span><span class="op">?.</span><span class="var">city</span>;  <span class="cmt">// undefined (no error)</span>
+
+<span class="cmt">// Nullish coalescing (??) — default for null/undefined</span>
+<span class="kw">const</span> <span class="var">score</span> = <span class="kw">null</span> <span class="op">??</span> <span class="num">100</span>;          <span class="cmt">// 100</span>
+<span class="kw">const</span> <span class="var">zero</span> = <span class="num">0</span> <span class="op">??</span> <span class="num">100</span>;              <span class="cmt">// 0 (keeps falsy values!)</span>
+
+<span class="cmt">// Compare with || which treats 0, "", false as falsy</span>
+<span class="kw">const</span> <span class="var">oops</span> = <span class="num">0</span> <span class="op">||</span> <span class="num">100</span>;              <span class="cmt">// 100 (probably not what you want)</span>`}</code></pre>
+  </div>
+
+  <div>
+    <button onclick={oncomplete} class="rounded-full bg-blue-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-blue-700 active:scale-95">
+      Got it
+    </button>
+  </div>
+</div>
+
+{/if}
 
 <style>
   .code-block {

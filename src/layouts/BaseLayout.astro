@@ -2,6 +2,7 @@
 import Header from '../components/layout/Header.svelte';
 import Sidebar from '../components/layout/Sidebar.svelte';
 import MobileSidebar from '../components/layout/MobileSidebar.svelte';
+import '../styles/global.css';
 
 interface Props {
   title?: string;
@@ -26,7 +27,6 @@ const { title = 'Simple Programming' } = Astro.props;
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Permanent+Marker&family=Roboto:wght@200;300;400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
     <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Permanent+Marker&family=Roboto:wght@200;300;400;500;700&display=swap" rel="stylesheet" /></noscript>
     <title>{title}</title>
-    <link rel="stylesheet" href="/src/styles/global.css" />
   </head>
   <body class="flex min-h-screen flex-col">
     <Header client:load />
@@ -37,12 +37,12 @@ const { title = 'Simple Programming' } = Astro.props;
         <Sidebar currentPath={Astro.url.pathname} />
       </aside>
 
-      <main class="w-full flex-1 px-4 py-4 lg:px-8 lg:py-5">
+      <main class="w-full flex-1 px-6 py-6 lg:px-12 lg:py-8">
         <slot />
       </main>
     </div>
 
-    <footer class="border-t border-slate-200 bg-white py-3 text-center text-sm text-slate-600">
+    <footer class="border-t border-slate-200 bg-white py-5 text-center text-sm text-slate-600">
       <p>Simple Programming &mdash; Learn to code, one concept at a time.</p>
     </footer>
   </body>
