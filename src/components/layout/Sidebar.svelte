@@ -32,14 +32,14 @@
   type SectionKey = 'basics' | 'blocks' | 'syntax' | 'principles' | 'languages' | 'toolbox' | 'testingqa' | 'putittogether';
 
   let collapsed = $state<Record<SectionKey, boolean>>({
-    basics: true,
-    blocks: true,
-    syntax: true,
-    principles: true,
-    languages: true,
-    toolbox: true,
-    testingqa: true,
-    putittogether: true,
+    basics: false,
+    blocks: false,
+    syntax: false,
+    principles: false,
+    languages: false,
+    toolbox: false,
+    testingqa: false,
+    putittogether: false,
   });
 
   onMount(() => {
@@ -47,6 +47,17 @@
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) collapsed = { ...collapsed, ...JSON.parse(stored) };
     } catch {}
+
+    // Auto-expand the section containing the active page
+    const path = currentPath.replace(/\/$/, '');
+    if (topics.some(t => path === `/topics/${t.slug}`)) collapsed.basics = false;
+    if (oopTopics.some(t => path === `/topics/${t.slug}`)) collapsed.blocks = false;
+    if (path.startsWith('/syntax-styles/')) collapsed.syntax = false;
+    if (path.startsWith('/principles/')) collapsed.principles = false;
+    if (path.startsWith('/languages/')) collapsed.languages = false;
+    if (path.startsWith('/toolbox/')) collapsed.toolbox = false;
+    if (path.startsWith('/testing-qa/')) collapsed.testingqa = false;
+    if (path.startsWith('/put-it-together/')) collapsed.putittogether = false;
   });
 
   function toggle(key: SectionKey) {
