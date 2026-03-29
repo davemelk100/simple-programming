@@ -42,24 +42,12 @@
     <a
       href="/"
       class="text-2xl font-bold text-slate-900 no-underline hover:text-indigo-600 sm:text-4xl"
-      style="font-family: 'Permanent Marker', cursive;"
+      style="font-family: 'Permanent Marker';"
     >
       Programming Is Easy
     </a>
 
     <div class="flex items-center gap-2 sm:gap-4">
-      <!-- Mode toggle -->
-      <button
-        onclick={() => toggleAdvanced()}
-        class="flex items-center gap-1.5 rounded-full border px-2 py-1 text-sm font-medium transition-colors sm:gap-2 sm:px-3 sm:py-1.5
-          {advanced ? 'border-indigo-300 bg-indigo-50 text-indigo-700' : 'border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100'}"
-      >
-        <span class="text-xs">{advanced ? 'Advanced' : 'Basic'}</span>
-        <div class="relative h-5 w-9 rounded-full transition-colors {advanced ? 'bg-indigo-500' : 'bg-slate-300'}">
-          <div class="absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform {advanced ? 'translate-x-4' : 'translate-x-0.5'}"></div>
-        </div>
-      </button>
-
       {#if user}
         <a
           href="/progress"
@@ -86,7 +74,17 @@
       {/if}
     </div>
   </div>
-  <div class="hidden px-4 pb-2 sm:block">
+  <div class="hidden items-center justify-between px-4 pb-2 sm:flex">
     <p class="text-sm text-slate-400">No jargon. No boring tutorials. Just colorful, interactive lessons that make programming click.</p>
+    <button
+      onclick={() => toggleAdvanced()}
+      class="flex shrink-0 items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors
+        {advanced ? 'border-indigo-300 bg-indigo-50 text-indigo-700' : 'border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100'}"
+    >
+      <span class="text-xs">{advanced ? 'Advanced' : 'Basic'}</span>
+      <div class="relative h-5 w-9 rounded-full transition-colors {advanced ? 'bg-indigo-500' : 'bg-slate-300'}">
+        <div class="absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform {advanced ? 'translate-x-4' : 'translate-x-0.5'}"></div>
+      </div>
+    </button>
   </div>
 </header>

@@ -23,13 +23,4 @@ import { topics } from '../lib/topics';
   <div id="progress-section" class="mb-4 hidden">
     <ProgressBar client:load percentage={0} label="Overall Progress" />
   </div>
-
-  <!-- Topic grid -->
-  <section>
-    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {topics.map((topic) => (
-        <TopicCard client:load topic={topic} completed={false} />
-      ))}
-    </div>
-  </section>
 </BaseLayout>

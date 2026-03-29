@@ -26,6 +26,7 @@
     walkthrough: string;
     lottie: string;
     video?: string;
+    videoStart?: number;
     image?: string;
     icon: string;
   }
@@ -60,6 +61,7 @@
       walkthrough: 'Step 2: Policies are written. $500 daily limit. PIN required. 2FA enabled. The rules are set.',
       lottie: '/lottie/config.json',
       video: '/lottie/config.mp4',
+      videoStart: 3,
     },
     {
       id: 'database',
@@ -75,6 +77,7 @@
       walkthrough: 'Step 3: The vault is stocked and the ledger opens. Your $240 is recorded. The money is real.',
       lottie: '/lottie/database.json',
       video: '/lottie/vault.mp4',
+      videoStart: 6,
     },
     {
       id: 'backend',
@@ -90,6 +93,7 @@
       walkthrough: 'Step 4: Employees are trained. They check your ID, read the ledger, follow the rules, and approve your withdrawal.',
       lottie: '/lottie/backend.json',
       video: '/lottie/backend.mp4',
+      videoStart: 5,
     },
     {
       id: 'frontend',
@@ -135,8 +139,6 @@
   <div class="mb-1 flex items-center justify-center">
     <p class="text-xs font-semibold uppercase tracking-widest text-slate-400">How Software Fits Together</p>
   </div>
-  <p class="mb-4 text-center text-sm text-slate-500">Think of a tech stack like a <strong class="text-amber-700">bank</strong> — built from the foundation up to the moment cash hits your hand.</p>
-
   <!-- Dot navigation + progress -->
   <div class="mb-6 flex flex-col items-center gap-4">
     <div class="flex items-center gap-4 sm:gap-6">
@@ -175,6 +177,8 @@
       <div class="h-full rounded-full bg-indigo-400 transition-all duration-300" style="width: {((current + 1) / slides.length) * 100}%"></div>
     </div>
   </div>
+
+  <p class="mb-5 text-center text-sm text-slate-500">Think of a tech stack like a <strong class="text-amber-700">bank</strong> — built from the foundation up to the moment cash hits your hand.</p>
 
   <!-- Carousel -->
   <div class="relative">
@@ -215,6 +219,7 @@
                 muted
                 playsinline
                 class="h-full w-full rounded-xl object-cover"
+                onloadeddata={(e) => { if (slide.videoStart) e.currentTarget.currentTime = slide.videoStart; }}
               ></video>
             {:else if slide.id === 'database'}
               <div class="h-48 w-48 sm:h-64 sm:w-64">

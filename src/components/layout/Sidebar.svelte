@@ -3,6 +3,7 @@
   import { topics, oopTopics } from '../../lib/topics';
   import { syntaxStyles } from '../../lib/syntax-styles';
   import { principles } from '../../lib/principles';
+  import { toolboxTopics } from '../../lib/toolbox';
 
   interface Props {
     currentPath?: string;
@@ -26,14 +27,15 @@
 
   const STORAGE_KEY = 'sidebar-collapsed';
 
-  type SectionKey = 'basics' | 'blocks' | 'syntax' | 'principles' | 'languages';
+  type SectionKey = 'basics' | 'blocks' | 'syntax' | 'principles' | 'languages' | 'toolbox';
 
   let collapsed = $state<Record<SectionKey, boolean>>({
-    basics: false,
-    blocks: false,
-    syntax: false,
-    principles: false,
-    languages: false,
+    basics: true,
+    blocks: true,
+    syntax: true,
+    principles: true,
+    languages: true,
+    toolbox: true,
   });
 
   onMount(() => {
@@ -55,7 +57,7 @@
     onclick={() => toggle('basics')}
     class="mb-1 flex w-full cursor-pointer items-center justify-between px-2"
   >
-    <span class="text-sm font-semibold uppercase tracking-wider text-slate-500" style="font-family: 'Permanent Marker', cursive;">Basics</span>
+    <span class="text-sm font-semibold uppercase tracking-wider text-slate-500" style="font-family: 'Permanent Marker';">Basics</span>
     <svg class="h-4 w-4 text-slate-400 transition-transform duration-200 {collapsed.basics ? '-rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
     </svg>
@@ -82,7 +84,7 @@
     onclick={() => toggle('blocks')}
     class="mb-1 flex w-full cursor-pointer items-center justify-between px-2"
   >
-    <span class="text-sm font-semibold uppercase tracking-wider text-slate-500" style="font-family: 'Permanent Marker', cursive;">Building Blocks</span>
+    <span class="text-sm font-semibold uppercase tracking-wider text-slate-500" style="font-family: 'Permanent Marker';">Building Blocks</span>
     <svg class="h-4 w-4 text-slate-400 transition-transform duration-200 {collapsed.blocks ? '-rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
     </svg>
@@ -109,7 +111,7 @@
     onclick={() => toggle('syntax')}
     class="mb-1 flex w-full cursor-pointer items-center justify-between px-2"
   >
-    <span class="text-sm font-semibold uppercase tracking-wider text-slate-500" style="font-family: 'Permanent Marker', cursive;">Syntax Styles</span>
+    <span class="text-sm font-semibold uppercase tracking-wider text-slate-500" style="font-family: 'Permanent Marker';">Syntax Styles</span>
     <svg class="h-4 w-4 text-slate-400 transition-transform duration-200 {collapsed.syntax ? '-rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
     </svg>
@@ -136,7 +138,7 @@
     onclick={() => toggle('principles')}
     class="mb-1 flex w-full cursor-pointer items-center justify-between px-2"
   >
-    <span class="text-sm font-semibold uppercase tracking-wider text-slate-500" style="font-family: 'Permanent Marker', cursive;">Principles</span>
+    <span class="text-sm font-semibold uppercase tracking-wider text-slate-500" style="font-family: 'Permanent Marker';">Principles</span>
     <svg class="h-4 w-4 text-slate-400 transition-transform duration-200 {collapsed.principles ? '-rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
     </svg>
@@ -163,7 +165,7 @@
     onclick={() => toggle('languages')}
     class="mb-1 flex w-full cursor-pointer items-center justify-between px-2"
   >
-    <span class="text-sm font-semibold uppercase tracking-wider text-slate-500" style="font-family: 'Permanent Marker', cursive;">Languages</span>
+    <span class="text-sm font-semibold uppercase tracking-wider text-slate-500" style="font-family: 'Permanent Marker';">Languages</span>
     <svg class="h-4 w-4 text-slate-400 transition-transform duration-200 {collapsed.languages ? '-rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
     </svg>
@@ -184,6 +186,33 @@
       >
         <span class="text-base">{lang.icon}</span>
         {lang.title}
+      </a>
+    {/each}
+  {/if}
+
+  <hr class="my-3 border-slate-200" />
+
+  <!-- Toolbox -->
+  <button
+    onclick={() => toggle('toolbox')}
+    class="mb-1 flex w-full cursor-pointer items-center justify-between px-2"
+  >
+    <span class="text-sm font-semibold uppercase tracking-wider text-slate-500" style="font-family: 'Permanent Marker';">Toolbox</span>
+    <svg class="h-4 w-4 text-slate-400 transition-transform duration-200 {collapsed.toolbox ? '-rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+    </svg>
+  </button>
+  {#if !collapsed.toolbox}
+    {#each toolboxTopics as tool}
+      {@const active = currentPath.replace(/\/$/, '') === `/toolbox/${tool.slug}`}
+      {@const colors = colorMap[tool.color]}
+      <a
+        href={`/toolbox/${tool.slug}`}
+        class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-light no-underline transition-colors {active ? `${colors?.active} font-medium` : `text-slate-600 ${colors?.hover ?? 'hover:bg-slate-50'}`}"
+        aria-current={active ? 'page' : undefined}
+      >
+        <span class="text-base">{tool.icon}</span>
+        {tool.title}
       </a>
     {/each}
   {/if}
