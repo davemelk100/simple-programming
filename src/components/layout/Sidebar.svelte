@@ -4,6 +4,7 @@
   import { syntaxStyles } from '../../lib/syntax-styles';
   import { principles } from '../../lib/principles';
   import { toolboxTopics } from '../../lib/toolbox';
+  import { testingQaTopics } from '../../lib/testing-qa';
   import { putItTogetherTopics } from '../../lib/put-it-together';
 
   interface Props {
@@ -28,7 +29,7 @@
 
   const STORAGE_KEY = 'sidebar-collapsed';
 
-  type SectionKey = 'basics' | 'blocks' | 'syntax' | 'principles' | 'languages' | 'toolbox' | 'putittogether';
+  type SectionKey = 'basics' | 'blocks' | 'syntax' | 'principles' | 'languages' | 'toolbox' | 'testingqa' | 'putittogether';
 
   let collapsed = $state<Record<SectionKey, boolean>>({
     basics: true,
@@ -37,6 +38,7 @@
     principles: true,
     languages: true,
     toolbox: true,
+    testingqa: true,
     putittogether: true,
   });
 
@@ -215,6 +217,33 @@
       >
         <span class="text-base">{tool.icon}</span>
         {tool.title}
+      </a>
+    {/each}
+  {/if}
+
+  <hr class="my-3 border-slate-200" />
+
+  <!-- Testing & QA -->
+  <button
+    onclick={() => toggle('testingqa')}
+    class="mb-1 flex w-full cursor-pointer items-center justify-between px-2"
+  >
+    <span class="text-sm font-semibold uppercase tracking-wider text-slate-500" style="font-family: 'Permanent Marker';">Testing &amp; QA</span>
+    <svg class="h-4 w-4 text-slate-400 transition-transform duration-200 {collapsed.testingqa ? '-rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+    </svg>
+  </button>
+  {#if !collapsed.testingqa}
+    {#each testingQaTopics as topic}
+      {@const active = currentPath.replace(/\/$/, '') === `/testing-qa/${topic.slug}`}
+      {@const colors = colorMap[topic.color]}
+      <a
+        href={`/testing-qa/${topic.slug}`}
+        class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-light no-underline transition-colors {active ? `${colors?.active} font-medium` : `text-slate-600 ${colors?.hover ?? 'hover:bg-slate-50'}`}"
+        aria-current={active ? 'page' : undefined}
+      >
+        <span class="text-base">{topic.icon}</span>
+        {topic.title}
       </a>
     {/each}
   {/if}
