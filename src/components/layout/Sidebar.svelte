@@ -6,6 +6,7 @@
   import { toolboxTopics } from '../../lib/toolbox';
   import { testingQaTopics } from '../../lib/testing-qa';
   import { putItTogetherTopics } from '../../lib/put-it-together';
+  import { aiTopics } from '../../lib/ai';
 
   interface Props {
     currentPath?: string;
@@ -29,7 +30,7 @@
 
   const STORAGE_KEY = 'sidebar-collapsed';
 
-  type SectionKey = 'basics' | 'blocks' | 'syntax' | 'principles' | 'languages' | 'toolbox' | 'testingqa' | 'putittogether';
+  type SectionKey = 'basics' | 'blocks' | 'syntax' | 'principles' | 'languages' | 'toolbox' | 'testingqa' | 'putittogether' | 'ai';
 
   let collapsed = $state<Record<SectionKey, boolean>>({
     basics: false,
@@ -40,6 +41,7 @@
     toolbox: false,
     testingqa: false,
     putittogether: false,
+    ai: false,
   });
 
   onMount(() => {
@@ -58,6 +60,7 @@
     if (path.startsWith('/toolbox/')) collapsed.toolbox = false;
     if (path.startsWith('/testing-qa/')) collapsed.testingqa = false;
     if (path.startsWith('/put-it-together/')) collapsed.putittogether = false;
+    if (path.startsWith('/ai/')) collapsed.ai = false;
   });
 
   function toggle(key: SectionKey) {
@@ -277,6 +280,33 @@
       {@const colors = colorMap[topic.color]}
       <a
         href={`/put-it-together/${topic.slug}`}
+        class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-light no-underline transition-colors {active ? `${colors?.active} font-medium` : `text-slate-600 ${colors?.hover ?? 'hover:bg-slate-50'}`}"
+        aria-current={active ? 'page' : undefined}
+      >
+        <span class="text-base">{topic.icon}</span>
+        {topic.title}
+      </a>
+    {/each}
+  {/if}
+
+  <hr class="my-3 border-slate-200" />
+
+  <!-- AI -->
+  <button
+    onclick={() => toggle('ai')}
+    class="mb-1 flex w-full cursor-pointer items-center justify-between px-2"
+  >
+    <span class="text-sm font-semibold uppercase tracking-wider text-slate-500" style="font-family: 'Permanent Marker';">AI</span>
+    <svg class="h-4 w-4 text-slate-400 transition-transform duration-200 {collapsed.ai ? '-rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+    </svg>
+  </button>
+  {#if !collapsed.ai}
+    {#each aiTopics as topic}
+      {@const active = currentPath.replace(/\/$/, '') === `/ai/${topic.slug}`}
+      {@const colors = colorMap[topic.color]}
+      <a
+        href={`/ai/${topic.slug}`}
         class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-light no-underline transition-colors {active ? `${colors?.active} font-medium` : `text-slate-600 ${colors?.hover ?? 'hover:bg-slate-50'}`}"
         aria-current={active ? 'page' : undefined}
       >

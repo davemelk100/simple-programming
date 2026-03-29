@@ -1,6 +1,6 @@
 ---
 import Header from '../components/layout/Header.svelte';
-import Sidebar from '../components/layout/Sidebar.svelte';
+import TopNav from '../components/layout/TopNav.svelte';
 import MobileSidebar from '../components/layout/MobileSidebar.svelte';
 import '../styles/global.css';
 
@@ -30,17 +30,12 @@ const { title = 'Simple Programming' } = Astro.props;
   </head>
   <body class="flex min-h-screen flex-col">
     <Header client:load />
+    <TopNav client:load currentPath={Astro.url.pathname} />
     <MobileSidebar client:load currentPath={Astro.url.pathname} />
 
-    <div class="flex flex-1">
-      <aside class="hidden lg:flex">
-        <Sidebar client:load currentPath={Astro.url.pathname} />
-      </aside>
-
-      <main class="w-full flex-1 px-6 py-6 lg:px-12 lg:py-8">
-        <slot />
-      </main>
-    </div>
+    <main class="mx-auto w-full max-w-7xl flex-1 px-6 py-6 lg:px-12 lg:py-8">
+      <slot />
+    </main>
 
     <footer class="border-t border-slate-200 bg-white py-5 text-center text-sm text-slate-600">
       <p>See? Easy.</p>

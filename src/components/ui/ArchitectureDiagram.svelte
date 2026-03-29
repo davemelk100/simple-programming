@@ -54,8 +54,8 @@
     },
     {
       id: 'config',
-      title: 'Config',
-      subtitle: 'Policies, env vars, settings',
+      title: 'Configuration',
+      subtitle: 'Policies, environmental variables, settings',
       metaphor: '⚙️',
       description: 'Before the doors open, the bank sets its rules. Interest rates, daily withdrawal limits, security keys, and feature toggles. These policies govern every decision the bank will ever make.',
       insight: 'Policy',
@@ -83,7 +83,7 @@
       lottie: '/lottie/database.json',
       video: '/lottie/vault.mp4',
       videoStart: 7,
-      videoSpeed: 0.5,
+      videoSpeed: 1,
     },
     {
       id: 'backend',
@@ -164,90 +164,103 @@
 
 <div class="rounded-2xl border border-slate-200 bg-gradient-to-b from-sky-50/50 to-amber-50/30 px-4 pb-4 pt-2 shadow-sm sm:px-6 sm:pb-6 sm:pt-3 lg:px-8 lg:pb-8 lg:pt-4">
   <!-- Carousel -->
-  <div class="relative">
-    <!-- Prev / Next arrows -->
-    <button
-      onclick={prev}
-      class="absolute left-0 top-1/2 z-10 -translate-x-1 -translate-y-1/2 rounded-full border border-slate-200 bg-white p-2 text-slate-400 shadow-md transition-colors hover:bg-slate-50 hover:text-slate-700 sm:-translate-x-4"
-      aria-label="Previous"
-    >
-      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-    </button>
-    <button
-      onclick={next}
-      class="absolute right-0 top-1/2 z-10 -translate-y-1/2 translate-x-1 rounded-full border border-slate-200 bg-white p-2 text-slate-400 shadow-md transition-colors hover:bg-slate-50 hover:text-slate-700 sm:translate-x-4 {pulsing ? 'animate-pulse ring-2 ring-indigo-300' : ''}"
-      aria-label="Next"
-    >
-      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-    </button>
-    <button
-      onclick={togglePause}
-      class="absolute bottom-2 left-1/2 z-10 -translate-x-1/2 rounded-full border border-slate-200 bg-white p-2 text-slate-400 shadow-md transition-colors hover:bg-slate-50 hover:text-slate-700"
-      aria-label={paused ? 'Play' : 'Pause'}
-    >
-      {#if paused}
-        <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-      {:else}
-        <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
-      {/if}
-    </button>
+  <div>
+    <!-- Title + Pagination row -->
+    <div class="mb-4 flex items-center gap-3">
+      <h3 class="flex items-center gap-2 text-xl sm:text-2xl {slide.textColor}" style="font-family: 'Roboto', sans-serif;">
+        <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 border-current text-sm font-bold leading-none">{current + 1}</span>
+        {slide.title}
+      </h3>
+      <div class="ml-auto flex items-center gap-3">
+      <button
+        onclick={prev}
+        class="rounded-full border border-slate-200 bg-white p-1.5 text-slate-400 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-700"
+        aria-label="Previous"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <div class="flex items-center gap-2">
+        <span class="flex h-8 w-8 items-center justify-center rounded-full {slide.tagColor} text-sm font-bold leading-none {slide.tagTextColor}">{current + 1}</span>
+        <span class="text-sm font-medium text-slate-400">of {slides.length}</span>
+      </div>
+      <button
+        onclick={next}
+        class="rounded-full border border-slate-200 bg-white p-1.5 text-slate-400 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-700 {pulsing ? 'animate-pulse ring-2 ring-indigo-300' : ''}"
+        aria-label="Next"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </button>
+      <button
+        onclick={togglePause}
+        class="rounded-full border border-slate-200 bg-white p-1.5 text-slate-400 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-700"
+        aria-label={paused ? 'Play' : 'Pause'}
+      >
+        {#if paused}
+          <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        {:else}
+          <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+        {/if}
+      </button>
+      </div>
+    </div>
 
     <!-- Slide content -->
-    <div class="mx-auto max-w-4xl overflow-hidden rounded-2xl
+    <div class="w-full overflow-hidden rounded-2xl
       {entering ? 'translate-x-12 opacity-0' : sliding ? '-translate-x-12 opacity-0 transition-all duration-700 ease-in-out' : 'translate-x-0 opacity-100 transition-all duration-500 ease-out'}">
 
       <!-- Top: text -->
       <div class="px-6 pt-6 sm:px-8 sm:pt-8">
-        <div class="mb-2 flex items-center gap-2">
-          <span class="flex h-7 w-7 items-center justify-center rounded-full {slide.tagColor} text-xs font-bold {slide.tagTextColor}">{current + 1}</span>
-          <span class="text-xs font-medium text-slate-400">of {slides.length}</span>
-        </div>
-        <h3 class="flex items-center gap-2 text-xl sm:text-2xl {slide.textColor}" style="font-family: 'Roboto', sans-serif;">
-          <svg class="h-6 w-6 shrink-0 sm:h-7 sm:w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-            {#if slide.id === 'infrastructure'}
-              <path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-4h6v4M9 9h.01M15 9h.01M9 13h.01M15 13h.01"/>
-            {:else if slide.id === 'config'}
-              <path d="M12.22 2h-.44a2 2 0 00-2 2v.18a2 2 0 01-1 1.73l-.43.25a2 2 0 01-2 0l-.15-.08a2 2 0 00-2.73.73l-.22.38a2 2 0 00.73 2.73l.15.1a2 2 0 011 1.72v.51a2 2 0 01-1 1.74l-.15.09a2 2 0 00-.73 2.73l.22.38a2 2 0 002.73.73l.15-.08a2 2 0 012 0l.43.25a2 2 0 011 1.73V20a2 2 0 002 2h.44a2 2 0 002-2v-.18a2 2 0 011-1.73l.43-.25a2 2 0 012 0l.15.08a2 2 0 002.73-.73l.22-.39a2 2 0 00-.73-2.73l-.15-.08a2 2 0 01-1-1.74v-.5a2 2 0 011-1.74l.15-.09a2 2 0 00.73-2.73l-.22-.38a2 2 0 00-2.73-.73l-.15.08a2 2 0 01-2 0l-.43-.25a2 2 0 01-1-1.73V4a2 2 0 00-2-2z"/><circle cx="12" cy="12" r="3"/>
-            {:else if slide.id === 'database'}
-              <ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/>
-            {:else if slide.id === 'backend'}
-              <rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"/>
-            {:else}
-              <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
-            {/if}
-          </svg>
-          {slide.title}
-        </h3>
-        <p class="mt-3 text-sm font-semibold uppercase text-slate-500">{slide.subtitle}</p>
+        <p class="text-sm font-semibold uppercase text-slate-500">{slide.subtitle}</p>
         <p class="mt-2 text-sm leading-relaxed text-slate-600">{slide.description}</p>
       </div>
 
-      <!-- Bottom: two images side by side -->
-      <div class="grid grid-cols-2 items-stretch gap-4 p-6 sm:p-8">
-        <!-- Band thumbnail -->
-        {#key slide.id}
-          {#if slide.id === 'infrastructure'}
-            <img src="/lottie/infra-thumb.jpg" alt="Infrastructure" class="w-full h-full object-cover rounded-lg"/>
-          {:else if slide.id === 'config'}
-            <img src="/lottie/config-thumb.avif" alt="Config" class="w-full h-full object-cover rounded-lg"/>
-          {:else if slide.id === 'database'}
-            <img src="/lottie/database-thumb.jpg" alt="Database" class="w-full h-full object-cover rounded-lg"/>
-          {:else if slide.id === 'backend'}
-            <img src="/lottie/backend-thumb.jpg" alt="Backend" class="w-full h-full object-cover rounded-lg"/>
-          {:else if slide.id === 'frontend'}
-            <img src="/lottie/frontend-thumb.avif" alt="Frontend" class="w-full h-full object-cover rounded-lg"/>
-          {/if}
-        {/key}
+      <!-- Bottom: schematic | image | video -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 items-stretch gap-4 p-6 sm:p-8">
 
-        <!-- Video/illustration -->
+        <!-- 1. Schematic (far left) - newest on top, up arrows -->
+        <div class="font-mono">
+          <svg viewBox="0 0 400 720" class="w-full" preserveAspectRatio="xMidYMin meet">
+            <defs>
+              <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#e2e8f0" stroke-width="0.5" opacity="0.5"/>
+              </pattern>
+            </defs>
+            <rect width="400" height="720" fill="url(#grid)" rx="8"/>
+
+            {#each [
+              { idx: 0, label: 'INFRASTRUCTURE', sub: 'Servers / DNS / Cloud / CI-CD', stroke: '#64748b', fill: '#f1f5f9', text: '#334155', subColor: '#94a3b8', tag: '#cbd5e1', num: 'L1' },
+              { idx: 1, label: 'CONFIGURATION', sub: '.env / JSON / YAML / Secrets', stroke: '#d97706', fill: '#fffbeb', text: '#92400e', subColor: '#d97706', tag: '#fcd34d', num: 'L2' },
+              { idx: 2, label: 'DATABASE', sub: 'SQL / NoSQL / Redis / Storage', stroke: '#16a34a', fill: '#f0fdf4', text: '#166534', subColor: '#16a34a', tag: '#86efac', num: 'L3' },
+              { idx: 3, label: 'BACKEND', sub: 'API / Auth / Logic / Processing', stroke: '#9333ea', fill: '#faf5ff', text: '#6b21a8', subColor: '#9333ea', tag: '#d8b4fe', num: 'L4' },
+              { idx: 4, label: 'FRONTEND', sub: 'HTML / CSS / JS / UI', stroke: '#2563eb', fill: '#eff6ff', text: '#1e40af', subColor: '#2563eb', tag: '#93c5fd', num: 'L5' },
+            ] as layer}
+              <!-- Layer box: position = (current - idx) slots from top. Newest at top. -->
+              {#if layer.idx <= current}
+                {@const pos = current - layer.idx}
+                <g style="opacity: 1; transform: translateY({pos * 130}px); transition: all 0.7s ease-out;">
+                  <rect x="20" y="20" width="360" height="70" rx="3" fill="none" stroke={layer.stroke} stroke-width="1.5" stroke-dasharray={layer.idx === current ? 'none' : '4 2'}/>
+                  <rect x="20" y="20" width="360" height="70" rx="3" fill={layer.fill} opacity="0.6"/>
+                  <text x="50" y="48" fill={layer.text} font-size="18" font-weight="600">{layer.label}</text>
+                  <text x="50" y="70" fill={layer.subColor} font-size="14">{layer.sub}</text>
+                  <text x="360" y="62" text-anchor="end" fill={layer.tag} font-size="11">{layer.num}</text>
+                </g>
+                <!-- Up arrow from below (skip for the bottom-most visible layer) -->
+                {#if pos > 0}
+                  <g style="opacity: 1; transform: translateY({pos * 130}px); transition: all 0.7s ease-out;">
+                    <line x1="200" y1="20" x2="200" y2="-20" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3 2"/>
+                    <polygon points="195,-14 200,-24 205,-14" fill="#94a3b8"/>
+                  </g>
+                {/if}
+              {/if}
+            {/each}
+          </svg>
+        </div>
+
+        <!-- 2. Video/illustration (middle) -->
         <div class="overflow-hidden rounded-lg">
           {#key slide.id}
             {#if slide.image}
-              <img
-                src={slide.image}
-                alt={slide.title}
-                class="w-full h-full object-cover rounded-lg"
-              />
+              <img src={slide.image} alt={slide.title} class="w-full h-full object-cover rounded-lg"/>
             {:else if slide.video}
               <video
                 src={slide.video}
@@ -286,18 +299,36 @@
                 }}
               ></video>
             {:else if slide.id === 'database'}
-              <div class="flex w-full items-center justify-center bg-slate-50 rounded-lg p-6">
+              <div class="flex w-full h-full items-center justify-center bg-slate-50 rounded-lg p-6">
                 <VaultAnimation />
               </div>
             {:else if slide.id === 'infrastructure'}
-              <div class="flex w-full items-center justify-center bg-slate-50 rounded-lg p-6">
+              <div class="flex w-full h-full items-center justify-center bg-slate-50 rounded-lg p-6">
                 <BankBuildingAnimation />
               </div>
             {:else}
-              <LottiePlayer src={slide.lottie} class="w-full h-64 sm:h-72" />
+              <LottiePlayer src={slide.lottie} class="w-full h-full" />
             {/if}
           {/key}
         </div>
+
+        <!-- 3. Band thumbnail (far right) -->
+        <div>
+        {#key slide.id}
+          {#if slide.id === 'infrastructure'}
+            <img src="/lottie/infra-thumb.jpg" alt="Infrastructure" class="w-full h-full object-cover rounded-lg"/>
+          {:else if slide.id === 'config'}
+            <img src="/lottie/config-thumb.avif" alt="Config" class="w-full h-full object-cover rounded-lg"/>
+          {:else if slide.id === 'database'}
+            <img src="/lottie/database-thumb.jpg" alt="Database" class="w-full h-full object-cover rounded-lg"/>
+          {:else if slide.id === 'backend'}
+            <img src="/lottie/backend-thumb.jpg" alt="Backend" class="w-full h-full object-cover rounded-lg"/>
+          {:else if slide.id === 'frontend'}
+            <img src="/lottie/frontend-thumb.avif" alt="Frontend" class="w-full h-full object-cover rounded-lg"/>
+          {/if}
+        {/key}
+        </div>
+
       </div>
     </div>
   </div>
