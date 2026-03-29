@@ -1,281 +1,262 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import LottiePlayer from './LottiePlayer.svelte';
+  import VaultAnimation from './VaultAnimation.svelte';
+  import BankBuildingAnimation from './BankBuildingAnimation.svelte';
 
   let visible = $state(false);
-  let pulse = $state(false);
-  let animating = $state(true);
-  let dataPacket = $state(-1);
-  let stopped = false;
+  let current = $state(0);
+  let pulsing = $state(true);
+
+  interface Slide {
+    id: string;
+    title: string;
+    subtitle: string;
+    metaphor: string;
+    description: string;
+    insight: string;
+    techs: string[];
+    color: string;
+    bgColor: string;
+    borderColor: string;
+    textColor: string;
+    tagColor: string;
+    tagTextColor: string;
+    insightBg: string;
+    walkthrough: string;
+    lottie: string;
+    video?: string;
+    image?: string;
+    icon: string;
+  }
+
+  const slides: Slide[] = [
+    {
+      id: 'infrastructure',
+      title: 'Infrastructure',
+      subtitle: 'The Building & Security',
+      metaphor: '🏗️',
+      description: 'Before anything else, the building must exist. Power, security cameras, vault locks, internet wiring, and the network connecting branches. Without this foundation, there is no bank.',
+      insight: 'Existence',
+      techs: ['Cloud', 'CI/CD', 'DNS', 'Servers'],
+      color: 'slate', bgColor: 'bg-slate-50', borderColor: 'border-slate-300', textColor: 'text-slate-700',
+      tagColor: 'bg-slate-200', tagTextColor: 'text-slate-700', insightBg: 'bg-slate-100',
+      icon: '🏦',
+      walkthrough: 'Step 1: The building goes up. Power turns on. Security is armed. The bank exists.',
+      lottie: '/lottie/infrastructure.json',
+      video: '/lottie/infrastructure.mp4',
+    },
+    {
+      id: 'config',
+      title: 'Config',
+      subtitle: 'Bank Policies & Settings',
+      metaphor: '⚙️',
+      description: 'Before the doors open, the bank sets its rules. Interest rates, daily withdrawal limits, security keys, and feature toggles. These policies govern every decision the bank will ever make.',
+      insight: 'Policy',
+      techs: ['.env', 'JSON', 'YAML'],
+      color: 'amber', bgColor: 'bg-amber-50', borderColor: 'border-amber-300', textColor: 'text-amber-700',
+      tagColor: 'bg-amber-200', tagTextColor: 'text-amber-800', insightBg: 'bg-amber-100',
+      icon: '⚙️',
+      walkthrough: 'Step 2: Policies are written. $500 daily limit. PIN required. 2FA enabled. The rules are set.',
+      lottie: '/lottie/config.json',
+      video: '/lottie/config.mp4',
+    },
+    {
+      id: 'database',
+      title: 'Database',
+      subtitle: 'The Vault & Ledger',
+      metaphor: '🗄️',
+      description: 'The vault is built and the ledger is ready. Account balances, transaction history, customer records — the money and every fact about it lives here. Nothing can happen until truth has a place to be stored.',
+      insight: 'Truth',
+      techs: ['SQL', 'NoSQL', 'Redis'],
+      color: 'green', bgColor: 'bg-green-50', borderColor: 'border-green-300', textColor: 'text-green-700',
+      tagColor: 'bg-green-200', tagTextColor: 'text-green-800', insightBg: 'bg-green-100',
+      icon: '🗄️',
+      walkthrough: 'Step 3: The vault is stocked and the ledger opens. Your $240 is recorded. The money is real.',
+      lottie: '/lottie/database.json',
+      video: '/lottie/vault.mp4',
+    },
+    {
+      id: 'backend',
+      title: 'Backend',
+      subtitle: 'The Bank Employees',
+      metaphor: '🧠',
+      description: 'Now you hire the employees. They know how to read the ledger, follow the policies, verify identities, and make decisions. They are the brains that connect the vault to the customer.',
+      insight: 'Actual control',
+      techs: ['Python', 'Go', 'Node.js'],
+      color: 'purple', bgColor: 'bg-purple-50', borderColor: 'border-purple-300', textColor: 'text-purple-700',
+      tagColor: 'bg-purple-200', tagTextColor: 'text-purple-800', insightBg: 'bg-purple-100',
+      icon: '🧠',
+      walkthrough: 'Step 4: Employees are trained. They check your ID, read the ledger, follow the rules, and approve your withdrawal.',
+      lottie: '/lottie/backend.json',
+      video: '/lottie/backend.mp4',
+    },
+    {
+      id: 'frontend',
+      title: 'Frontend',
+      subtitle: 'The ATM & Teller Window',
+      metaphor: '💁',
+      description: 'Finally, the ATM is installed and the teller window opens. This is the only part you ever see or touch. You tap a button — and all four layers behind it work together to put $60 cash in your hand.',
+      insight: 'The illusion of control',
+      techs: ['HTML', 'CSS', 'JavaScript'],
+      color: 'blue', bgColor: 'bg-blue-50', borderColor: 'border-blue-300', textColor: 'text-blue-700',
+      tagColor: 'bg-blue-200', tagTextColor: 'text-blue-800', insightBg: 'bg-blue-100',
+      icon: '💁',
+      walkthrough: 'Step 5: You tap "Withdraw $60." The ATM talks to the employees, who check the vault and the rules. Approved. Cash in hand.',
+      lottie: '/lottie/frontend.json',
+      video: '/lottie/frontend.mp4',
+    },
+  ];
 
   onMount(() => {
     visible = true;
-    setTimeout(() => {
-      pulse = true;
-      cyclePacket();
-    }, 800);
   });
 
-  function cyclePacket() {
-    if (stopped) return;
-    dataPacket = 0;
-    const advance = () => {
-      if (stopped) { dataPacket = -1; return; }
-      dataPacket++;
-      if (dataPacket < 5) {
-        setTimeout(advance, 600);
-      } else {
-        setTimeout(() => { dataPacket = -1; if (!stopped) setTimeout(cyclePacket, 1500); }, 600);
-      }
-    };
-    setTimeout(advance, 600);
+  function goTo(i: number) {
+    current = i;
+    pulsing = false;
   }
 
-  function toggleAnimation() {
-    if (animating) {
-      stopped = true;
-      animating = false;
-      pulse = false;
-      dataPacket = -1;
-    } else {
-      stopped = false;
-      animating = true;
-      pulse = true;
-      cyclePacket();
-    }
+  function prev() {
+    current = (current - 1 + slides.length) % slides.length;
+    pulsing = false;
   }
+
+  function next() {
+    current = (current + 1) % slides.length;
+    pulsing = current < slides.length - 1;
+  }
+
+  let slide = $derived(slides[current]);
 </script>
 
-<div class="rounded-2xl border border-slate-200 bg-gradient-to-b from-slate-50 to-white p-4 shadow-sm sm:p-8">
-  <div class="mb-8 flex items-center justify-center gap-3">
+<div class="rounded-2xl border border-slate-200 bg-gradient-to-b from-sky-50/50 to-amber-50/30 p-4 shadow-sm sm:p-6 lg:p-8">
+  <!-- Header -->
+  <div class="mb-1 flex items-center justify-center">
     <p class="text-xs font-semibold uppercase tracking-widest text-slate-400">How Software Fits Together</p>
+  </div>
+  <p class="mb-4 text-center text-sm text-slate-500">Think of a tech stack like a <strong class="text-amber-700">bank</strong> — built from the foundation up to the moment cash hits your hand.</p>
+
+  <!-- Dot navigation + progress -->
+  <div class="mb-6 flex flex-col items-center gap-4">
+    <div class="flex items-center gap-4 sm:gap-6">
+      {#each slides as s, i}
+        <button
+          onclick={() => goTo(i)}
+          class="group flex flex-col items-center gap-1.5"
+          aria-label="Go to {s.title}"
+        >
+          <div class="flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300
+            {i === current ? `scale-110 shadow-lg ${s.tagColor}` : 'bg-slate-100 group-hover:bg-slate-200'}">
+            <svg class="h-5 w-5 transition-colors duration-300 {i === current ? s.tagTextColor : 'text-slate-400 group-hover:text-slate-500'}" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              {#if s.id === 'infrastructure'}
+                <!-- Building -->
+                <path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-4h6v4M9 9h.01M15 9h.01M9 13h.01M15 13h.01"/>
+              {:else if s.id === 'config'}
+                <!-- Gear/cog -->
+                <path d="M12.22 2h-.44a2 2 0 00-2 2v.18a2 2 0 01-1 1.73l-.43.25a2 2 0 01-2 0l-.15-.08a2 2 0 00-2.73.73l-.22.38a2 2 0 00.73 2.73l.15.1a2 2 0 011 1.72v.51a2 2 0 01-1 1.74l-.15.09a2 2 0 00-.73 2.73l.22.38a2 2 0 002.73.73l.15-.08a2 2 0 012 0l.43.25a2 2 0 011 1.73V20a2 2 0 002 2h.44a2 2 0 002-2v-.18a2 2 0 011-1.73l.43-.25a2 2 0 012 0l.15.08a2 2 0 002.73-.73l.22-.39a2 2 0 00-.73-2.73l-.15-.08a2 2 0 01-1-1.74v-.5a2 2 0 011-1.74l.15-.09a2 2 0 00.73-2.73l-.22-.38a2 2 0 00-2.73-.73l-.15.08a2 2 0 01-2 0l-.43-.25a2 2 0 01-1-1.73V4a2 2 0 00-2-2z"/><circle cx="12" cy="12" r="3"/>
+              {:else if s.id === 'database'}
+                <!-- Database/cylinder -->
+                <ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/>
+              {:else if s.id === 'backend'}
+                <!-- Server/CPU -->
+                <rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"/>
+              {:else}
+                <!-- Monitor/screen -->
+                <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+              {/if}
+            </svg>
+          </div>
+          <span class="text-xs font-semibold transition-colors sm:text-sm {i === current ? s.textColor : 'text-slate-300 group-hover:text-slate-500'}">{s.title}</span>
+        </button>
+      {/each}
+    </div>
+    <div class="h-1 w-full max-w-lg overflow-hidden rounded-full bg-slate-100">
+      <div class="h-full rounded-full bg-indigo-400 transition-all duration-300" style="width: {((current + 1) / slides.length) * 100}%"></div>
+    </div>
+  </div>
+
+  <!-- Carousel -->
+  <div class="relative">
+    <!-- Prev / Next arrows -->
     <button
-      onclick={toggleAnimation}
-      class="rounded-full border border-slate-200 px-2 py-0.5 text-[10px] font-medium text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
-      aria-label="{animating ? 'Pause' : 'Play'} animation"
+      onclick={prev}
+      class="absolute left-0 top-1/2 z-10 -translate-x-1 -translate-y-1/2 rounded-full border border-slate-200 bg-white p-2 text-slate-400 shadow-md transition-colors hover:bg-slate-50 hover:text-slate-700 sm:-translate-x-4"
+      aria-label="Previous"
     >
-      {animating ? '⏸ Pause' : '▶ Play'}
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
     </button>
+    <button
+      onclick={next}
+      class="absolute right-0 top-1/2 z-10 -translate-y-1/2 translate-x-1 rounded-full border border-slate-200 bg-white p-2 text-slate-400 shadow-md transition-colors hover:bg-slate-50 hover:text-slate-700 sm:translate-x-4 {pulsing ? 'animate-pulse ring-2 ring-indigo-300' : ''}"
+      aria-label="Next"
+    >
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+    </button>
+
+    <!-- Slide content -->
+    <div class="mx-auto max-w-2xl overflow-hidden rounded-2xl transition-colors duration-500">
+      <div class="grid grid-cols-1 sm:grid-cols-2">
+
+        <!-- Left: illustration -->
+        <div class="flex items-center justify-center p-6 sm:p-8">
+          {#key slide.id}
+            {#if slide.image}
+              <img
+                src={slide.image}
+                alt={slide.title}
+                class="h-full w-full rounded-xl object-cover"
+              />
+            {:else if slide.video}
+              <video
+                src={slide.video}
+                autoplay
+                loop
+                muted
+                playsinline
+                class="h-full w-full rounded-xl object-cover"
+              ></video>
+            {:else if slide.id === 'database'}
+              <div class="h-48 w-48 sm:h-64 sm:w-64">
+                <VaultAnimation />
+              </div>
+            {:else if slide.id === 'infrastructure'}
+              <div class="h-48 w-48 sm:h-64 sm:w-64">
+                <BankBuildingAnimation />
+              </div>
+            {:else}
+              <LottiePlayer src={slide.lottie} class="h-48 w-48 sm:h-64 sm:w-64" />
+            {/if}
+          {/key}
+        </div>
+
+        <!-- Right: text content -->
+        <div class="flex flex-col justify-center p-5 sm:p-8">
+          <!-- Step indicator -->
+          <div class="mb-3 flex items-center gap-2">
+            <span class="flex h-7 w-7 items-center justify-center rounded-full {slide.tagColor} text-xs font-bold {slide.tagTextColor}">{current + 1}</span>
+            <span class="text-xs font-medium text-slate-400">of {slides.length}</span>
+          </div>
+
+          <h3 class="text-xl font-black {slide.textColor} sm:text-2xl">{slide.title}</h3>
+          <p class="mt-0.5 text-sm font-semibold text-slate-400">{slide.subtitle}</p>
+
+          <p class="mt-3 text-sm leading-relaxed text-slate-600">{slide.description}</p>
+
+          <!-- Insight -->
+          <div class="mt-4 inline-flex self-start rounded-full {slide.insightBg} px-4 py-1.5">
+            <p class="text-xs font-bold italic {slide.textColor}">"{slide.insight}"</p>
+          </div>
+
+          <!-- Tech tags -->
+          <div class="mt-4 flex flex-wrap gap-2">
+            {#each slide.techs as tech}
+              <span class="rounded-full {slide.tagColor} px-3 py-1 text-xs font-bold {slide.tagTextColor}">{tech}</span>
+            {/each}
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="grid grid-cols-1 gap-6 lg:grid-cols-5 lg:gap-4">
-
-    <!-- Layer 1: Frontend -->
-    <div class="transition-all duration-700 {visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}">
-      <div class="relative rounded-2xl border-2 border-blue-200 bg-blue-50 p-4 {dataPacket === 0 ? 'ring-2 ring-blue-400 ring-offset-2' : ''}">
-        <!-- Monitor SVG -->
-        <div class="mx-auto mb-3 flex justify-center">
-          <svg class="h-20 w-28" viewBox="0 0 112 80" fill="none">
-            <!-- Monitor body -->
-            <rect x="6" y="2" width="100" height="60" rx="6" fill="#dbeafe" stroke="#93c5fd" stroke-width="2"/>
-            <!-- Screen -->
-            <rect x="12" y="8" width="88" height="44" rx="3" fill="#eff6ff"/>
-            <!-- Screen content: nav bar -->
-            <rect x="16" y="12" width="80" height="6" rx="1.5" fill="#bfdbfe"/>
-            <!-- Screen content: hero block -->
-            <rect x="16" y="22" width="48" height="8" rx="1.5" fill="#93c5fd"/>
-            <rect x="16" y="33" width="32" height="4" rx="1" fill="#bfdbfe"/>
-            <!-- Screen content: cards -->
-            <rect x="16" y="41" width="24" height="8" rx="1.5" fill="#dbeafe" stroke="#93c5fd" stroke-width="0.5"/>
-            <rect x="44" y="41" width="24" height="8" rx="1.5" fill="#dbeafe" stroke="#93c5fd" stroke-width="0.5"/>
-            <rect x="72" y="41" width="24" height="8" rx="1.5" fill="#dbeafe" stroke="#93c5fd" stroke-width="0.5"/>
-            <!-- Button -->
-            <rect x="68" y="22" width="24" height="8" rx="3" fill="#3b82f6"/>
-            <!-- Stand -->
-            <rect x="44" y="62" width="24" height="4" rx="1" fill="#93c5fd"/>
-            <rect x="36" y="66" width="40" height="3" rx="1.5" fill="#bfdbfe"/>
-            <!-- Cursor -->
-            <g class="{pulse ? 'animate-bounce' : ''}" style="animation-duration: 2s;">
-              <path d="M78 34l-4-4v8l2-2 2 3 1.5-1-2-3z" fill="#1d4ed8"/>
-            </g>
-          </svg>
-        </div>
-
-        <h3 class="text-center text-sm font-black text-blue-700">Frontend</h3>
-        <p class="mt-1 text-center text-xs leading-relaxed text-blue-600">
-          What you <strong>see and click</strong>. Buttons, pages, animations &mdash; everything on screen.
-        </p>
-        <div class="mt-3 flex flex-wrap justify-center gap-1.5">
-          <span class="rounded-full bg-blue-200 px-2 py-0.5 text-[10px] font-bold text-blue-800">HTML</span>
-          <span class="rounded-full bg-blue-200 px-2 py-0.5 text-[10px] font-bold text-blue-800">CSS</span>
-          <span class="rounded-full bg-blue-200 px-2 py-0.5 text-[10px] font-bold text-blue-800">JavaScript</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Layer 2: Backend -->
-    <div class="transition-all duration-700 delay-100 {visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}">
-      <div class="rounded-2xl border-2 border-purple-200 bg-purple-50 p-4 {dataPacket === 1 ? 'ring-2 ring-purple-400 ring-offset-2' : ''}">
-        <!-- Brain/Gears SVG -->
-        <div class="mx-auto mb-3 flex justify-center">
-          <svg class="h-20 w-28" viewBox="0 0 112 80" fill="none">
-            <!-- Server rack -->
-            <rect x="24" y="8" width="64" height="64" rx="6" fill="#f3e8ff" stroke="#c084fc" stroke-width="2"/>
-            <!-- Rack slots -->
-            <rect x="30" y="14" width="52" height="12" rx="2" fill="#e9d5ff"/>
-            <rect x="30" y="30" width="52" height="12" rx="2" fill="#e9d5ff"/>
-            <rect x="30" y="46" width="52" height="12" rx="2" fill="#e9d5ff"/>
-            <!-- Lights -->
-            <circle cx="38" cy="20" r="2.5" fill="#a855f7"/>
-            <circle cx="46" cy="20" r="2.5" fill="#a855f7" opacity="0.5"/>
-            <circle cx="38" cy="36" r="2.5" fill="#a855f7"/>
-            <circle cx="46" cy="36" r="2.5" fill="#a855f7" class="{pulse ? 'animate-pulse' : ''}"/>
-            <circle cx="38" cy="52" r="2.5" fill="#a855f7" opacity="0.5"/>
-            <circle cx="46" cy="52" r="2.5" fill="#a855f7"/>
-            <!-- Vents -->
-            <line x1="60" y1="16" x2="76" y2="16" stroke="#c084fc" stroke-width="1" opacity="0.5"/>
-            <line x1="60" y1="19" x2="76" y2="19" stroke="#c084fc" stroke-width="1" opacity="0.5"/>
-            <line x1="60" y1="22" x2="76" y2="22" stroke="#c084fc" stroke-width="1" opacity="0.5"/>
-            <line x1="60" y1="32" x2="76" y2="32" stroke="#c084fc" stroke-width="1" opacity="0.5"/>
-            <line x1="60" y1="35" x2="76" y2="35" stroke="#c084fc" stroke-width="1" opacity="0.5"/>
-            <line x1="60" y1="38" x2="76" y2="38" stroke="#c084fc" stroke-width="1" opacity="0.5"/>
-            <!-- Power button -->
-            <circle cx="56" cy="66" r="3" fill="none" stroke="#a855f7" stroke-width="1.5"/>
-            <line x1="56" y1="63" x2="56" y2="66" stroke="#a855f7" stroke-width="1.5"/>
-          </svg>
-        </div>
-
-        <h3 class="text-center text-sm font-black text-purple-700">Backend</h3>
-        <p class="mt-1 text-center text-xs leading-relaxed text-purple-600">
-          The <strong>brain</strong> behind the scenes. Processes requests, runs logic, enforces rules.
-        </p>
-        <div class="mt-3 flex flex-wrap justify-center gap-1.5">
-          <span class="rounded-full bg-purple-200 px-2 py-0.5 text-[10px] font-bold text-purple-800">Python</span>
-          <span class="rounded-full bg-purple-200 px-2 py-0.5 text-[10px] font-bold text-purple-800">Go</span>
-          <span class="rounded-full bg-purple-200 px-2 py-0.5 text-[10px] font-bold text-purple-800">Node.js</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Layer 3: Database -->
-    <div class="transition-all duration-700 delay-200 {visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}">
-      <div class="rounded-2xl border-2 border-green-200 bg-green-50 p-4 {dataPacket === 2 ? 'ring-2 ring-green-400 ring-offset-2' : ''}">
-        <!-- Filing Cabinet SVG -->
-        <div class="mx-auto mb-3 flex justify-center">
-          <svg class="h-20 w-28" viewBox="0 0 112 80" fill="none">
-            <!-- Cabinet body -->
-            <rect x="26" y="6" width="60" height="68" rx="4" fill="#dcfce7" stroke="#86efac" stroke-width="2"/>
-            <!-- Drawers -->
-            <rect x="32" y="12" width="48" height="16" rx="2" fill="#bbf7d0" stroke="#86efac" stroke-width="1"/>
-            <rect x="32" y="32" width="48" height="16" rx="2" fill="#bbf7d0" stroke="#86efac" stroke-width="1"/>
-            <rect x="32" y="52" width="48" height="16" rx="2" fill="#bbf7d0" stroke="#86efac" stroke-width="1"/>
-            <!-- Drawer handles -->
-            <rect x="50" y="18" width="12" height="3" rx="1.5" fill="#22c55e"/>
-            <rect x="50" y="38" width="12" height="3" rx="1.5" fill="#22c55e"/>
-            <rect x="50" y="58" width="12" height="3" rx="1.5" fill="#22c55e"/>
-            <!-- Labels on drawers -->
-            <text x="56" y="27" text-anchor="middle" fill="#15803d" font-size="6" font-weight="bold">Users</text>
-            <text x="56" y="47" text-anchor="middle" fill="#15803d" font-size="6" font-weight="bold">Orders</text>
-            <text x="56" y="67" text-anchor="middle" fill="#15803d" font-size="6" font-weight="bold">Products</text>
-          </svg>
-        </div>
-
-        <h3 class="text-center text-sm font-black text-green-700">Database</h3>
-        <p class="mt-1 text-center text-xs leading-relaxed text-green-600">
-          The <strong>memory</strong>. Stores users, orders, content &mdash; everything that persists.
-        </p>
-        <div class="mt-3 flex flex-wrap justify-center gap-1.5">
-          <span class="rounded-full bg-green-200 px-2 py-0.5 text-[10px] font-bold text-green-800">SQL</span>
-          <span class="rounded-full bg-green-200 px-2 py-0.5 text-[10px] font-bold text-green-800">NoSQL</span>
-          <span class="rounded-full bg-green-200 px-2 py-0.5 text-[10px] font-bold text-green-800">Redis</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Layer 4: Config -->
-    <div class="transition-all duration-700 delay-300 {visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}">
-      <div class="rounded-2xl border-2 border-dashed border-amber-200 bg-amber-50 p-4 {dataPacket === 3 ? 'ring-2 ring-amber-400 ring-offset-2' : ''}">
-        <!-- Settings/Dials SVG -->
-        <div class="mx-auto mb-3 flex justify-center">
-          <svg class="h-20 w-28" viewBox="0 0 112 80" fill="none">
-            <!-- Clipboard -->
-            <rect x="28" y="10" width="56" height="62" rx="4" fill="#fef3c7" stroke="#fbbf24" stroke-width="2"/>
-            <rect x="42" y="6" width="28" height="10" rx="3" fill="#fbbf24"/>
-            <circle cx="56" cy="11" r="3" fill="#fef3c7"/>
-            <!-- Lines of config -->
-            <rect x="36" y="24" width="20" height="3" rx="1" fill="#f59e0b"/>
-            <rect x="58" y="24" width="14" height="3" rx="1" fill="#fcd34d"/>
-            <rect x="36" y="32" width="14" height="3" rx="1" fill="#f59e0b"/>
-            <rect x="52" y="32" width="22" height="3" rx="1" fill="#fcd34d"/>
-            <rect x="36" y="40" width="24" height="3" rx="1" fill="#f59e0b"/>
-            <rect x="62" y="40" width="10" height="3" rx="1" fill="#fcd34d"/>
-            <rect x="36" y="48" width="16" height="3" rx="1" fill="#f59e0b"/>
-            <rect x="54" y="48" width="18" height="3" rx="1" fill="#fcd34d"/>
-            <!-- Toggle switches -->
-            <circle cx="40" cy="60" r="4" fill="#22c55e"/>
-            <circle cx="52" cy="60" r="4" fill="#22c55e"/>
-            <circle cx="64" cy="60" r="4" fill="#ef4444" opacity="0.6"/>
-          </svg>
-        </div>
-
-        <h3 class="text-center text-sm font-black text-amber-700">Config</h3>
-        <p class="mt-1 text-center text-xs leading-relaxed text-amber-600">
-          The <strong>settings dial</strong>. Passwords, feature flags, environment-specific values.
-        </p>
-        <div class="mt-3 flex flex-wrap justify-center gap-1.5">
-          <span class="rounded-full bg-amber-200 px-2 py-0.5 text-[10px] font-bold text-amber-800">.env</span>
-          <span class="rounded-full bg-amber-200 px-2 py-0.5 text-[10px] font-bold text-amber-800">JSON</span>
-          <span class="rounded-full bg-amber-200 px-2 py-0.5 text-[10px] font-bold text-amber-800">YAML</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Layer 5: Infrastructure -->
-    <div class="transition-all duration-700 delay-[400ms] {visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}">
-      <div class="rounded-2xl border-2 border-slate-200 bg-slate-50 p-4 {dataPacket === 4 ? 'ring-2 ring-slate-400 ring-offset-2' : ''}">
-        <!-- Cloud/Infrastructure SVG -->
-        <div class="mx-auto mb-3 flex justify-center">
-          <svg class="h-20 w-28" viewBox="0 0 112 80" fill="none">
-            <!-- Cloud shape -->
-            <path d="M28 52c-6 0-10-4-10-10 0-5 3-9 8-10 1-8 8-14 16-14 7 0 13 4 15 10 2-1 4-2 7-2 7 0 12 5 12 12s-5 12-12 12H28z" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/>
-            <!-- Second cloud -->
-            <path d="M58 56c-5 0-8-3-8-8s2-7 6-8c1-7 7-12 14-12 6 0 11 3 13 9 1-1 3-1 5-1 6 0 10 4 10 10s-4 10-10 10H58z" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
-            <!-- Upload arrow -->
-            <path d="M42 42v-10m0 0l-4 4m4-4l4 4" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{pulse ? 'animate-pulse' : ''}"/>
-            <!-- Download arrow -->
-            <path d="M72 38v10m0 0l-4-4m4 4l4-4" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{pulse ? 'animate-pulse' : ''}" style="animation-delay: 0.5s;"/>
-            <!-- Server dots in cloud -->
-            <circle cx="48" cy="30" r="2" fill="#64748b"/>
-            <circle cx="56" cy="28" r="2" fill="#64748b"/>
-            <circle cx="64" cy="30" r="2" fill="#64748b"/>
-            <!-- Connection lines -->
-            <line x1="50" y1="30" x2="54" y2="28" stroke="#94a3b8" stroke-width="1"/>
-            <line x1="58" y1="28" x2="62" y2="30" stroke="#94a3b8" stroke-width="1"/>
-          </svg>
-        </div>
-
-        <h3 class="text-center text-sm font-black text-slate-700 break-words hyphens-auto">Infra&shy;structure</h3>
-        <p class="mt-1 text-center text-xs leading-relaxed text-slate-500">
-          The <strong>foundation</strong>. Servers, networking, deployment &mdash; keeps everything running.
-        </p>
-        <div class="mt-3 flex flex-wrap justify-center gap-1.5">
-          <span class="rounded-full bg-slate-200 px-2 py-0.5 text-[10px] font-bold text-slate-700">Cloud</span>
-          <span class="rounded-full bg-slate-200 px-2 py-0.5 text-[10px] font-bold text-slate-700">CI/CD</span>
-          <span class="rounded-full bg-slate-200 px-2 py-0.5 text-[10px] font-bold text-slate-700">DNS</span>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- Connection flow line (desktop only) -->
-  <div class="mt-6 hidden lg:block">
-    <div class="relative mx-auto h-8 max-w-3xl">
-      <!-- Horizontal line -->
-      <div class="absolute top-1/2 left-0 right-0 h-0.5 -translate-y-1/2 bg-gradient-to-r from-blue-300 via-purple-300 to-slate-300"></div>
-      <!-- Animated data packet -->
-      {#if dataPacket >= 0}
-        <div
-          class="absolute top-1/2 h-3 w-3 -translate-y-1/2 rounded-full bg-indigo-500 shadow-md shadow-indigo-300 transition-all duration-500"
-          style="left: {dataPacket * 25}%"
-        ></div>
-      {/if}
-      <!-- Dots at each layer -->
-      <div class="absolute top-1/2 left-0 h-2.5 w-2.5 -translate-y-1/2 rounded-full bg-blue-400"></div>
-      <div class="absolute top-1/2 left-1/4 h-2.5 w-2.5 -translate-y-1/2 rounded-full bg-purple-400"></div>
-      <div class="absolute top-1/2 left-2/4 h-2.5 w-2.5 -translate-y-1/2 rounded-full bg-green-400"></div>
-      <div class="absolute top-1/2 left-3/4 h-2.5 w-2.5 -translate-y-1/2 rounded-full bg-amber-400"></div>
-      <div class="absolute top-1/2 left-full h-2.5 w-2.5 -translate-x-full -translate-y-1/2 rounded-full bg-slate-400"></div>
-    </div>
-    <p class="mt-1 text-center text-[10px] text-slate-400">Data flows between layers as users interact with the app</p>
-  </div>
 </div>

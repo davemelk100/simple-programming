@@ -17,6 +17,7 @@
     "@supabase/supabase-js": "^2.100.0",
     "@tailwindcss/vite": "^4.2.2",
     "astro": "^6.0.8",
+    "lottie-web": "^5.13.0",
     "svelte": "^5.55.0",
     "tailwindcss": "^4.2.2",
     "typescript": "^5.9.3"
