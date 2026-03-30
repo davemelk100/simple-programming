@@ -41,7 +41,7 @@
   <div class="mx-auto flex flex-wrap items-center justify-between gap-2 px-4 py-3">
     <a
       href="/"
-      class="text-2xl font-bold text-slate-900 no-underline hover:text-indigo-600 sm:text-4xl"
+      class="text-xl font-bold text-slate-900 no-underline hover:text-indigo-600 sm:text-4xl"
       style="font-family: 'Permanent Marker';"
     >
       Programming Is Easy
@@ -56,6 +56,18 @@
           My Progress
         </a>
         <span class="hidden text-sm text-slate-500 sm:inline">{user.email}</span>
+      {/if}
+      <button
+        onclick={() => toggleAdvanced()}
+        class="flex shrink-0 items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors
+          {advanced ? 'border-indigo-300 bg-indigo-50 text-indigo-700' : 'border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100'}"
+      >
+        <span class="text-xs">{advanced ? 'Advanced' : 'Basic'}</span>
+        <div class="relative h-5 w-9 rounded-full transition-colors {advanced ? 'bg-indigo-500' : 'bg-slate-300'}">
+          <div class="absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform {advanced ? 'translate-x-4' : 'translate-x-0.5'}"></div>
+        </div>
+      </button>
+      {#if user}
         <button
           onclick={handleSignOut}
           disabled={signingOut}
@@ -64,27 +76,17 @@
           {signingOut ? "Signing out..." : "Sign Out"}
         </button>
       {:else}
-        <span class="hidden text-sm text-slate-400 lg:inline">Sign in to track your progress across lessons.</span>
         <a
           href="/auth/login"
-          class="rounded-lg bg-indigo-600 px-2.5 py-1 text-sm font-medium text-white no-underline hover:bg-indigo-700 sm:px-3 sm:py-1.5"
+          class="rounded-lg bg-indigo-600 p-2 text-sm font-medium text-white no-underline hover:bg-indigo-700 sm:px-3 sm:py-1.5"
         >
-          Sign In
+          <svg class="h-5 w-5 sm:hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3-3l3-3m0 0l-3-3m3 3H9"/></svg>
+          <span class="hidden sm:inline">Sign In</span>
         </a>
       {/if}
     </div>
   </div>
   <div class="hidden items-center justify-between px-4 pb-2 sm:flex">
     <p class="text-sm text-slate-400">No jargon. No boring tutorials. Just colorful, interactive lessons that make programming click.</p>
-    <button
-      onclick={() => toggleAdvanced()}
-      class="flex shrink-0 items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors
-        {advanced ? 'border-indigo-300 bg-indigo-50 text-indigo-700' : 'border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100'}"
-    >
-      <span class="text-xs">{advanced ? 'Advanced' : 'Basic'}</span>
-      <div class="relative h-5 w-9 rounded-full transition-colors {advanced ? 'bg-indigo-500' : 'bg-slate-300'}">
-        <div class="absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform {advanced ? 'translate-x-4' : 'translate-x-0.5'}"></div>
-      </div>
-    </button>
   </div>
 </header>

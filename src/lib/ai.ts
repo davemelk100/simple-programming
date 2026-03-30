@@ -1,6 +1,6 @@
 import type { Topic } from './types';
 
-export const aiTopics: Topic[] = [
+export const aiUsingTopics: Topic[] = [
   {
     slug: 'what-is-an-llm',
     title: 'What Is an LLM?',
@@ -16,13 +16,6 @@ export const aiTopics: Topic[] = [
     color: 'blue',
   },
   {
-    slug: 'agentic-ai',
-    title: 'Agentic AI',
-    description: 'Autonomous agents that plan, use tools, and reason through multi-step tasks',
-    icon: '\u{1F916}',
-    color: 'green',
-  },
-  {
     slug: 'copilots',
     title: 'Copilots',
     description: 'AI coding assistants that help you write, review, and debug code',
@@ -36,6 +29,16 @@ export const aiTopics: Topic[] = [
     icon: '\u{1F4AC}',
     color: 'pink',
   },
+];
+
+export const aiDevelopingTopics: Topic[] = [
+  {
+    slug: 'agentic-ai',
+    title: 'Agentic AI',
+    description: 'Autonomous agents that plan, use tools, and reason through multi-step tasks',
+    icon: '\u{1F916}',
+    color: 'green',
+  },
   {
     slug: 'ai-fine-tuning',
     title: 'AI Fine-Tuning',
@@ -44,6 +47,8 @@ export const aiTopics: Topic[] = [
     color: 'indigo',
   },
 ];
+
+export const aiTopics: Topic[] = [...aiUsingTopics, ...aiDevelopingTopics];
 
 export function getAiBySlug(slug: string): Topic | undefined {
   return aiTopics.find((t) => t.slug === slug);

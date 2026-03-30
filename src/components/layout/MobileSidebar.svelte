@@ -48,7 +48,10 @@
 >
   <!-- svelte-ignore a11y_click_events_have_key_events -->
   <!-- svelte-ignore a11y_no_static_element_interactions -->
-  <div onclick={close}>
+  <div class="h-full overflow-y-auto" onclick={(e) => {
+    const target = e.target as HTMLElement;
+    if (target.closest('a')) close();
+  }}>
     <Sidebar {currentPath} />
   </div>
 </div>

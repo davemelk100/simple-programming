@@ -31,6 +31,7 @@
     lottie: string;
     video?: string;
     videoStart?: number;
+    videoEnd?: number;
     videoSpeed?: number;
     image?: string;
     icon: string;
@@ -66,7 +67,8 @@
       walkthrough: 'Step 2: Policies are written. $500 daily limit. PIN required. 2FA enabled. The rules are set.',
       lottie: '/lottie/config.json',
       video: '/lottie/config.mp4',
-      videoStart: 6,
+      videoStart: 10,
+      videoEnd: 9,
     },
     {
       id: 'database',
@@ -82,7 +84,8 @@
       walkthrough: 'Step 3: The vault is stocked and the ledger opens. Your $240 is recorded. The money is real.',
       lottie: '/lottie/database.json',
       video: '/lottie/vault.mp4',
-      videoStart: 7,
+      videoStart: 5,
+      videoEnd: 10,
       videoSpeed: 1,
     },
     {
@@ -99,7 +102,8 @@
       walkthrough: 'Step 4: Employees are trained. They check your ID, read the ledger, follow the rules, and approve your withdrawal.',
       lottie: '/lottie/backend.json',
       video: '/lottie/backend.mp4',
-      videoStart: 7,
+      videoStart: 5,
+      videoEnd: 10,
     },
     {
       id: 'frontend',
@@ -160,93 +164,111 @@
   }
 
   let slide = $derived(slides[current]);
+  let svgHeight = $derived(current * 150 + 140);
 </script>
 
-<div class="rounded-2xl border border-slate-200 bg-gradient-to-b from-sky-50/50 to-amber-50/30 px-4 pb-4 pt-2 shadow-sm sm:px-6 sm:pb-6 sm:pt-3 lg:px-8 lg:pb-8 lg:pt-4">
-  <!-- Carousel -->
-  <div>
-    <!-- Title + Pagination row -->
-    <div class="mb-4 flex items-center gap-3">
-      <h3 class="flex items-center gap-2 text-xl sm:text-2xl {slide.textColor}" style="font-family: 'Roboto', sans-serif;">
-        <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 border-current text-sm font-bold leading-none">{current + 1}</span>
+<div class="rounded-2xl border border-slate-200 bg-gradient-to-b from-sky-50/50 to-amber-50/30 px-6 pb-4 pt-4 shadow-sm sm:px-8 sm:pb-6 lg:px-10 lg:pb-8">
+  <!-- Carousel: 2-col on sm+, stacked on mobile -->
+  <div class="grid grid-cols-1 sm:grid-cols-[1fr_1fr] lg:grid-cols-[1fr_minmax(0,28rem)] sm:gap-6 lg:gap-8
+    {entering ? 'opacity-0' : sliding ? 'opacity-0 transition-opacity duration-500 ease-in-out' : 'opacity-100 transition-opacity duration-500 ease-out'}">
+
+    <!-- Left column: title, pagination, text -->
+    <div class="flex flex-col gap-3 pt-2 sm:pt-10">
+      <h3 class="flex items-center gap-2 text-xl sm:text-2xl uppercase {slide.textColor}" style="font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-weight: 800;">
+        <span class="text-2xl leading-none">{slide.icon}</span>
         {slide.title}
       </h3>
-      <div class="ml-auto flex items-center gap-3">
-      <button
-        onclick={prev}
-        class="rounded-full border border-slate-200 bg-white p-1.5 text-slate-400 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-700"
-        aria-label="Previous"
-      >
-        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-      </button>
-      <div class="flex items-center gap-2">
-        <span class="flex h-8 w-8 items-center justify-center rounded-full {slide.tagColor} text-sm font-bold leading-none {slide.tagTextColor}">{current + 1}</span>
-        <span class="text-sm font-medium text-slate-400">of {slides.length}</span>
-      </div>
-      <button
-        onclick={next}
-        class="rounded-full border border-slate-200 bg-white p-1.5 text-slate-400 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-700 {pulsing ? 'animate-pulse ring-2 ring-indigo-300' : ''}"
-        aria-label="Next"
-      >
-        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-      </button>
-      <button
-        onclick={togglePause}
-        class="rounded-full border border-slate-200 bg-white p-1.5 text-slate-400 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-700"
-        aria-label={paused ? 'Play' : 'Pause'}
-      >
-        {#if paused}
-          <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-        {:else}
-          <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
-        {/if}
-      </button>
-      </div>
-    </div>
 
-    <!-- Slide content -->
-    <div class="w-full overflow-hidden rounded-2xl
-      {entering ? 'translate-x-12 opacity-0' : sliding ? '-translate-x-12 opacity-0 transition-all duration-700 ease-in-out' : 'translate-x-0 opacity-100 transition-all duration-500 ease-out'}">
+      <div class="flex items-center gap-3">
+        <button
+          onclick={prev}
+          class="rounded-full border border-slate-200 bg-white p-1.5 text-slate-400 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-700"
+          aria-label="Previous"
+        >
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+        <span class="hidden sm:inline text-sm font-bold leading-none {slide.textColor}">{current + 1}</span>
+        <span class="hidden sm:inline text-sm font-medium text-slate-400">of</span>
+        <span class="hidden sm:inline text-sm font-medium text-slate-400">{slides.length}</span>
+        <button
+          onclick={togglePause}
+          class="sm:hidden rounded-full border border-slate-200 bg-white p-1.5 text-slate-400 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-700"
+          aria-label={paused ? 'Play' : 'Pause'}
+        >
+          {#if paused}
+            <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          {:else}
+            <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+          {/if}
+        </button>
+        <button
+          onclick={next}
+          class="rounded-full border border-slate-200 bg-white p-1.5 text-slate-400 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-700 {pulsing ? 'animate-pulse ring-2 ring-indigo-300' : ''}"
+          aria-label="Next"
+        >
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+        <button
+          onclick={togglePause}
+          class="hidden sm:block rounded-full border border-slate-200 bg-white p-1.5 text-slate-400 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-700"
+          aria-label={paused ? 'Play' : 'Pause'}
+        >
+          {#if paused}
+            <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          {:else}
+            <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+          {/if}
+        </button>
+      </div>
 
-      <!-- Top: text -->
-      <div class="px-6 pt-6 sm:px-8 sm:pt-8">
+      <div>
         <p class="text-sm font-semibold uppercase text-slate-500">{slide.subtitle}</p>
         <p class="mt-2 text-sm leading-relaxed text-slate-600">{slide.description}</p>
       </div>
+    </div>
 
-      <!-- Bottom: schematic | image | video -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 items-stretch gap-4 p-6 sm:p-8">
+    <!-- Right column: video + schematic overlay -->
+    <div class="relative min-h-[28rem] sm:min-h-[36rem] lg:min-h-[40rem] mt-4 sm:mt-0 rounded-lg overflow-hidden">
 
-        <!-- 1. Schematic (far left) - newest on top, up arrows -->
-        <div class="font-mono">
-          <svg viewBox="0 0 400 720" class="w-full" preserveAspectRatio="xMidYMin meet">
+      <!-- Schematic - overlaid on video -->
+      <div class="relative z-10 font-mono p-2 sm:p-6 sm:max-w-lg">
+          <svg viewBox="0 0 400 {svgHeight}" class="w-full" preserveAspectRatio="xMidYMin meet">
             <defs>
               <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
                 <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#e2e8f0" stroke-width="0.5" opacity="0.5"/>
               </pattern>
             </defs>
-            <rect width="400" height="720" fill="url(#grid)" rx="8"/>
+            <!-- grid background hidden – video is the background -->
 
             {#each [
-              { idx: 0, label: 'INFRASTRUCTURE', sub: 'Servers / DNS / Cloud / CI-CD', stroke: '#64748b', fill: '#f1f5f9', text: '#334155', subColor: '#94a3b8', tag: '#cbd5e1', num: 'L1' },
-              { idx: 1, label: 'CONFIGURATION', sub: '.env / JSON / YAML / Secrets', stroke: '#d97706', fill: '#fffbeb', text: '#92400e', subColor: '#d97706', tag: '#fcd34d', num: 'L2' },
-              { idx: 2, label: 'DATABASE', sub: 'SQL / NoSQL / Redis / Storage', stroke: '#16a34a', fill: '#f0fdf4', text: '#166534', subColor: '#16a34a', tag: '#86efac', num: 'L3' },
-              { idx: 3, label: 'BACKEND', sub: 'API / Auth / Logic / Processing', stroke: '#9333ea', fill: '#faf5ff', text: '#6b21a8', subColor: '#9333ea', tag: '#d8b4fe', num: 'L4' },
-              { idx: 4, label: 'FRONTEND', sub: 'HTML / CSS / JS / UI', stroke: '#2563eb', fill: '#eff6ff', text: '#1e40af', subColor: '#2563eb', tag: '#93c5fd', num: 'L5' },
+              { idx: 0, label: 'INFRASTRUCTURE', sub: 'The building itself', stroke: '#64748b', fill: '#f1f5f9', text: '#334155', subColor: '#94a3b8', tag: '#cbd5e1', num: 'L1' },
+              { idx: 1, label: 'CONFIGURATION', sub: 'The rules and policies', stroke: '#d97706', fill: '#fffbeb', text: '#92400e', subColor: '#d97706', tag: '#fcd34d', num: 'L2' },
+              { idx: 2, label: 'DATABASE', sub: 'The vault and ledger', stroke: '#16a34a', fill: '#f0fdf4', text: '#166534', subColor: '#16a34a', tag: '#86efac', num: 'L3' },
+              { idx: 3, label: 'BACKEND', sub: 'The employees and computers', stroke: '#9333ea', fill: '#faf5ff', text: '#6b21a8', subColor: '#9333ea', tag: '#d8b4fe', num: 'L4' },
+              { idx: 4, label: 'FRONTEND', sub: 'The teller window', stroke: '#2563eb', fill: '#eff6ff', text: '#1e40af', subColor: '#2563eb', tag: '#93c5fd', num: 'L5' },
             ] as layer}
               <!-- Layer box: position = (current - idx) slots from top. Newest at top. -->
               {#if layer.idx <= current}
                 {@const pos = current - layer.idx}
-                <g style="opacity: 1; transform: translateY({pos * 130}px); transition: all 0.7s ease-out;">
-                  <rect x="20" y="20" width="360" height="70" rx="3" fill="none" stroke={layer.stroke} stroke-width="1.5" stroke-dasharray={layer.idx === current ? 'none' : '4 2'}/>
-                  <rect x="20" y="20" width="360" height="70" rx="3" fill={layer.fill} opacity="0.6"/>
-                  <text x="50" y="48" fill={layer.text} font-size="18" font-weight="600">{layer.label}</text>
-                  <text x="50" y="70" fill={layer.subColor} font-size="14">{layer.sub}</text>
-                  <text x="360" y="62" text-anchor="end" fill={layer.tag} font-size="11">{layer.num}</text>
+                {@const isActive = layer.idx === current}
+                <g style="opacity: {isActive ? 1 : 0.5}; transform: translateY({pos * 150}px); transition: all 0.7s ease-out;">
+                  <!-- Scrim background for readability over video -->
+                  <rect x="10" y="20" width="380" height="90" rx="5" fill="white" opacity={isActive ? 0.9 : 0.7}/>
+                  <rect x="10" y="20" width="380" height="90" rx="5" fill={layer.fill} opacity={isActive ? 0.7 : 0.4}/>
+                  <text x="30" y="55" fill={layer.text} font-size={isActive ? 24 : 20} font-weight={isActive ? '700' : '500'}>{layer.label}</text>
+                  <text x="30" y="82" fill={layer.subColor} font-size={isActive ? 18 : 15}>{layer.sub}</text>
+                  {#if layer.idx === 4 && isActive}
+                    <!-- Celebration sparkles -->
+                    <text x="340" y="45" font-size="36" class="celebrate-1">🎉</text>
+                    <text x="365" y="75" font-size="30" class="celebrate-2">✨</text>
+                    <text x="315" y="85" font-size="28" class="celebrate-3">🎊</text>
+                    <text x="355" y="55" font-size="26" class="celebrate-4">💰</text>
+                    <text x="325" y="40" font-size="24" class="celebrate-5">💵</text>
+                  {/if}
                 </g>
                 <!-- Up arrow from below (skip for the bottom-most visible layer) -->
                 {#if pos > 0}
-                  <g style="opacity: 1; transform: translateY({pos * 130}px); transition: all 0.7s ease-out;">
+                  <g style="opacity: 1; transform: translateY({pos * 150}px); transition: all 0.7s ease-out;">
                     <line x1="200" y1="20" x2="200" y2="-20" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3 2"/>
                     <polygon points="195,-14 200,-24 205,-14" fill="#94a3b8"/>
                   </g>
@@ -256,8 +278,8 @@
           </svg>
         </div>
 
-        <!-- 2. Video/illustration (middle) -->
-        <div class="overflow-hidden rounded-lg">
+        <!-- 2. Video/illustration - background on mobile, normal column on md+ -->
+        <div class="absolute inset-0 z-0 h-full overflow-hidden rounded-lg">
           {#key slide.id}
             {#if slide.image}
               <img src={slide.image} alt={slide.title} class="w-full h-full object-cover rounded-lg"/>
@@ -291,7 +313,10 @@
                 }}
                 ontimeupdate={(e) => {
                   const vid = e.currentTarget;
-                  if (vid.dataset.looped && slide.videoStart && vid.currentTime >= slide.videoStart) {
+                  if (slide.videoEnd && vid.currentTime >= slide.videoEnd) {
+                    vid.pause();
+                    if (!paused) next();
+                  } else if (vid.dataset.looped && slide.videoStart && vid.currentTime >= slide.videoStart) {
                     vid.pause();
                     delete vid.dataset.looped;
                     if (!paused) next();
@@ -312,25 +337,30 @@
           {/key}
         </div>
 
-        <!-- 3. Band thumbnail (far right) -->
-        <div>
-        {#key slide.id}
-          {#if slide.id === 'infrastructure'}
-            <img src="/lottie/infra-thumb.jpg" alt="Infrastructure" class="w-full h-full object-cover rounded-lg"/>
-          {:else if slide.id === 'config'}
-            <img src="/lottie/config-thumb.avif" alt="Config" class="w-full h-full object-cover rounded-lg"/>
-          {:else if slide.id === 'database'}
-            <img src="/lottie/database-thumb.jpg" alt="Database" class="w-full h-full object-cover rounded-lg"/>
-          {:else if slide.id === 'backend'}
-            <img src="/lottie/backend-thumb.jpg" alt="Backend" class="w-full h-full object-cover rounded-lg"/>
-          {:else if slide.id === 'frontend'}
-            <img src="/lottie/frontend-thumb.avif" alt="Frontend" class="w-full h-full object-cover rounded-lg"/>
-          {/if}
-        {/key}
-        </div>
-
-      </div>
-    </div>
-  </div>
+      </div><!-- end right column -->
+    </div><!-- end grid -->
 
 </div>
+
+<style>
+  @keyframes celebrate-float {
+    0% { opacity: 0; transform: translate(0, 0) scale(0.5); }
+    30% { opacity: 1; transform: translate(-5px, -10px) scale(1.2); }
+    100% { opacity: 0; transform: translate(-10px, -25px) scale(0.8); }
+  }
+  :global(.celebrate-1) {
+    animation: celebrate-float 1.5s ease-out infinite;
+  }
+  :global(.celebrate-2) {
+    animation: celebrate-float 1.5s ease-out 0.3s infinite;
+  }
+  :global(.celebrate-3) {
+    animation: celebrate-float 1.5s ease-out 0.6s infinite;
+  }
+  :global(.celebrate-4) {
+    animation: celebrate-float 1.5s ease-out 0.9s infinite;
+  }
+  :global(.celebrate-5) {
+    animation: celebrate-float 1.5s ease-out 1.2s infinite;
+  }
+</style>
