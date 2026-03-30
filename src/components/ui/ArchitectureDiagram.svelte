@@ -102,8 +102,8 @@
       walkthrough: 'Step 4: Employees are trained. They check your ID, read the ledger, follow the rules, and approve your withdrawal.',
       lottie: '/lottie/backend.json',
       video: '/lottie/backend.mp4',
-      videoStart: 5,
-      videoEnd: 10,
+      videoStart: 6,
+      videoEnd: 11,
     },
     {
       id: 'frontend',
@@ -313,12 +313,16 @@
                 }}
                 ontimeupdate={(e) => {
                   const vid = e.currentTarget;
-                  if (slide.videoEnd && vid.currentTime >= slide.videoEnd) {
+                  if (vid.dataset.looped && slide.videoEnd && vid.currentTime >= slide.videoEnd) {
                     vid.pause();
+                    delete vid.dataset.looped;
                     if (!paused) next();
                   } else if (vid.dataset.looped && slide.videoStart && vid.currentTime >= slide.videoStart) {
                     vid.pause();
                     delete vid.dataset.looped;
+                    if (!paused) next();
+                  } else if (!vid.dataset.looped && slide.videoEnd && !slide.videoStart && vid.currentTime >= slide.videoEnd) {
+                    vid.pause();
                     if (!paused) next();
                   }
                 }}
