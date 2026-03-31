@@ -84,9 +84,6 @@
       walkthrough: 'Step 3: The vault is stocked and the ledger opens. Your $240 is recorded. The money is real.',
       lottie: '/lottie/database.json',
       video: '/lottie/vault.mp4',
-      videoStart: 1,
-      videoEnd: 3,
-      videoSpeed: 1,
     },
     {
       id: 'backend',
@@ -102,8 +99,8 @@
       walkthrough: 'Step 4: Employees are trained. They check your ID, read the ledger, follow the rules, and approve your withdrawal.',
       lottie: '/lottie/backend.json',
       video: '/lottie/backend.mp4',
-      videoStart: 1,
-      videoEnd: 4,
+      videoStart: 6,
+      videoSpeed: 0.8,
       videoPosition: 'center 60%',
     },
     {
@@ -120,13 +117,30 @@
       walkthrough: 'Step 5: You tap "Withdraw $60." The ATM talks to the employees, who check the vault and the rules. Approved. Cash in hand.',
       lottie: '/lottie/frontend.json',
       video: '/lottie/frontend.mp4',
-      videoStart: 2,
-      videoEnd: 6,
+      videoStart: 6,
+      videoSpeed: 0.8,
     },
   ];
 
   onMount(() => {
     visible = true;
+    // Ensure first video starts playing
+    const firstVid = videoRefs[0];
+    if (firstVid) {
+      const firstSlide = slides[0];
+      if (firstSlide.videoStart) firstVid.currentTime = firstSlide.videoStart;
+      firstVid.play().catch(() => {});
+    } else {
+      // Video ref may not be ready yet, retry shortly
+      setTimeout(() => {
+        const vid = videoRefs[0];
+        if (vid) {
+          const firstSlide = slides[0];
+          if (firstSlide.videoStart) vid.currentTime = firstSlide.videoStart;
+          vid.play().catch(() => {});
+        }
+      }, 500);
+    }
   });
 
   function transitionTo(i: number) {
@@ -141,6 +155,8 @@
     const newSlide = slides[i];
     const newVid = videoRefs[i];
     if (newVid) {
+      if (newSlide.videoSpeed) newVid.playbackRate = newSlide.videoSpeed;
+      else newVid.playbackRate = 1;
       if (newSlide.videoStart) newVid.currentTime = newSlide.videoStart;
       else newVid.currentTime = 0;
       delete newVid.dataset.looped;
@@ -180,18 +196,25 @@
   }
 
   let slide = $derived(slides[current]);
-  let svgHeight = $derived(current === 0 ? 230 : 70 + current * 125 + 140);
+
+  const layers = [
+    { idx: 0, label: 'INFRASTRUCTURE', subtitle: 'Servers, power, network', sub: 'The building itself', desc: 'Before anything else, the building must exist. Power, security cameras, vault locks, internet wiring, and the network connecting branches. Without this foundation, there is no bank.', fill: 'bg-slate-100/70', text: 'text-slate-700', subColor: 'text-slate-400' },
+    { idx: 1, label: 'CONFIGURATION', subtitle: 'Policies, env vars, settings', sub: 'The rules and policies', desc: 'Before the doors open, the bank sets its rules. Interest rates, daily withdrawal limits, security keys, and feature toggles. These policies govern every decision the bank will ever make.', fill: 'bg-amber-50/70', text: 'text-amber-900', subColor: 'text-amber-600' },
+    { idx: 2, label: 'DATABASE', subtitle: 'Vault, ledger, records', sub: 'The vault and ledger', desc: 'The vault is built and the ledger is ready. Account balances, transaction history, customer records — the money and every fact about it lives here. Nothing can happen until truth has a place to be stored.', fill: 'bg-green-50/70', text: 'text-green-800', subColor: 'text-green-600' },
+    { idx: 3, label: 'BACKEND CODE', subtitle: 'Logic, auth, processing', sub: 'The employees and computers', desc: 'Now you hire the employees. They know how to read the ledger, follow the policies, verify identities, and make decisions. They are the brains that connect the vault to the customer.', fill: 'bg-purple-50/70', text: 'text-purple-800', subColor: 'text-purple-500' },
+    { idx: 4, label: 'FRONTEND CODE', subtitle: 'What users see', sub: 'The teller window', desc: 'Finally, the teller window opens. This is the only part you ever see — the counter, the forms, the friendly face. You hand over a withdrawal slip, and all four layers behind the counter work together to put cash in your hand.', fill: 'bg-blue-50/70', text: 'text-blue-800', subColor: 'text-blue-500' },
+  ];
 </script>
 
 <div class="overflow-hidden" style="width: 100vw; margin-left: calc(-50vw + 50%); margin-top: calc(-1.5rem - 1px);">
   <div>
 
     <!-- Video / illustration area -->
-    <div class="relative min-h-[28rem] sm:min-h-[36rem] lg:min-h-[40rem] overflow-hidden">
+    <div class="relative min-h-[32rem] sm:min-h-[36rem] lg:min-h-[40rem] overflow-hidden">
 
       <!-- Video/illustration backgrounds - all rendered, cross-fade via opacity -->
       {#each slides as s, idx}
-        <div class="absolute inset-0 z-0 transition-opacity duration-700 ease-in-out" style="opacity: {idx === current ? 1 : 0};">
+        <div class="absolute inset-0 z-0 transition-opacity duration-700 ease-in-out" style="opacity: {idx === current ? 1 : 0}; top: 5rem;">
           {#if s.image}
             <img src={s.image} alt={s.title} class="w-full h-full object-cover"/>
           {:else if s.video}
@@ -239,94 +262,111 @@
         </div>
       {/each}
 
-      <!-- Pagination controls - top right -->
-      <div class="absolute top-4 right-4 z-20 flex items-center gap-2 rounded-md bg-white/80 px-3 py-1.5 shadow-md backdrop-blur-sm">
-        <button
-          onclick={prev}
-          class="rounded-full p-1 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700"
-          aria-label="Previous"
-        >
-          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-        </button>
-        <span class="text-sm font-bold leading-none {slide.textColor}">{current + 1}</span>
-        <span class="text-xs font-medium text-slate-400">of</span>
-        <span class="text-sm font-medium text-slate-400">{slides.length}</span>
-        <button
-          onclick={next}
-          class="rounded-full p-1 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700 {pulsing ? 'animate-pulse ring-2 ring-indigo-300' : ''}"
-          aria-label="Next"
-        >
-          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-        </button>
-        <button
-          onclick={togglePause}
-          class="rounded-full p-1 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700"
-          aria-label={paused ? 'Play' : 'Pause'}
-        >
-          {#if paused}
-            <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-          {:else}
-            <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
-          {/if}
-        </button>
-      </div>
-
       <!-- Schematic - overlaid on video -->
-      <div class="relative z-20 font-mono p-2 sm:p-6 sm:max-w-lg pt-4">
-          <!-- Bank metaphor description -->
-          <h2 class="mb-3 rounded-md bg-white/80 px-3 py-2 shadow-md backdrop-blur-sm" style="font-family: 'Roboto', sans-serif;">
-            <span class="block text-lg sm:text-xl font-bold text-slate-800 mb-1">Think of every application as a bank.</span>
-            <span class="block text-xs sm:text-sm leading-relaxed text-slate-600 font-light">From the building itself to the teller window you walk up to, each layer has a job. This walkthrough builds a bank from the ground up — and shows you how software works the same way.</span>
-          </h2>
-
-          <svg viewBox="0 0 400 {svgHeight}" class="w-full" preserveAspectRatio="xMidYMin meet">
-            <defs>
-              <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-                <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#e2e8f0" stroke-width="0.5" opacity="0.5"/>
-              </pattern>
-            </defs>
-            <!-- grid background hidden – video is the background -->
-
-            {#each [
-              { idx: 0, label: 'INFRASTRUCTURE', icon: '🏦', subtitle: 'Servers, power, network', sub: 'The building itself', desc: 'Before anything else, the building must exist. Power, security cameras, vault locks, internet wiring, and the network connecting branches. Without this foundation, there is no bank.', stroke: '#64748b', fill: '#f1f5f9', text: '#334155', subColor: '#94a3b8', tag: '#cbd5e1', num: 'L1' },
-              { idx: 1, label: 'CONFIGURATION', icon: '⚙️', subtitle: 'Policies, env vars, settings', sub: 'The rules and policies', desc: 'Before the doors open, the bank sets its rules. Interest rates, daily withdrawal limits, security keys, and feature toggles. These policies govern every decision the bank will ever make.', stroke: '#d97706', fill: '#fffbeb', text: '#92400e', subColor: '#d97706', tag: '#fcd34d', num: 'L2' },
-              { idx: 2, label: 'DATABASE', icon: '🗄️', subtitle: 'Vault, ledger, records', sub: 'The vault and ledger', desc: 'The vault is built and the ledger is ready. Account balances, transaction history, customer records — the money and every fact about it lives here. Nothing can happen until truth has a place to be stored.', stroke: '#16a34a', fill: '#f0fdf4', text: '#166534', subColor: '#16a34a', tag: '#86efac', num: 'L3' },
-              { idx: 3, label: 'BACKEND CODE', icon: '🧠', subtitle: 'Logic, auth, processing', sub: 'The employees and computers', desc: 'Now you hire the employees. They know how to read the ledger, follow the policies, verify identities, and make decisions. They are the brains that connect the vault to the customer.', stroke: '#9333ea', fill: '#faf5ff', text: '#6b21a8', subColor: '#9333ea', tag: '#d8b4fe', num: 'L4' },
-              { idx: 4, label: 'FRONTEND CODE', icon: '💁', subtitle: 'What users see', sub: 'The teller window', desc: 'Finally, the teller window opens. This is the only part you ever see — the counter, the forms, the friendly face. You hand over a withdrawal slip, and all four layers behind the counter work together to put cash in your hand.', stroke: '#2563eb', fill: '#eff6ff', text: '#1e40af', subColor: '#2563eb', tag: '#93c5fd', num: 'L5' },
-            ] as layer}
-              <!-- Layer box: position = (current - idx) slots from top. Newest at top. -->
-              {#if layer.idx <= current}
-                {@const pos = current - layer.idx}
-                {@const isActive = layer.idx === current}
-                {@const boxHeight = isActive ? 180 : 110}
-                {@const yOffset = pos === 0 ? 0 : 70 + pos * 125}
-                <g style="opacity: {isActive ? 1 : 0.5}; transform: translateY({yOffset}px); transition: all 0.7s ease-out;">
-                  <!-- Scrim background for readability over video -->
-                  <rect x="0" y="20" width="400" height={boxHeight} rx="5" fill="white" opacity={isActive ? 0.9 : 0.7} style="transition: height 0.7s ease-out;"/>
-                  <rect x="0" y="20" width="400" height={boxHeight} rx="5" fill={layer.fill} opacity={isActive ? 0.7 : 0.4} style="transition: height 0.7s ease-out;"/>
-                  <text x="10" y="55" fill={layer.text} font-size={isActive ? 22 : 18} font-weight={isActive ? '700' : '500'}>{layer.label}</text>
-                  <text x="10" y="78" fill={layer.subColor} font-size={isActive ? 15 : 13}>{layer.sub}</text>
-                  <text x="10" y="100" fill={layer.subColor} font-size={isActive ? 13 : 11} >({layer.subtitle.toUpperCase()})</text>
-                  {#if isActive}
-                    <foreignObject x="10" y="108" width="380" height="70">
-                      <p style="font-size: 12px; line-height: 1.4; color: {layer.subColor}; margin: 0; font-family: sans-serif;">{layer.desc}</p>
-                    </foreignObject>
-                  {/if}
-                </g>
-                <!-- Up arrow from below (skip for the bottom-most visible layer) -->
-                {#if pos > 0}
-                  <g style="opacity: 1; transform: translateY({70 + pos * 125}px); transition: all 0.7s ease-out;">
-                    <line x1="200" y1="20" x2="200" y2="-20" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3 2"/>
-                    <polygon points="195,-14 200,-24 205,-14" fill="#94a3b8"/>
-                  </g>
+      <div class="relative z-20 font-mono">
+          <!-- Bank metaphor description + pagination inline -->
+          <div class="mb-0 bg-white/60 px-3 py-1.5 sm:px-4 sm:py-2 shadow-md backdrop-blur-sm flex items-center justify-between">
+            <h2 class="text-base sm:text-xl font-bold text-slate-800 m-0" style="font-family: 'Permanent Marker';">Think of every application as a bank.</h2>
+            <div class="hidden sm:flex items-center gap-2 rounded-md bg-white/80 px-3 py-1.5 shadow-md backdrop-blur-sm">
+              <button
+                onclick={prev}
+                class="rounded-full p-1 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700"
+                aria-label="Previous"
+              >
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+              </button>
+              <span class="text-sm font-bold leading-none {slide.textColor}">{current + 1}</span>
+              <span class="text-xs font-medium text-slate-400">of</span>
+              <span class="text-sm font-medium text-slate-400">{slides.length}</span>
+              <button
+                onclick={next}
+                class="rounded-full p-1 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700 {pulsing ? 'animate-pulse ring-2 ring-indigo-300' : ''}"
+                aria-label="Next"
+              >
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              </button>
+              <button
+                onclick={togglePause}
+                class="rounded-full p-1 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700"
+                aria-label={paused ? 'Play' : 'Pause'}
+              >
+                {#if paused}
+                  <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                {:else}
+                  <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
                 {/if}
-              {/if}
-            {/each}
-          </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Active band at top -->
+          {#each layers as layer}
+            {#if layer.idx === current}
+              <div
+                class="w-full px-3 py-2 sm:px-4 sm:py-3 backdrop-blur-sm transition-all duration-700 ease-out {layer.fill}"
+              >
+                <div class="flex flex-col lg:flex-row lg:items-baseline lg:gap-3">
+                  <p class="text-sm sm:text-base font-bold font-mono shrink-0 {layer.text}">{layer.label}</p>
+                  <p class="text-xs sm:text-sm shrink-0 {layer.subColor}">{layer.sub}</p>
+                  <p class="text-[10px] sm:text-xs shrink-0 {layer.subColor}">({layer.subtitle.toUpperCase()})</p>
+                </div>
+                <p class="mt-1 text-xs sm:text-sm leading-relaxed {layer.subColor}" style="font-family: sans-serif;">{layer.desc}</p>
+              </div>
+            {/if}
+          {/each}
         </div>
+
+      <!-- Past bands anchored to bottom -->
+      <div class="absolute bottom-0 left-0 right-0 z-20">
+        {#each layers as layer}
+          {#if layer.idx < current}
+            <div
+              class="w-full px-3 py-1 sm:px-4 sm:py-1.5 backdrop-blur-sm transition-all duration-700 ease-out opacity-50 {layer.fill}"
+            >
+              <div class="flex items-baseline gap-3">
+                <p class="text-xs sm:text-sm font-bold font-mono shrink-0 {layer.text}">{layer.label}</p>
+                <p class="text-[10px] sm:text-xs shrink-0 {layer.subColor}">{layer.sub}</p>
+              </div>
+            </div>
+          {/if}
+        {/each}
+      </div>
 
 
       </div><!-- end video area -->
+
+    <!-- Pagination controls - mobile (below video) -->
+    <div class="flex sm:hidden items-center justify-center gap-2 bg-white/90 px-3 py-2 backdrop-blur-sm">
+      <button
+        onclick={prev}
+        class="rounded-full p-1.5 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700"
+        aria-label="Previous"
+      >
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <span class="text-sm font-bold leading-none {slide.textColor}">{current + 1}</span>
+      <span class="text-xs font-medium text-slate-400">of</span>
+      <span class="text-sm font-medium text-slate-400">{slides.length}</span>
+      <button
+        onclick={next}
+        class="rounded-full p-1.5 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700 {pulsing ? 'animate-pulse ring-2 ring-indigo-300' : ''}"
+        aria-label="Next"
+      >
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </button>
+      <button
+        onclick={togglePause}
+        class="rounded-full p-1.5 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700"
+        aria-label={paused ? 'Play' : 'Pause'}
+      >
+        {#if paused}
+          <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        {:else}
+          <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+        {/if}
+      </button>
+    </div>
+
     </div><!-- end stacked container -->
 </div>
 

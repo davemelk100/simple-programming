@@ -115,15 +115,15 @@
 
 <svelte:window onclick={handleClose} />
 
-<nav class="hidden border-b border-slate-200 bg-white lg:block">
+<nav class="hidden border-b border-slate-200 bg-white shadow-sm lg:block">
   <div class="mx-auto flex items-center justify-between px-4 py-2">
     <div class="flex flex-wrap items-center gap-1">
       <a
         href="/"
-        class="rounded-md px-2.5 py-1.5 text-xs font-semibold uppercase tracking-wide no-underline transition-colors
-          {currentPath === '/' || currentPath === '' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700'}"
+        class="mr-2 text-xl font-bold text-slate-900 no-underline hover:text-indigo-600 sm:text-2xl"
+        style="font-family: 'Permanent Marker';"
       >
-        <svg class="inline h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z"/></svg>
+        Programming Is Easy
       </a>
       {#each groups as group}
         <div class="relative">
