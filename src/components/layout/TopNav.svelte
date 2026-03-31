@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { topics, oopTopics } from '../../lib/topics';
   import { syntaxStyles } from '../../lib/syntax-styles';
   import { principles } from '../../lib/principles';
@@ -6,12 +7,47 @@
   import { testingQaTopics } from '../../lib/testing-qa';
   import { putItTogetherTopics } from '../../lib/put-it-together';
   import { aiUsingTopics, aiDevelopingTopics } from '../../lib/ai';
+  import { getAdvanced, toggleAdvanced, onAdvancedChange } from '../../lib/mode';
 
   interface Props {
     currentPath?: string;
   }
 
   let { currentPath = '' }: Props = $props();
+
+  let user: { email?: string } | null = $state(null);
+  let signingOut = $state(false);
+  let advanced = $state(false);
+
+  onMount(() => {
+    advanced = getAdvanced();
+    return onAdvancedChange((v) => (advanced = v));
+  });
+
+  onMount(() => {
+    let subscription: { unsubscribe: () => void } | undefined;
+
+    import('../../lib/supabase').then(async ({ supabase }) => {
+      const { data } = await supabase.auth.getUser();
+      user = data.user;
+
+      const { data: authData } = supabase.auth.onAuthStateChange(
+        (_event, session) => {
+          user = session?.user ?? null;
+        },
+      );
+      subscription = authData.subscription;
+    });
+
+    return () => subscription?.unsubscribe();
+  });
+
+  async function handleSignOut() {
+    signingOut = true;
+    const { signOut } = await import('../../lib/auth');
+    await signOut();
+    signingOut = false;
+  }
 
   const colorMap: Record<string, { hover: string; active: string }> = {
     blue: { hover: 'hover:bg-blue-50 hover:text-blue-700', active: 'bg-blue-50 text-blue-700' },
@@ -80,54 +116,94 @@
 <svelte:window onclick={handleClose} />
 
 <nav class="hidden border-b border-slate-200 bg-white lg:block">
-  <div class="mx-auto flex flex-wrap items-center gap-1 px-4 py-2">
-    <a
-      href="/"
-      class="rounded-md px-2.5 py-1.5 text-xs font-semibold uppercase tracking-wide no-underline transition-colors
-        {currentPath === '/' || currentPath === '' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700'}"
-    >
-      <svg class="inline h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z"/></svg>
-    </a>
-    {#each groups as group}
-      <div class="relative">
-        <button
-          onclick={(e) => { e.stopPropagation(); handleToggle(group.label); }}
-          class="rounded-md px-2.5 py-1.5 text-xs font-semibold uppercase tracking-wide transition-colors
-            {isGroupActive(group) ? 'bg-indigo-50 text-indigo-700' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700'}
-            {openMenu === group.label ? 'bg-slate-100 text-slate-800' : ''}"
-        >
-          {group.label}
-          <svg class="ml-1 inline h-3 w-3 transition-transform {openMenu === group.label ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
-
-        {#if openMenu === group.label}
-          <!-- svelte-ignore a11y_click_events_have_key_events -->
-          <!-- svelte-ignore a11y_no_static_element_interactions -->
-          <div
-            class="absolute left-0 top-full z-50 mt-1 min-w-60 rounded-lg border border-slate-200 bg-white py-1 shadow-lg"
-            onclick={(e) => e.stopPropagation()}
+  <div class="mx-auto flex items-center justify-between px-4 py-2">
+    <div class="flex flex-wrap items-center gap-1">
+      <a
+        href="/"
+        class="rounded-md px-2.5 py-1.5 text-xs font-semibold uppercase tracking-wide no-underline transition-colors
+          {currentPath === '/' || currentPath === '' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700'}"
+      >
+        <svg class="inline h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z"/></svg>
+      </a>
+      {#each groups as group}
+        <div class="relative">
+          <button
+            onclick={(e) => { e.stopPropagation(); handleToggle(group.label); }}
+            class="rounded-md px-2.5 py-1.5 text-xs font-semibold uppercase tracking-wide transition-colors
+              {isGroupActive(group) ? 'bg-indigo-50 text-indigo-700' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700'}
+              {openMenu === group.label ? 'bg-slate-100 text-slate-800' : ''}"
           >
-            {#each group.sections as section}
-              <div class="px-3 pt-2 pb-1 text-[10px] font-bold uppercase tracking-widest text-slate-400">{section.label}</div>
-              {#each section.items as item}
-                {@const active = isItemActive(item.href)}
-                {@const colors = colorMap[item.color]}
-                <a
-                  href={item.href}
-                  onclick={handleClose}
-                  class="flex items-center gap-2 px-3 py-2 text-sm font-light no-underline transition-colors {active ? `${colors?.active} font-medium` : `text-slate-600 ${colors?.hover ?? 'hover:bg-slate-50'}`}"
-                  aria-current={active ? 'page' : undefined}
-                >
-                  <span class="text-base">{item.icon}</span>
-                  {item.title}
-                </a>
+            {group.label}
+            <svg class="ml-1 inline h-3 w-3 transition-transform {openMenu === group.label ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {#if openMenu === group.label}
+            <!-- svelte-ignore a11y_click_events_have_key_events -->
+            <!-- svelte-ignore a11y_no_static_element_interactions -->
+            <div
+              class="absolute left-0 top-full z-50 mt-1 min-w-60 rounded-lg border border-slate-200 bg-white py-1 shadow-lg"
+              onclick={(e) => e.stopPropagation()}
+            >
+              {#each group.sections as section}
+                <div class="px-3 pt-2 pb-1 text-[10px] font-bold uppercase tracking-widest text-slate-400">{section.label}</div>
+                {#each section.items as item}
+                  {@const active = isItemActive(item.href)}
+                  {@const colors = colorMap[item.color]}
+                  <a
+                    href={item.href}
+                    onclick={handleClose}
+                    class="flex items-center gap-2 px-3 py-2 text-sm font-light no-underline transition-colors {active ? `${colors?.active} font-medium` : `text-slate-600 ${colors?.hover ?? 'hover:bg-slate-50'}`}"
+                    aria-current={active ? 'page' : undefined}
+                  >
+                    <span class="text-base">{item.icon}</span>
+                    {item.title}
+                  </a>
+                {/each}
               {/each}
-            {/each}
-          </div>
-        {/if}
-      </div>
-    {/each}
+            </div>
+          {/if}
+        </div>
+      {/each}
+    </div>
+
+    <div class="flex items-center gap-4">
+      {#if user}
+        <a
+          href="/progress"
+          class="rounded-lg px-3 py-1.5 text-sm font-medium text-slate-600 no-underline hover:bg-slate-100"
+        >
+          My Progress
+        </a>
+        <span class="text-sm text-slate-500">{user.email}</span>
+      {/if}
+      <button
+        onclick={() => toggleAdvanced()}
+        class="flex shrink-0 items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors
+          {advanced ? 'border-indigo-300 bg-indigo-50 text-indigo-700' : 'border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100'}"
+      >
+        <span class="text-xs">{advanced ? 'Advanced' : 'Basic'}</span>
+        <div class="relative h-5 w-9 rounded-full transition-colors {advanced ? 'bg-indigo-500' : 'bg-slate-300'}">
+          <div class="absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform {advanced ? 'translate-x-4' : 'translate-x-0.5'}"></div>
+        </div>
+      </button>
+      {#if user}
+        <button
+          onclick={handleSignOut}
+          disabled={signingOut}
+          class="rounded-lg bg-slate-100 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-200 disabled:opacity-50"
+        >
+          {signingOut ? 'Signing out...' : 'Sign Out'}
+        </button>
+      {:else}
+        <a
+          href="/auth/login"
+          class="rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white no-underline hover:bg-indigo-700"
+        >
+          Sign In
+        </a>
+      {/if}
+    </div>
   </div>
 </nav>
