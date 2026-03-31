@@ -39,86 +39,87 @@
 
   const slides: Slide[] = [
     {
-      id: 'infrastructure',
-      title: 'Infrastructure',
-      subtitle: 'Servers, power, network',
+      id: 'concepts',
+      title: 'Concepts',
+      subtitle: 'Variables, functions, logic, OOP',
       metaphor: '🏗️',
-      description: 'Before anything else, the building must exist. Power, security cameras, vault locks, internet wiring, and the network connecting branches. Without this foundation, there is no bank.',
-      insight: 'Existence',
-      techs: ['Cloud', 'CI/CD', 'DNS', 'Servers'],
+      description: 'Before anything else, the building must exist. Variables, functions, data structures, control flow, and object-oriented thinking are the concrete and steel of every application.',
+      insight: 'Foundation',
+      techs: ['Variables', 'Functions', 'OOP'],
       color: 'slate', bgColor: 'bg-slate-50', borderColor: 'border-slate-300', textColor: 'text-slate-700',
       tagColor: 'bg-slate-200', tagTextColor: 'text-slate-700', insightBg: 'bg-slate-100',
       icon: '🏦',
-      walkthrough: 'Step 1: The building goes up. Power turns on. Security is armed. The bank exists.',
+      walkthrough: 'Step 1: The building goes up. The foundation is laid.',
       lottie: '/lottie/infrastructure.json',
       video: '/lottie/infrastructure.mp4',
       videoEnd: 4,
+      noSlowdown: true,
     },
     {
-      id: 'config',
-      title: 'Configuration',
-      subtitle: 'Policies, environmental variables, settings',
+      id: 'syntax',
+      title: 'Syntax & Principles',
+      subtitle: 'Patterns, naming, DRY, KISS',
       metaphor: '⚙️',
-      description: 'Before the doors open, the bank sets its rules. Interest rates, daily withdrawal limits, security keys, and feature toggles. These policies govern every decision the bank will ever make.',
+      description: 'Before the doors open, the bank sets its rules. Syntax styles, naming conventions, DRY, KISS, and planning are the policies that govern how every line of code behaves.',
       insight: 'Policy',
-      techs: ['.env', 'JSON', 'YAML'],
+      techs: ['Markup', 'C-style', 'DRY', 'KISS'],
       color: 'amber', bgColor: 'bg-amber-50', borderColor: 'border-amber-300', textColor: 'text-amber-700',
       tagColor: 'bg-amber-200', tagTextColor: 'text-amber-800', insightBg: 'bg-amber-100',
       icon: '⚙️',
-      walkthrough: 'Step 2: Policies are written. $500 daily limit. PIN required. 2FA enabled. The rules are set.',
+      walkthrough: 'Step 2: The rules are written. The policies are set.',
       lottie: '/lottie/config.json',
       video: '/lottie/config.mp4',
-      videoEnd: 4,
+      videoEndOffset: 1,
     },
     {
-      id: 'database',
-      title: 'Database',
-      subtitle: 'Vault, ledger, records',
+      id: 'languages',
+      title: 'Languages & Tools',
+      subtitle: 'TypeScript, Python, Go, C#',
       metaphor: '🗄️',
-      description: 'The vault is built and the ledger is ready. Account balances, transaction history, customer records — the money and every fact about it lives here. Nothing can happen until truth has a place to be stored.',
-      insight: 'Truth',
-      techs: ['SQL', 'NoSQL', 'Redis'],
+      description: 'The vault is stocked and the ledger is open. Real languages — TypeScript, Python, Go, C# — plus version control, the command line, and local servers. This is where you store and manage real code.',
+      insight: 'Execution',
+      techs: ['TypeScript', 'Python', 'Go', 'C#'],
       color: 'green', bgColor: 'bg-green-50', borderColor: 'border-green-300', textColor: 'text-green-700',
       tagColor: 'bg-green-200', tagTextColor: 'text-green-800', insightBg: 'bg-green-100',
       icon: '🗄️',
-      walkthrough: 'Step 3: The vault is stocked and the ledger opens. Your $240 is recorded. The money is real.',
+      walkthrough: 'Step 3: The vault opens. The tools are ready.',
       lottie: '/lottie/database.json',
       video: '/lottie/vault.mp4',
     },
     {
-      id: 'backend',
-      title: 'Backend Code',
-      subtitle: 'Logic, auth, processing',
+      id: 'build',
+      title: 'Build & Ship',
+      subtitle: 'Stack, database, API, deploy',
       metaphor: '🧠',
-      description: 'Now you hire the employees. They know how to read the ledger, follow the policies, verify identities, and make decisions. They are the brains that connect the vault to the customer.',
-      insight: 'Actual control',
-      techs: ['Python', 'Go', 'Node.js'],
+      description: 'Now you hire the employees. Choose a stack, scaffold a project, connect a database, add auth, build an API, and deploy. These are the brains that make your application actually work.',
+      insight: 'Creation',
+      techs: ['APIs', 'Databases', 'Auth', 'Deploy'],
       color: 'purple', bgColor: 'bg-purple-50', borderColor: 'border-purple-300', textColor: 'text-purple-700',
       tagColor: 'bg-purple-200', tagTextColor: 'text-purple-800', insightBg: 'bg-purple-100',
       icon: '🧠',
-      walkthrough: 'Step 4: Employees are trained. They check your ID, read the ledger, follow the rules, and approve your withdrawal.',
+      walkthrough: 'Step 4: The employees are trained. The bank is open for business.',
       lottie: '/lottie/backend.json',
-      video: '/lottie/backend.mp4',
-      videoStart: 6,
+      video: '/lottie/buildship.mp4',
+      videoStart: 4,
       videoSpeed: 0.8,
       videoPosition: 'center 60%',
     },
     {
-      id: 'frontend',
-      title: 'Frontend Code',
-      subtitle: 'What users see',
+      id: 'ai',
+      title: 'AI',
+      subtitle: 'LLMs, copilots, agents',
       metaphor: '💁',
-      description: 'Finally, the teller window opens. This is the only part you ever see — the counter, the forms, the friendly face. You hand over a withdrawal slip, and all four layers behind the counter work together to put cash in your hand.',
-      insight: 'The illusion of control',
-      techs: ['HTML', 'CSS', 'JavaScript'],
+      description: 'Finally, the teller window opens — but now it\'s intelligent. LLMs, copilots, chatbots, and agentic AI are changing how we build and interact with software.',
+      insight: 'The future',
+      techs: ['LLMs', 'Copilots', 'Agents'],
       color: 'blue', bgColor: 'bg-blue-50', borderColor: 'border-blue-300', textColor: 'text-blue-700',
       tagColor: 'bg-blue-200', tagTextColor: 'text-blue-800', insightBg: 'bg-blue-100',
       icon: '💁',
-      walkthrough: 'Step 5: You tap "Withdraw $60." The ATM talks to the employees, who check the vault and the rules. Approved. Cash in hand.',
+      walkthrough: 'Step 5: The ATM gets smart.',
       lottie: '/lottie/frontend.json',
-      video: '/lottie/frontend.mp4',
-      videoStart: 6,
+      video: '/lottie/atm.mp4',
       videoSpeed: 0.8,
+      videoEndOffset: 4,
     },
   ];
 
@@ -182,8 +183,20 @@
     transitionTo((current + 1) % slides.length);
   }
 
+  let completed = $state(false);
+
   function fadeOutAndNext() {
-    if (!paused) next();
+    if (paused) return;
+    if (current === slides.length - 1) {
+      // Last slide finished — show all bands at bottom, wait 4 seconds, restart
+      completed = true;
+      setTimeout(() => {
+        completed = false;
+        transitionTo(0);
+      }, 4000);
+    } else {
+      next();
+    }
   }
 
   function togglePause() {
@@ -198,11 +211,11 @@
   let slide = $derived(slides[current]);
 
   const layers = [
-    { idx: 0, label: 'INFRASTRUCTURE', subtitle: 'Servers, power, network', sub: 'The building itself', desc: 'Before anything else, the building must exist. Power, security cameras, vault locks, internet wiring, and the network connecting branches. Without this foundation, there is no bank.', fill: 'bg-slate-100/70', text: 'text-slate-700', subColor: 'text-slate-400' },
-    { idx: 1, label: 'CONFIGURATION', subtitle: 'Policies, env vars, settings', sub: 'The rules and policies', desc: 'Before the doors open, the bank sets its rules. Interest rates, daily withdrawal limits, security keys, and feature toggles. These policies govern every decision the bank will ever make.', fill: 'bg-amber-50/70', text: 'text-amber-900', subColor: 'text-amber-600' },
-    { idx: 2, label: 'DATABASE', subtitle: 'Vault, ledger, records', sub: 'The vault and ledger', desc: 'The vault is built and the ledger is ready. Account balances, transaction history, customer records — the money and every fact about it lives here. Nothing can happen until truth has a place to be stored.', fill: 'bg-green-50/70', text: 'text-green-800', subColor: 'text-green-600' },
-    { idx: 3, label: 'BACKEND CODE', subtitle: 'Logic, auth, processing', sub: 'The employees and computers', desc: 'Now you hire the employees. They know how to read the ledger, follow the policies, verify identities, and make decisions. They are the brains that connect the vault to the customer.', fill: 'bg-purple-50/70', text: 'text-purple-800', subColor: 'text-purple-500' },
-    { idx: 4, label: 'FRONTEND CODE', subtitle: 'What users see', sub: 'The teller window', desc: 'Finally, the teller window opens. This is the only part you ever see — the counter, the forms, the friendly face. You hand over a withdrawal slip, and all four layers behind the counter work together to put cash in your hand.', fill: 'bg-blue-50/70', text: 'text-blue-800', subColor: 'text-blue-500' },
+    { idx: 0, label: 'CONCEPTS', subtitle: 'Variables, functions, logic, OOP', sub: 'The building itself', descBold: 'Before anything else, the building must exist.', descRest: 'Variables, functions, data structures, control flow, and object-oriented thinking are the concrete and steel of every application.', fill: 'bg-slate-100/70', text: 'text-slate-700', subColor: 'text-slate-400' },
+    { idx: 1, label: 'SYNTAX & PRINCIPLES', subtitle: 'Patterns, naming, DRY, KISS', sub: 'The rules and policies', descBold: 'Before the doors open, the bank sets its rules.', descRest: 'Syntax styles, naming conventions, DRY, KISS, and planning are the policies that govern how every line of code behaves.', fill: 'bg-amber-50/70', text: 'text-amber-900', subColor: 'text-amber-600' },
+    { idx: 2, label: 'LANGUAGES & TOOLS', subtitle: 'TypeScript, Python, Go, C#', sub: 'The vault and ledger', descBold: 'The vault is stocked and the ledger is open.', descRest: 'Real languages — TypeScript, Python, Go, C# — plus version control, the command line, and local servers. This is where you store and manage real code.', fill: 'bg-green-50/70', text: 'text-green-800', subColor: 'text-green-600' },
+    { idx: 3, label: 'BUILD & SHIP', subtitle: 'Stack, database, API, deploy', sub: 'The employees and computers', descBold: 'Now you hire the employees.', descRest: 'Choose a stack, scaffold a project, connect a database, add auth, build an API, and deploy. These are the brains that make your application actually work.', fill: 'bg-purple-50/70', text: 'text-purple-800', subColor: 'text-purple-500' },
+    { idx: 4, label: 'AI', subtitle: 'LLMs, copilots, agents', sub: 'The ATM', descBold: 'Finally, the teller window opens — but now it\'s intelligent.', descRest: 'LLMs, copilots, chatbots, and agentic AI are changing how we build and interact with software.', fill: 'bg-blue-50/70', text: 'text-blue-800', subColor: 'text-blue-500' },
   ];
 </script>
 
@@ -214,7 +227,7 @@
 
       <!-- Video/illustration backgrounds - all rendered, cross-fade via opacity -->
       {#each slides as s, idx}
-        <div class="absolute inset-0 z-0 transition-opacity duration-700 ease-in-out" style="opacity: {idx === current ? 1 : 0}; top: 5rem;">
+        <div class="absolute inset-0 z-0 transition-opacity duration-700 ease-in-out" style="opacity: {idx === current ? 1 : 0}; top: 9rem;">
           {#if s.image}
             <img src={s.image} alt={s.title} class="w-full h-full object-cover"/>
           {:else if s.video}
@@ -242,9 +255,14 @@
               ontimeupdate={(e) => {
                 const vid = e.currentTarget;
                 if (idx !== current) return;
-                if (s.videoEnd && vid.currentTime >= s.videoEnd) {
+                const hasEndPoint = s.videoEnd || s.videoEndOffset;
+                const endTime = s.videoEnd ?? (s.videoEndOffset ? vid.duration - s.videoEndOffset : vid.duration);
+                const timeLeft = endTime - vid.currentTime;
+                if (hasEndPoint && timeLeft <= 0) {
                   vid.pause();
                   if (!paused) fadeOutAndNext();
+                } else if (hasEndPoint && !s.noSlowdown && timeLeft <= 2 && timeLeft > 0) {
+                  vid.playbackRate = 0.4;
                 }
               }}
             ></video>
@@ -266,7 +284,7 @@
       <div class="relative z-20 font-mono">
           <!-- Bank metaphor description + pagination inline -->
           <div class="mb-0 bg-white/60 px-3 py-1.5 sm:px-4 sm:py-2 shadow-md backdrop-blur-sm flex items-center justify-between">
-            <h2 class="text-base sm:text-xl font-bold text-slate-800 m-0" style="font-family: 'Permanent Marker';">Think of every application as a bank.</h2>
+            <h2 class="text-base sm:text-xl font-bold text-slate-800 m-0" style="font-family: 'Permanent Marker';">Think of an app like a bank.</h2>
             <div class="hidden sm:flex items-center gap-2 rounded-md bg-white/80 px-3 py-1.5 shadow-md backdrop-blur-sm">
               <button
                 onclick={prev}
@@ -301,16 +319,16 @@
 
           <!-- Active band at top -->
           {#each layers as layer}
-            {#if layer.idx === current}
+            {#if layer.idx === current && !completed}
               <div
                 class="w-full px-3 py-2 sm:px-4 sm:py-3 backdrop-blur-sm transition-all duration-700 ease-out {layer.fill}"
               >
+                <p class="mb-1 text-xs sm:text-sm leading-relaxed {layer.subColor}" style="font-family: sans-serif;"><span class="font-bold">{layer.descBold}</span> {layer.descRest}</p>
                 <div class="flex flex-col lg:flex-row lg:items-baseline lg:gap-3">
-                  <p class="text-sm sm:text-base font-bold font-mono shrink-0 {layer.text}">{layer.label}</p>
+                  <p class="text-sm sm:text-base font-bold font-mono shrink-0 {layer.text}">{layer.idx + 1}. {layer.label}</p>
                   <p class="text-xs sm:text-sm shrink-0 {layer.subColor}">{layer.sub}</p>
                   <p class="text-[10px] sm:text-xs shrink-0 {layer.subColor}">({layer.subtitle.toUpperCase()})</p>
                 </div>
-                <p class="mt-1 text-xs sm:text-sm leading-relaxed {layer.subColor}" style="font-family: sans-serif;">{layer.desc}</p>
               </div>
             {/if}
           {/each}
@@ -319,12 +337,12 @@
       <!-- Past bands anchored to bottom -->
       <div class="absolute bottom-0 left-0 right-0 z-20">
         {#each layers as layer}
-          {#if layer.idx < current}
+          {#if layer.idx < current || (completed && layer.idx === current)}
             <div
               class="w-full px-3 py-1 sm:px-4 sm:py-1.5 backdrop-blur-sm transition-all duration-700 ease-out opacity-50 {layer.fill}"
             >
               <div class="flex items-baseline gap-3">
-                <p class="text-xs sm:text-sm font-bold font-mono shrink-0 {layer.text}">{layer.label}</p>
+                <p class="text-xs sm:text-sm font-bold font-mono shrink-0 {layer.text}">{layer.idx + 1}. {layer.label}</p>
                 <p class="text-[10px] sm:text-xs shrink-0 {layer.subColor}">{layer.sub}</p>
               </div>
             </div>

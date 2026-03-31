@@ -1,43 +1,57 @@
-# Astro Starter Kit: Minimal
+# Programming Is Easy
 
-```sh
-npm create astro@latest -- --template minimal
+A visual, interactive learning platform that teaches programming concepts through colorful lessons and a bank metaphor. No jargon. No boring tutorials. Just colorful, interactive lessons that make programming click.
+
+## Stack
+
+- **Framework**: [Astro](https://astro.build/) v6
+- **UI**: [Svelte](https://svelte.dev/) v5
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) v4
+- **Auth & Data**: [Supabase](https://supabase.com/)
+- **Animations**: [Lottie](https://airbnb.io/lottie/)
+- **Hosting**: [Netlify](https://www.netlify.com/)
+
+## Curriculum
+
+The site is organized into five layers, presented through a bank metaphor:
+
+1. **Concepts** - Variables, functions, data structures, control flow, OOP
+2. **Syntax & Principles** - Code styles, naming, DRY, KISS, planning
+3. **Languages & Tools** - TypeScript, Python, Go, C#, version control, CLI
+4. **Build & Ship** - Choose a stack, databases, APIs, auth, deployment
+5. **AI** - LLMs, copilots, chatbots, agentic AI
+
+## Getting Started
+
+```bash
+# Install dependencies
+npm install
+
+# Start dev server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Requires Node.js >= 22.12.0.
 
-## 🚀 Project Structure
+The dev server runs at `http://localhost:4321`.
 
-Inside of your Astro project, you'll see the following folders and files:
+## Project Structure
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
 ```
-
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+src/
+  components/
+    layout/       # Header, TopNav, Sidebar, MobileSidebar
+    ui/           # ArchitectureDiagram, ProgressBar, etc.
+  layouts/        # BaseLayout
+  lib/            # Topics data, auth, Supabase client, mode toggle
+  pages/          # Route pages (topics, languages, principles, etc.)
+  styles/         # Global CSS
+public/
+  lottie/         # Animation JSON and video files
+```
