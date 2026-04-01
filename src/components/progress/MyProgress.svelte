@@ -55,11 +55,11 @@
     ctx.fillStyle = '#f8fafc';
     ctx.fillRect(0, 0, 800, 500);
 
-    ctx.strokeStyle = '#6366f1';
+    ctx.strokeStyle = '#0f89ec';
     ctx.lineWidth = 6;
     ctx.strokeRect(20, 20, 760, 460);
 
-    ctx.strokeStyle = '#c7d2fe';
+    ctx.strokeStyle = '#a8d2f7';
     ctx.lineWidth = 2;
     ctx.strokeRect(32, 32, 736, 436);
 
@@ -82,7 +82,7 @@
     ctx.font = 'bold 28px sans-serif';
     ctx.fillText(topicTitle, 400, 230);
 
-    ctx.fillStyle = '#6366f1';
+    ctx.fillStyle = '#0f89ec';
     ctx.font = '22px sans-serif';
     ctx.fillText(`${sectionLabels[section]} Section`, 400, 275);
 

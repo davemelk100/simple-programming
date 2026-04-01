@@ -22,7 +22,10 @@
 
   onMount(() => {
     advanced = getAdvanced();
-    return onAdvancedChange((v) => (advanced = v));
+    const unsub = onAdvancedChange((v) => (advanced = v));
+    const toggleHandler = () => { mobileMenuOpen = !mobileMenuOpen; };
+    window.addEventListener('toggle-mobile-menu', toggleHandler);
+    return () => { unsub(); window.removeEventListener('toggle-mobile-menu', toggleHandler); };
   });
 
   onMount(() => {
@@ -124,16 +127,13 @@
   }
 </script>
 
-<svelte:window onclick={handleClose} on:toggle-mobile-menu={() => { mobileMenuOpen = !mobileMenuOpen; }} />
+<svelte:window onclick={handleClose} />
 
 <header class="hidden border-b border-slate-200 bg-white shadow-sm md:block">
   <div class="mx-auto flex items-center justify-between px-4 py-2">
-    <a
-      href="/"
-      class="text-xl font-bold text-slate-900 no-underline hover:text-indigo-600 sm:text-2xl"
-      style="font-family: 'Permanent Marker';"
-    >
-      Programming Is Easy
+    <a href="/" class="flex items-center gap-3 no-underline">
+      <img src="/logo.png" alt="Programming Is Easy" class="h-14" />
+      <span class="text-xl font-bold text-slate-900" style="font-family: 'Roboto', sans-serif;">Programming Is Easy</span>
     </a>
 
     <div class="flex items-center gap-4">
@@ -176,14 +176,14 @@
   </div>
 </header>
 
-<nav class="border-b border-slate-200 bg-white {mobileMenuOpen ? '' : 'hidden md:block'}">
-  <div class="mx-auto px-4 py-1.5 overflow-x-auto md:flex md:items-center">
+<nav class="sticky top-0 border-b border-slate-200 bg-white {mobileMenuOpen ? '' : 'hidden md:block'}" style="z-index: 9999;">
+  <div class="mx-auto px-4 py-1.5 md:flex md:items-center">
     <div class="flex flex-col gap-1 md:flex-row md:items-center md:flex-nowrap">
       {#each groups as group}
         <div class="relative">
           <button
             onclick={(e) => { e.stopPropagation(); handleToggle(group.label); }}
-            class="shrink-0 whitespace-nowrap rounded-md px-2.5 py-2 md:py-1.5 text-left text-xs font-semibold uppercase tracking-wide transition-colors
+            class="w-full shrink-0 whitespace-nowrap rounded-md px-2.5 py-2 md:py-1.5 text-left text-xs font-semibold uppercase tracking-wide transition-colors
               {isGroupActive(group) ? 'bg-indigo-50 text-indigo-700' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700'}
               {openMenu === group.label ? 'bg-slate-100 text-slate-800' : ''}"
           >
@@ -197,7 +197,7 @@
             <!-- svelte-ignore a11y_click_events_have_key_events -->
             <!-- svelte-ignore a11y_no_static_element_interactions -->
             <div
-              class="absolute left-0 top-full z-50 mt-1 min-w-60 rounded-lg border border-slate-200 bg-white py-1 shadow-lg"
+              class="md:absolute md:left-0 md:top-full md:mt-1 md:min-w-60 md:rounded-lg md:border md:border-slate-200 md:shadow-lg bg-white py-1" style="z-index: 99999;"
               onclick={(e) => e.stopPropagation()}
             >
               {#each group.sections as section}
@@ -220,6 +220,36 @@
           {/if}
         </div>
       {/each}
+    </div>
+
+    <!-- Mobile: toggle + sign in at bottom of menu -->
+    <div class="flex items-center gap-3 pt-3 mt-2 border-t border-slate-200 md:hidden">
+      <button
+        onclick={() => toggleAdvanced()}
+        class="flex shrink-0 items-center gap-1.5 rounded-full border px-2 py-1 text-xs font-medium transition-colors
+          {advanced ? 'border-indigo-300 bg-indigo-50 text-indigo-700' : 'border-slate-200 bg-slate-50 text-slate-600'}"
+      >
+        <span class="text-xs">{advanced ? 'Adv' : 'Basic'}</span>
+        <div class="relative h-4 w-7 rounded-full transition-colors {advanced ? 'bg-indigo-500' : 'bg-slate-300'}">
+          <div class="absolute top-0.5 h-3 w-3 rounded-full bg-white shadow transition-transform {advanced ? 'translate-x-3' : 'translate-x-0.5'}"></div>
+        </div>
+      </button>
+      {#if user}
+        <button
+          onclick={handleSignOut}
+          disabled={signingOut}
+          class="rounded-lg bg-slate-100 px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-200 disabled:opacity-50"
+        >
+          {signingOut ? '...' : 'Sign Out'}
+        </button>
+      {:else}
+        <a
+          href="/auth/login"
+          class="rounded-lg bg-indigo-600 px-3 py-1 text-xs font-medium text-white no-underline hover:bg-indigo-700"
+        >
+          Sign In
+        </a>
+      {/if}
     </div>
   </div>
 </nav>

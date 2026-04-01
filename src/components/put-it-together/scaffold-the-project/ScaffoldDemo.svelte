@@ -169,7 +169,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        brand: { 500: "#6366f1", 600: "#4f46e5" },
+        brand: { 500: "#0f89ec", 600: "#0a6fc0" },
       },
     },
   },

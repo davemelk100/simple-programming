@@ -135,7 +135,7 @@
           <span class="text-xs text-slate-400">CSS</span>
         </div>
         <pre class="code-block"><code>{@html `<span class="var">.btn</span> {
-  <span class="var">background</span>: <span class="str">#4f46e5</span>;
+  <span class="var">background</span>: <span class="str">#0f89ec</span>;
   <span class="var">color</span>: <span class="str">white</span>;
   <span class="var">padding</span>: <span class="num">12px</span> <span class="num">24px</span>;
   <span class="var">border-radius</span>: <span class="num">8px</span>;
@@ -149,7 +149,7 @@
           <span class="text-xs text-slate-400">JavaScript DOM</span>
         </div>
         <pre class="code-block"><code>{@html `<span class="kw">const</span> <span class="var">btn</span> <span class="op">=</span> <span class="var">document</span>.<span class="fn">querySelector</span>(<span class="str">".btn"</span>);
-<span class="var">btn</span>.<span class="var">style</span>.<span class="var">background</span> <span class="op">=</span> <span class="str">"#4f46e5"</span>;
+<span class="var">btn</span>.<span class="var">style</span>.<span class="var">background</span> <span class="op">=</span> <span class="str">"#0f89ec"</span>;
 <span class="var">btn</span>.<span class="var">style</span>.<span class="var">color</span> <span class="op">=</span> <span class="str">"white"</span>;
 <span class="var">btn</span>.<span class="var">style</span>.<span class="var">padding</span> <span class="op">=</span> <span class="str">"12px 24px"</span>;
 <span class="var">btn</span>.<span class="var">style</span>.<span class="var">borderRadius</span> <span class="op">=</span> <span class="str">"8px"</span>;

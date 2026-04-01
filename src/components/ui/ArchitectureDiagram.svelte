@@ -338,8 +338,8 @@
                 {/if}
               </button>
             </div>
-            <p class="text-sm sm:text-base font-bold font-mono {layer.text}">{layer.label}</p>
-            <p class="text-[10px] sm:text-xs font-semibold {layer.text}">({layer.sub})</p>
+            <p class="text-lg sm:text-2xl font-bold {layer.text}" style="font-family: 'Permanent Marker', cursive;">{layer.label}</p>
+            <p class="text-xs sm:text-sm font-semibold {layer.text}">({layer.sub})</p>
             <p class="text-xs sm:text-sm leading-relaxed font-bold {layer.text}" style="font-family: sans-serif;">{layer.descBold}</p>
             <p class="text-xs sm:text-sm leading-relaxed font-light {layer.text}" style="font-family: sans-serif;">{layer.descRest}</p>
             <p class="text-[10px] sm:text-xs font-light {layer.text}">({layer.subtitle.toUpperCase()})</p>
@@ -365,7 +365,16 @@
             <div class="liquid-blob absolute rounded-full" style="width: 180px; height: 180px; top: 40%; left: 10%; background: radial-gradient(circle, rgba(34,197,94,0.12), transparent 70%); animation-delay: -6s;"></div>
           </div>
 
-          <p class="relative text-sm sm:text-base font-bold text-slate-700 font-mono tracking-wide">The Full Stack</p>
+          <div class="relative flex items-center justify-between">
+            <p class="text-sm sm:text-base font-bold text-slate-700 font-mono tracking-wide">The Full Stack</p>
+            <button
+              onclick={() => { showSummary = false; }}
+              class="rounded-full p-1 text-slate-400 transition-colors hover:bg-slate-200/50 hover:text-slate-600"
+              aria-label="Close"
+            >
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
 
           <!-- Stack diagram -->
           <div class="relative flex flex-col-reverse gap-0 rounded-xl overflow-hidden" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4);">
