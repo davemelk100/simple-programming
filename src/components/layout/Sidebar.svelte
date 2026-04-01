@@ -30,11 +30,14 @@
 
   const letters = 'abcdefghijklmnopqrstuvwxyz';
 
-  type SectionKey = 'concepts' | 'execution' | 'basics' | 'blocks' | 'syntax' | 'principles' | 'languages' | 'toolbox' | 'testingqa' | 'putittogether' | 'ai' | 'aiUsing' | 'aiDeveloping';
+  type SectionKey = 'concepts' | 'syntaxprinciples' | 'execution' | 'builddeploy' | 'userinterface' | 'basics' | 'blocks' | 'syntax' | 'principles' | 'languages' | 'toolbox' | 'testingqa' | 'putittogether';
 
   let collapsed = $state<Record<SectionKey, boolean>>({
     concepts: false,
+    syntaxprinciples: false,
     execution: false,
+    builddeploy: false,
+    userinterface: false,
     basics: false,
     blocks: false,
     syntax: false,
@@ -43,9 +46,6 @@
     toolbox: false,
     testingqa: false,
     putittogether: false,
-    ai: false,
-    aiUsing: false,
-    aiDeveloping: false,
   });
 
   function toggle(key: SectionKey) {
@@ -70,8 +70,8 @@
     onclick={() => toggle('concepts')}
     class="mb-1 flex w-full cursor-pointer items-center justify-between px-2"
   >
-    <span class="text-base font-bold uppercase tracking-widest text-slate-800" style="font-family: 'Roboto', sans-serif;">1. Concepts</span>
-    <svg class="h-4 w-4 text-slate-400 transition-transform duration-200 {collapsed.concepts ? '-rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <span class="text-sm font-bold uppercase tracking-wider text-slate-800 text-left" style="font-family: 'Roboto', sans-serif;">1. Concepts</span>
+    <svg class="h-4 w-4 shrink-0 text-slate-400 transition-transform duration-200 {collapsed.concepts ? '-rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
     </svg>
   </button>
@@ -128,6 +128,21 @@
       </a>
     {/each}
   {/if}
+  {/if}
+
+  <hr class="my-3 border-slate-200" />
+
+  <!-- ===== 2. SYNTAX & PRINCIPLES ===== -->
+  <button
+    onclick={() => toggle('syntaxprinciples')}
+    class="mb-1 flex w-full cursor-pointer items-center justify-between px-2"
+  >
+    <span class="text-sm font-bold uppercase tracking-wider text-slate-800 text-left" style="font-family: 'Roboto', sans-serif;">2. Syntax & Principles</span>
+    <svg class="h-4 w-4 shrink-0 text-slate-400 transition-transform duration-200 {collapsed.syntaxprinciples ? '-rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+    </svg>
+  </button>
+  {#if !collapsed.syntaxprinciples}
 
   <!-- Syntax Styles -->
   <button
@@ -148,7 +163,6 @@
         class="flex items-center gap-2 rounded-lg px-3 py-2 pl-6 text-sm font-light no-underline transition-colors {active ? `${colors?.active} font-medium` : `text-slate-600 ${colors?.hover ?? 'hover:bg-slate-50'}`}"
         aria-current={active ? 'page' : undefined}
       >
-
         <span class="text-base">{style.icon}</span>
         {style.title}
       </a>
@@ -174,7 +188,6 @@
         class="flex items-center gap-2 rounded-lg px-3 py-2 pl-6 text-sm font-light no-underline transition-colors {active ? `${colors?.active} font-medium` : `text-slate-600 ${colors?.hover ?? 'hover:bg-slate-50'}`}"
         aria-current={active ? 'page' : undefined}
       >
-
         <span class="text-base">{principle.icon}</span>
         {principle.title}
       </a>
@@ -184,13 +197,13 @@
 
   <hr class="my-3 border-slate-200" />
 
-  <!-- ===== 2. EXECUTION ===== -->
+  <!-- ===== 3. LANGUAGES & TOOLS ===== -->
   <button
     onclick={() => toggle('execution')}
     class="mb-1 flex w-full cursor-pointer items-center justify-between px-2"
   >
-    <span class="text-base font-bold uppercase tracking-widest text-slate-800" style="font-family: 'Roboto', sans-serif;">2. Execution</span>
-    <svg class="h-4 w-4 text-slate-400 transition-transform duration-200 {collapsed.execution ? '-rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <span class="text-sm font-bold uppercase tracking-wider text-slate-800 text-left" style="font-family: 'Roboto', sans-serif;">3. Languages & Tools</span>
+    <svg class="h-4 w-4 shrink-0 text-slate-400 transition-transform duration-200 {collapsed.execution ? '-rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
     </svg>
   </button>
@@ -253,31 +266,21 @@
     {/each}
   {/if}
 
-  <!-- 2.3 Testing & QA -->
+  {/if}
+
+  <hr class="my-3 border-slate-200" />
+
+  <!-- ===== 4. BUILD & DEPLOY ===== -->
   <button
-    onclick={() => toggle('testingqa')}
-    class="mb-1 flex w-full cursor-pointer items-center justify-between px-2 pl-4"
+    onclick={() => toggle('builddeploy')}
+    class="mb-1 flex w-full cursor-pointer items-center justify-between px-2"
   >
-    <span class="text-sm font-semibold uppercase tracking-wider text-slate-500" style="font-family: 'Roboto', sans-serif;">Testing &amp; QA</span>
-    <svg class="h-4 w-4 text-slate-400 transition-transform duration-200 {collapsed.testingqa ? '-rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <span class="text-sm font-bold uppercase tracking-wider text-slate-800 text-left" style="font-family: 'Roboto', sans-serif;">4. Build & Deploy</span>
+    <svg class="h-4 w-4 shrink-0 text-slate-400 transition-transform duration-200 {collapsed.builddeploy ? '-rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
     </svg>
   </button>
-  {#if !collapsed.testingqa}
-    {#each testingQaTopics as topic, i}
-      {@const active = currentPath.replace(/\/$/, '') === `/testing-qa/${topic.slug}`}
-      {@const colors = colorMap[topic.color]}
-      <a
-        href={`/testing-qa/${topic.slug}`}
-        class="flex items-center gap-2 rounded-lg px-3 py-2 pl-6 text-sm font-light no-underline transition-colors {active ? `${colors?.active} font-medium` : `text-slate-600 ${colors?.hover ?? 'hover:bg-slate-50'}`}"
-        aria-current={active ? 'page' : undefined}
-      >
-
-        <span class="text-base">{topic.icon}</span>
-        {topic.title}
-      </a>
-    {/each}
-  {/if}
+  {#if !collapsed.builddeploy}
 
   <!-- Put It Together -->
   <button
@@ -298,7 +301,31 @@
         class="flex items-center gap-2 rounded-lg px-3 py-2 pl-6 text-sm font-light no-underline transition-colors {active ? `${colors?.active} font-medium` : `text-slate-600 ${colors?.hover ?? 'hover:bg-slate-50'}`}"
         aria-current={active ? 'page' : undefined}
       >
+        <span class="text-base">{topic.icon}</span>
+        {topic.title}
+      </a>
+    {/each}
+  {/if}
 
+  <!-- Testing & QA -->
+  <button
+    onclick={() => toggle('testingqa')}
+    class="mb-1 flex w-full cursor-pointer items-center justify-between px-2 pl-4"
+  >
+    <span class="text-sm font-semibold uppercase tracking-wider text-slate-500" style="font-family: 'Roboto', sans-serif;">Testing &amp; QA</span>
+    <svg class="h-4 w-4 text-slate-400 transition-transform duration-200 {collapsed.testingqa ? '-rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+    </svg>
+  </button>
+  {#if !collapsed.testingqa}
+    {#each testingQaTopics as topic, i}
+      {@const active = currentPath.replace(/\/$/, '') === `/testing-qa/${topic.slug}`}
+      {@const colors = colorMap[topic.color]}
+      <a
+        href={`/testing-qa/${topic.slug}`}
+        class="flex items-center gap-2 rounded-lg px-3 py-2 pl-6 text-sm font-light no-underline transition-colors {active ? `${colors?.active} font-medium` : `text-slate-600 ${colors?.hover ?? 'hover:bg-slate-50'}`}"
+        aria-current={active ? 'page' : undefined}
+      >
         <span class="text-base">{topic.icon}</span>
         {topic.title}
       </a>
@@ -308,67 +335,17 @@
 
   <hr class="my-3 border-slate-200" />
 
-  <!-- ===== 3. AI ===== -->
+  <!-- ===== 5. USER INTERFACE ===== -->
   <button
-    onclick={() => toggle('ai')}
+    onclick={() => toggle('userinterface')}
     class="mb-1 flex w-full cursor-pointer items-center justify-between px-2"
   >
-    <span class="text-base font-bold uppercase tracking-widest text-slate-800" style="font-family: 'Roboto', sans-serif;">3. AI</span>
-    <svg class="h-4 w-4 text-slate-400 transition-transform duration-200 {collapsed.ai ? '-rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <span class="text-sm font-bold uppercase tracking-wider text-slate-800 text-left" style="font-family: 'Roboto', sans-serif;">5. User Interface</span>
+    <svg class="h-4 w-4 shrink-0 text-slate-400 transition-transform duration-200 {collapsed.userinterface ? '-rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
     </svg>
   </button>
-  {#if !collapsed.ai}
-
-  <!-- Using AI -->
-  <button
-    onclick={() => toggle('aiUsing')}
-    class="mb-1 flex w-full cursor-pointer items-center justify-between px-2 pl-4"
-  >
-    <span class="text-sm font-semibold uppercase tracking-wider text-slate-500" style="font-family: 'Roboto', sans-serif;">Using AI</span>
-    <svg class="h-4 w-4 text-slate-400 transition-transform duration-200 {collapsed.aiUsing ? '-rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-    </svg>
-  </button>
-  {#if !collapsed.aiUsing}
-    {#each aiUsingTopics as topic}
-      {@const active = currentPath.replace(/\/$/, '') === `/ai/${topic.slug}`}
-      {@const colors = colorMap[topic.color]}
-      <a
-        href={`/ai/${topic.slug}`}
-        class="flex items-center gap-2 rounded-lg px-3 py-2 pl-6 text-sm font-light no-underline transition-colors {active ? `${colors?.active} font-medium` : `text-slate-600 ${colors?.hover ?? 'hover:bg-slate-50'}`}"
-        aria-current={active ? 'page' : undefined}
-      >
-        <span class="text-base">{topic.icon}</span>
-        {topic.title}
-      </a>
-    {/each}
-  {/if}
-
-  <!-- Developing in AI -->
-  <button
-    onclick={() => toggle('aiDeveloping')}
-    class="mb-1 flex w-full cursor-pointer items-center justify-between px-2 pl-4"
-  >
-    <span class="text-sm font-semibold uppercase tracking-wider text-slate-500" style="font-family: 'Roboto', sans-serif;">Developing in AI</span>
-    <svg class="h-4 w-4 text-slate-400 transition-transform duration-200 {collapsed.aiDeveloping ? '-rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-    </svg>
-  </button>
-  {#if !collapsed.aiDeveloping}
-    {#each aiDevelopingTopics as topic}
-      {@const active = currentPath.replace(/\/$/, '') === `/ai/${topic.slug}`}
-      {@const colors = colorMap[topic.color]}
-      <a
-        href={`/ai/${topic.slug}`}
-        class="flex items-center gap-2 rounded-lg px-3 py-2 pl-6 text-sm font-light no-underline transition-colors {active ? `${colors?.active} font-medium` : `text-slate-600 ${colors?.hover ?? 'hover:bg-slate-50'}`}"
-        aria-current={active ? 'page' : undefined}
-      >
-        <span class="text-base">{topic.icon}</span>
-        {topic.title}
-      </a>
-    {/each}
-  {/if}
-
+  {#if !collapsed.userinterface}
+    <p class="px-4 py-2 text-xs text-slate-400 italic">Coming soon</p>
   {/if}
 </nav>

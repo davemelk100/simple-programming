@@ -1,0 +1,111 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Get Started - Programming Is Easy">
+  <div class="max-w-3xl mx-auto py-8 sm:py-12">
+
+    <!-- Hero -->
+    <div class="text-center mb-12">
+      <h1 class="text-4xl sm:text-5xl font-bold mb-4" style="font-family: 'Permanent Marker', cursive;">Programming Is Easy</h1>
+      <p class="text-lg sm:text-xl text-slate-500 font-light">No, really. Let us show you.</p>
+    </div>
+
+    <!-- Premise -->
+    <div class="mb-12 space-y-5 text-slate-700 font-light leading-relaxed" style="font-size: 1.05rem;">
+      <p>
+        Most people think programming is hard because they were taught it wrong. They got thrown into a wall of jargon, cryptic error messages, and tutorials that assumed they already knew everything.
+      </p>
+      <p>
+        This site takes a different approach. We start with <strong class="font-semibold">ideas</strong>, not syntax. Every concept is explained visually, with interactive demos you can play with before you ever write a line of code.
+      </p>
+      <p>
+        Think of it like building a bank. First the building goes up. Then you set the rules. Then you stock the vault, hire the employees, and open the doors. Each layer builds on the last, and none of it requires a computer science degree.
+      </p>
+    </div>
+
+    <!-- How it works -->
+    <div class="mb-12">
+      <h2 class="text-2xl font-bold text-slate-800 mb-6" style="font-family: 'Permanent Marker', cursive;">How it works</h2>
+      <div class="grid gap-4">
+        <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100">
+          <span class="text-2xl">🎯</span>
+          <div>
+            <p class="font-semibold text-slate-800 mb-1">Learn the idea first</p>
+            <p class="text-sm text-slate-500 font-light">Every topic starts with a plain-English explanation. No jargon, no assumptions.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100">
+          <span class="text-2xl">🧪</span>
+          <div>
+            <p class="font-semibold text-slate-800 mb-1">Play with interactive demos</p>
+            <p class="text-sm text-slate-500 font-light">See how variables, functions, and logic actually work — visually, in your browser.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100">
+          <span class="text-2xl">💻</span>
+          <div>
+            <p class="font-semibold text-slate-800 mb-1">See real code</p>
+            <p class="text-sm text-slate-500 font-light">Once the concept clicks, see how it looks in TypeScript, Python, Go, and C#.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100">
+          <span class="text-2xl">🏋️</span>
+          <div>
+            <p class="font-semibold text-slate-800 mb-1">Practice with exercises</p>
+            <p class="text-sm text-slate-500 font-light">Short challenges that reinforce what you just learned. No trick questions.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- The curriculum -->
+    <div class="mb-12">
+      <h2 class="text-2xl font-bold text-slate-800 mb-6" style="font-family: 'Permanent Marker', cursive;">The curriculum</h2>
+      <p class="text-slate-600 font-light mb-6">Five layers, from zero to shipping a real application:</p>
+      <div class="flex flex-col gap-0 rounded-xl overflow-hidden border border-slate-200">
+        <a href="/topics/variables" class="flex items-center gap-4 px-5 py-3.5 bg-slate-50 border-b border-slate-200 no-underline transition-colors hover:bg-slate-100">
+          <span class="text-lg">🏦</span>
+          <div class="flex-1">
+            <p class="font-bold font-mono text-sm text-slate-700">CONCEPTS</p>
+            <p class="text-xs text-slate-400">Variables, functions, logic, OOP</p>
+          </div>
+          <svg class="h-4 w-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </a>
+        <a href="/syntax-styles/markup" class="flex items-center gap-4 px-5 py-3.5 bg-amber-50/50 border-b border-slate-200 no-underline transition-colors hover:bg-amber-100/50">
+          <span class="text-lg">⚙️</span>
+          <div class="flex-1">
+            <p class="font-bold font-mono text-sm text-amber-900">SYNTAX & PRINCIPLES</p>
+            <p class="text-xs text-amber-600">Patterns, naming, DRY, KISS</p>
+          </div>
+          <svg class="h-4 w-4 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </a>
+        <a href="/languages/typescript" class="flex items-center gap-4 px-5 py-3.5 bg-green-50/50 border-b border-slate-200 no-underline transition-colors hover:bg-green-100/50">
+          <span class="text-lg">🗄️</span>
+          <div class="flex-1">
+            <p class="font-bold font-mono text-sm text-green-800">LANGUAGES & TOOLS</p>
+            <p class="text-xs text-green-600">TypeScript, Python, Go, C#</p>
+          </div>
+          <svg class="h-4 w-4 text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </a>
+        <a href="/put-it-together/choose-your-stack" class="flex items-center gap-4 px-5 py-3.5 bg-purple-50/50 border-b border-slate-200 no-underline transition-colors hover:bg-purple-100/50">
+          <span class="text-lg">🧠</span>
+          <div class="flex-1">
+            <p class="font-bold font-mono text-sm text-purple-800">BUILD & DEPLOY</p>
+            <p class="text-xs text-purple-500">Stack, database, API, deploy</p>
+          </div>
+          <svg class="h-4 w-4 text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#" class="flex items-center gap-4 px-5 py-3.5 bg-blue-50/50 no-underline transition-colors hover:bg-blue-100/50">
+          <span class="text-lg">💁</span>
+          <div class="flex-1">
+            <p class="font-bold font-mono text-sm text-blue-800">USER INTERFACE</p>
+            <p class="text-xs text-blue-500">HTML, CSS, React, Svelte</p>
+          </div>
+          <svg class="h-4 w-4 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</BaseLayout>

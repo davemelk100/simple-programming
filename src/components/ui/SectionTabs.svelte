@@ -27,7 +27,7 @@
 </script>
 
 <!-- Mobile: dropdown -->
-<div class="relative lg:hidden">
+<div class="relative sm:hidden">
   <button
     onclick={() => (dropdownOpen = !dropdownOpen)}
     class="flex w-full items-center justify-between rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition-colors hover:bg-slate-50"
@@ -78,7 +78,7 @@
 </div>
 
 <!-- Desktop: horizontal tabs -->
-<div class="hidden shrink-0 border-b border-slate-200 lg:flex lg:border-b-0">
+<div class="hidden shrink-0 border-b border-slate-200 sm:flex sm:border-b-0">
   {#each tabs as tab}
     <button
       onclick={() => handleClick(tab.key)}

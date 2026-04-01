@@ -67,12 +67,17 @@
       sections: [
         { key: 'basics', label: 'Basics', items: topics.map(t => ({ ...t, href: `/topics/${t.slug}` })) },
         { key: 'blocks', label: 'Building Blocks', items: oopTopics.map(t => ({ ...t, href: `/topics/${t.slug}` })) },
+      ],
+    },
+    {
+      label: '2. Syntax & Principles',
+      sections: [
         { key: 'syntax', label: 'Syntax Styles', items: syntaxStyles.map(t => ({ ...t, href: `/syntax-styles/${t.slug}` })) },
         { key: 'principles', label: 'Principles', items: principles.map(t => ({ ...t, href: `/principles/${t.slug}` })) },
       ],
     },
     {
-      label: '2. Execution',
+      label: '3. Languages & Tools',
       sections: [
         { key: 'languages', label: 'Languages', items: [
           { slug: 'typescript', icon: '🟦', title: 'TypeScript / JavaScript', color: 'blue', href: '/languages/typescript' },
@@ -81,16 +86,18 @@
           { slug: 'csharp', icon: '🟪', title: 'C#', color: 'purple', href: '/languages/csharp' },
         ] },
         { key: 'toolbox', label: 'Toolbox', items: toolboxTopics.map(t => ({ ...t, href: `/toolbox/${t.slug}` })) },
-        { key: 'testingqa', label: 'Testing & QA', items: testingQaTopics.map(t => ({ ...t, href: `/testing-qa/${t.slug}` })) },
-        { key: 'putittogether', label: 'Put It Together', items: putItTogetherTopics.map(t => ({ ...t, href: `/put-it-together/${t.slug}` })) },
       ],
     },
     {
-      label: '3. AI',
+      label: '4. Build & Deploy',
       sections: [
-        { key: 'aiUsing', label: 'Using AI', items: aiUsingTopics.map(t => ({ ...t, href: `/ai/${t.slug}` })) },
-        { key: 'aiDeveloping', label: 'Developing in AI', items: aiDevelopingTopics.map(t => ({ ...t, href: `/ai/${t.slug}` })) },
+        { key: 'putittogether', label: 'Put It Together', items: putItTogetherTopics.map(t => ({ ...t, href: `/put-it-together/${t.slug}` })) },
+        { key: 'testingqa', label: 'Testing & QA', items: testingQaTopics.map(t => ({ ...t, href: `/testing-qa/${t.slug}` })) },
       ],
+    },
+    {
+      label: '5. User Interface',
+      sections: [],
     },
   ];
 
