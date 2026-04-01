@@ -7,6 +7,7 @@
   import { testingQaTopics } from '../../lib/testing-qa';
   import { putItTogetherTopics } from '../../lib/put-it-together';
   import { aiUsingTopics, aiDevelopingTopics } from '../../lib/ai';
+  import { userInterfaceTopics } from '../../lib/user-interface';
   import { getAdvanced, toggleAdvanced, onAdvancedChange } from '../../lib/mode';
 
   interface Props {
@@ -60,6 +61,7 @@
   };
 
   let openMenu = $state<string | null>(null);
+  let mobileMenuOpen = $state(false);
 
   const groups = [
     {
@@ -97,7 +99,9 @@
     },
     {
       label: '5. User Interface',
-      sections: [],
+      sections: [
+        { key: 'ui', label: 'User Interface', items: userInterfaceTopics.map(t => ({ ...t, href: `/user-interface/${t.slug}` })) },
+      ],
     },
   ];
 
@@ -120,60 +124,17 @@
   }
 </script>
 
-<svelte:window onclick={handleClose} />
+<svelte:window onclick={handleClose} on:toggle-mobile-menu={() => { mobileMenuOpen = !mobileMenuOpen; }} />
 
-<nav class="hidden border-b border-slate-200 bg-white shadow-sm lg:block">
+<header class="hidden border-b border-slate-200 bg-white shadow-sm md:block">
   <div class="mx-auto flex items-center justify-between px-4 py-2">
-    <div class="flex flex-wrap items-center gap-1">
-      <a
-        href="/"
-        class="mr-2 text-xl font-bold text-slate-900 no-underline hover:text-indigo-600 sm:text-2xl"
-        style="font-family: 'Permanent Marker';"
-      >
-        Programming Is Easy
-      </a>
-      {#each groups as group}
-        <div class="relative">
-          <button
-            onclick={(e) => { e.stopPropagation(); handleToggle(group.label); }}
-            class="rounded-md px-2.5 py-1.5 text-xs font-semibold uppercase tracking-wide transition-colors
-              {isGroupActive(group) ? 'bg-indigo-50 text-indigo-700' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700'}
-              {openMenu === group.label ? 'bg-slate-100 text-slate-800' : ''}"
-          >
-            {group.label}
-            <svg class="ml-1 inline h-3 w-3 transition-transform {openMenu === group.label ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-
-          {#if openMenu === group.label}
-            <!-- svelte-ignore a11y_click_events_have_key_events -->
-            <!-- svelte-ignore a11y_no_static_element_interactions -->
-            <div
-              class="absolute left-0 top-full z-50 mt-1 min-w-60 rounded-lg border border-slate-200 bg-white py-1 shadow-lg"
-              onclick={(e) => e.stopPropagation()}
-            >
-              {#each group.sections as section}
-                <div class="px-3 pt-2 pb-1 text-[10px] font-bold uppercase tracking-widest text-slate-400">{section.label}</div>
-                {#each section.items as item}
-                  {@const active = isItemActive(item.href)}
-                  {@const colors = colorMap[item.color]}
-                  <a
-                    href={item.href}
-                    onclick={handleClose}
-                    class="flex items-center gap-2 px-3 py-2 text-sm font-light no-underline transition-colors {active ? `${colors?.active} font-medium` : `text-slate-600 ${colors?.hover ?? 'hover:bg-slate-50'}`}"
-                    aria-current={active ? 'page' : undefined}
-                  >
-                    <span class="text-base">{item.icon}</span>
-                    {item.title}
-                  </a>
-                {/each}
-              {/each}
-            </div>
-          {/if}
-        </div>
-      {/each}
-    </div>
+    <a
+      href="/"
+      class="text-xl font-bold text-slate-900 no-underline hover:text-indigo-600 sm:text-2xl"
+      style="font-family: 'Permanent Marker';"
+    >
+      Programming Is Easy
+    </a>
 
     <div class="flex items-center gap-4">
       {#if user}
@@ -211,6 +172,54 @@
           Sign In
         </a>
       {/if}
+    </div>
+  </div>
+</header>
+
+<nav class="border-b border-slate-200 bg-white {mobileMenuOpen ? '' : 'hidden md:block'}">
+  <div class="mx-auto px-4 py-1.5 overflow-x-auto md:flex md:items-center">
+    <div class="flex flex-col gap-1 md:flex-row md:items-center md:flex-nowrap">
+      {#each groups as group}
+        <div class="relative">
+          <button
+            onclick={(e) => { e.stopPropagation(); handleToggle(group.label); }}
+            class="shrink-0 whitespace-nowrap rounded-md px-2.5 py-2 md:py-1.5 text-left text-xs font-semibold uppercase tracking-wide transition-colors
+              {isGroupActive(group) ? 'bg-indigo-50 text-indigo-700' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700'}
+              {openMenu === group.label ? 'bg-slate-100 text-slate-800' : ''}"
+          >
+            {group.label}
+            <svg class="ml-1 inline h-3 w-3 transition-transform {openMenu === group.label ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {#if openMenu === group.label}
+            <!-- svelte-ignore a11y_click_events_have_key_events -->
+            <!-- svelte-ignore a11y_no_static_element_interactions -->
+            <div
+              class="absolute left-0 top-full z-50 mt-1 min-w-60 rounded-lg border border-slate-200 bg-white py-1 shadow-lg"
+              onclick={(e) => e.stopPropagation()}
+            >
+              {#each group.sections as section}
+                <div class="px-3 pt-2 pb-1 text-[10px] font-bold uppercase tracking-widest text-slate-400">{section.label}</div>
+                {#each section.items as item}
+                  {@const active = isItemActive(item.href)}
+                  {@const colors = colorMap[item.color]}
+                  <a
+                    href={item.href}
+                    onclick={handleClose}
+                    class="flex items-center gap-2 px-3 py-2 text-sm font-light no-underline transition-colors {active ? `${colors?.active} font-medium` : `text-slate-600 ${colors?.hover ?? 'hover:bg-slate-50'}`}"
+                    aria-current={active ? 'page' : undefined}
+                  >
+                    <span class="text-base">{item.icon}</span>
+                    {item.title}
+                  </a>
+                {/each}
+              {/each}
+            </div>
+          {/if}
+        </div>
+      {/each}
     </div>
   </div>
 </nav>

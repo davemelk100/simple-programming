@@ -17,7 +17,7 @@
 <!-- Toggle button -->
 <button
   onclick={() => (open = !open)}
-  class="fixed bottom-4 left-4 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-indigo-600 text-white shadow-lg transition-all hover:bg-indigo-700 active:scale-95 lg:hidden"
+  class="fixed bottom-4 left-4 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-indigo-600 text-white shadow-lg transition-all hover:bg-indigo-700 active:scale-95 md:hidden"
   aria-label="Toggle navigation"
 >
   {#if open}
@@ -34,7 +34,7 @@
 <!-- Backdrop -->
 {#if open}
   <button
-    class="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm lg:hidden"
+    class="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm md:hidden"
     onclick={close}
     aria-label="Close navigation"
     tabindex="-1"
@@ -43,7 +43,7 @@
 
 <!-- Drawer -->
 <div
-  class="fixed top-0 left-0 z-40 h-full transform transition-transform duration-300 ease-in-out lg:hidden
+  class="fixed top-0 left-0 z-40 h-full transform transition-transform duration-300 ease-in-out md:hidden
     {open ? 'translate-x-0' : '-translate-x-full'}"
 >
   <!-- svelte-ignore a11y_click_events_have_key_events -->

@@ -1,42 +1,32 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import type { SectionType } from '../../lib/types';
-  import { getPutItTogetherBySlug, getNextPutItTogether, getPrevPutItTogether } from '../../lib/put-it-together';
+  import { getUserInterfaceBySlug, getNextUserInterface, getPrevUserInterface } from '../../lib/user-interface';
   import { loadProgress, markSectionComplete } from '../../lib/progress';
   import { getUser } from '../../lib/auth';
   import SectionTabs from '../ui/SectionTabs.svelte';
   import Modal from '../ui/Modal.svelte';
   import CompletionModal from '../ui/CompletionModal.svelte';
 
-  import ChooseYourStackExplain from './choose-your-stack/ChooseYourStackExplain.svelte';
-  import ChooseYourStackDemo from './choose-your-stack/ChooseYourStackDemo.svelte';
-  import ChooseYourStackExercise from './choose-your-stack/ChooseYourStackExercise.svelte';
-  import ChooseYourStackCode from './choose-your-stack/ChooseYourStackCode.svelte';
+  import HtmlStructureExplain from './html-structure/HtmlStructureExplain.svelte';
+  import HtmlStructureDemo from './html-structure/HtmlStructureDemo.svelte';
+  import HtmlStructureExercise from './html-structure/HtmlStructureExercise.svelte';
+  import HtmlStructureCode from './html-structure/HtmlStructureCode.svelte';
 
-  import ScaffoldExplain from './scaffold-the-project/ScaffoldExplain.svelte';
-  import ScaffoldDemo from './scaffold-the-project/ScaffoldDemo.svelte';
-  import ScaffoldExercise from './scaffold-the-project/ScaffoldExercise.svelte';
-  import ScaffoldCode from './scaffold-the-project/ScaffoldCode.svelte';
+  import CssStylingExplain from './css-styling/CssStylingExplain.svelte';
+  import CssStylingDemo from './css-styling/CssStylingDemo.svelte';
+  import CssStylingExercise from './css-styling/CssStylingExercise.svelte';
+  import CssStylingCode from './css-styling/CssStylingCode.svelte';
 
-  import ConnectDatabaseExplain from './connect-a-database/ConnectDatabaseExplain.svelte';
-  import ConnectDatabaseDemo from './connect-a-database/ConnectDatabaseDemo.svelte';
-  import ConnectDatabaseExercise from './connect-a-database/ConnectDatabaseExercise.svelte';
-  import ConnectDatabaseCode from './connect-a-database/ConnectDatabaseCode.svelte';
+  import ResponsiveDesignExplain from './responsive-design/ResponsiveDesignExplain.svelte';
+  import ResponsiveDesignDemo from './responsive-design/ResponsiveDesignDemo.svelte';
+  import ResponsiveDesignExercise from './responsive-design/ResponsiveDesignExercise.svelte';
+  import ResponsiveDesignCode from './responsive-design/ResponsiveDesignCode.svelte';
 
-  import AddAuthExplain from './add-authentication/AddAuthExplain.svelte';
-  import AddAuthDemo from './add-authentication/AddAuthDemo.svelte';
-  import AddAuthExercise from './add-authentication/AddAuthExercise.svelte';
-  import AddAuthCode from './add-authentication/AddAuthCode.svelte';
-
-  import BuildApiExplain from './build-an-api/BuildApiExplain.svelte';
-  import BuildApiDemo from './build-an-api/BuildApiDemo.svelte';
-  import BuildApiExercise from './build-an-api/BuildApiExercise.svelte';
-  import BuildApiCode from './build-an-api/BuildApiCode.svelte';
-
-  import DeployShipExplain from './deploy-and-ship/DeployShipExplain.svelte';
-  import DeployShipDemo from './deploy-and-ship/DeployShipDemo.svelte';
-  import DeployShipExercise from './deploy-and-ship/DeployShipExercise.svelte';
-  import DeployShipCode from './deploy-and-ship/DeployShipCode.svelte';
+  import ComponentFrameworksExplain from './component-frameworks/ComponentFrameworksExplain.svelte';
+  import ComponentFrameworksDemo from './component-frameworks/ComponentFrameworksDemo.svelte';
+  import ComponentFrameworksExercise from './component-frameworks/ComponentFrameworksExercise.svelte';
+  import ComponentFrameworksCode from './component-frameworks/ComponentFrameworksCode.svelte';
 
   interface Props {
     topicSlug: string;
@@ -44,9 +34,9 @@
 
   let { topicSlug }: Props = $props();
 
-  let topic = $derived(getPutItTogetherBySlug(topicSlug));
-  let prevTopic = $derived(getPrevPutItTogether(topicSlug));
-  let nextTopic = $derived(getNextPutItTogether(topicSlug));
+  let topic = $derived(getUserInterfaceBySlug(topicSlug));
+  let prevTopic = $derived(getPrevUserInterface(topicSlug));
+  let nextTopic = $derived(getNextUserInterface(topicSlug));
 
   let activeSection = $state<SectionType>('explain');
   let completedSections = $state({ explain: false, demo: false, exercise: false, code: false });
@@ -70,7 +60,7 @@
       if (user) {
         userId = user.id;
         const progress = await loadProgress(user.id);
-        const p = progress[`pit-${topicSlug}`];
+        const p = progress[`ui-${topicSlug}`];
         if (p) {
           completedSections = {
             explain: p.explain?.completed ?? false,
@@ -93,24 +83,22 @@
     completedScore = score;
     showCompletionModal = true;
     if (userId) {
-      await markSectionComplete(userId, `pit-${topicSlug}`, section, score);
+      await markSectionComplete(userId, `ui-${topicSlug}`, section, score);
     }
   }
 
   const components: Record<string, Record<SectionType, any>> = {
-    'choose-your-stack': { explain: ChooseYourStackExplain, demo: ChooseYourStackDemo, exercise: ChooseYourStackExercise, code: ChooseYourStackCode },
-    'scaffold-the-project': { explain: ScaffoldExplain, demo: ScaffoldDemo, exercise: ScaffoldExercise, code: ScaffoldCode },
-    'connect-a-database': { explain: ConnectDatabaseExplain, demo: ConnectDatabaseDemo, exercise: ConnectDatabaseExercise, code: ConnectDatabaseCode },
-    'add-authentication': { explain: AddAuthExplain, demo: AddAuthDemo, exercise: AddAuthExercise, code: AddAuthCode },
-    'build-an-api': { explain: BuildApiExplain, demo: BuildApiDemo, exercise: BuildApiExercise, code: BuildApiCode },
-    'deploy-and-ship': { explain: DeployShipExplain, demo: DeployShipDemo, exercise: DeployShipExercise, code: DeployShipCode },
+    'html-structure': { explain: HtmlStructureExplain, demo: HtmlStructureDemo, exercise: HtmlStructureExercise, code: HtmlStructureCode },
+    'css-styling': { explain: CssStylingExplain, demo: CssStylingDemo, exercise: CssStylingExercise, code: CssStylingCode },
+    'responsive-design': { explain: ResponsiveDesignExplain, demo: ResponsiveDesignDemo, exercise: ResponsiveDesignExercise, code: ResponsiveDesignCode },
+    'component-frameworks': { explain: ComponentFrameworksExplain, demo: ComponentFrameworksDemo, exercise: ComponentFrameworksExercise, code: ComponentFrameworksCode },
   };
 </script>
 
 {#if topic}
   <div class="space-y-6">
     <div class="flex flex-col gap-4">
-      <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">4. Build & Deploy</p>
+      <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">5. User Interface</p>
       <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <span class="text-2xl">{topic.icon}</span>
         <h1 class="text-2xl font-black {colorMap[topic.color] ?? 'text-slate-800'}">{topic.title}</h1>
@@ -136,14 +124,14 @@
 
     <div class="flex items-center justify-between pt-2">
       {#if prevTopic}
-        <a href={`/put-it-together/${prevTopic.slug}`} class="flex items-center gap-2 rounded-lg bg-slate-100 px-4 py-2 text-sm font-medium text-slate-600 transition-all hover:bg-slate-200">
+        <a href={`/user-interface/${prevTopic.slug}`} class="flex items-center gap-2 rounded-lg bg-slate-100 px-4 py-2 text-sm font-medium text-slate-600 transition-all hover:bg-slate-200">
           <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
           {prevTopic.title}
         </a>
       {:else}<div></div>{/if}
       <a href="/" class="text-sm text-slate-500 hover:text-slate-600">All Topics</a>
       {#if nextTopic}
-        <a href={`/put-it-together/${nextTopic.slug}`} class="flex items-center gap-2 rounded-lg bg-slate-100 px-4 py-2 text-sm font-medium text-slate-600 transition-all hover:bg-slate-200">
+        <a href={`/user-interface/${nextTopic.slug}`} class="flex items-center gap-2 rounded-lg bg-slate-100 px-4 py-2 text-sm font-medium text-slate-600 transition-all hover:bg-slate-200">
           {nextTopic.title}
           <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
         </a>
@@ -152,7 +140,7 @@
   </div>
 
   <Modal open={showCompletionModal} onclose={() => (showCompletionModal = false)}>
-    <CompletionModal topicTitle={topic.title} topicIcon={topic.icon} sectionType={completedSectionType} topicSlug={`pit-${topicSlug}`} score={completedScore} onclose={() => (showCompletionModal = false)} />
+    <CompletionModal topicTitle={topic.title} topicIcon={topic.icon} sectionType={completedSectionType} topicSlug={`ui-${topicSlug}`} score={completedScore} onclose={() => (showCompletionModal = false)} />
   </Modal>
 {:else}
   <div class="text-center py-12">

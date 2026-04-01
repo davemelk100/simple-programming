@@ -121,6 +121,7 @@
   <div class="space-y-6">
     <!-- Header + Tabs -->
     <div class="flex flex-col gap-4">
+      <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">2. Syntax & Principles</p>
       <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <span class="text-2xl">{principle.icon}</span>
         <h1 class="text-2xl font-black {colorMap[principle.color] ?? 'text-slate-800'}">{principle.title}</h1>

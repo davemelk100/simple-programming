@@ -7,6 +7,7 @@
   import { testingQaTopics } from '../../lib/testing-qa';
   import { putItTogetherTopics } from '../../lib/put-it-together';
   import { aiUsingTopics, aiDevelopingTopics } from '../../lib/ai';
+  import { userInterfaceTopics } from '../../lib/user-interface';
 
   interface Props {
     currentPath?: string;
@@ -346,6 +347,17 @@
     </svg>
   </button>
   {#if !collapsed.userinterface}
-    <p class="px-4 py-2 text-xs text-slate-400 italic">Coming soon</p>
+    {#each userInterfaceTopics as topic}
+      {@const active = currentPath.replace(/\/$/, '') === `/user-interface/${topic.slug}`}
+      {@const colors = colorMap[topic.color]}
+      <a
+        href={`/user-interface/${topic.slug}`}
+        class="flex items-center gap-2 rounded-lg px-3 py-2 pl-6 text-sm font-light no-underline transition-colors {active ? `${colors?.active} font-medium` : `text-slate-600 ${colors?.hover ?? 'hover:bg-slate-50'}`}"
+        aria-current={active ? 'page' : undefined}
+      >
+        <span class="text-base">{topic.icon}</span>
+        {topic.title}
+      </a>
+    {/each}
   {/if}
 </nav>
