@@ -71,6 +71,17 @@
   import AbstractionExercise from './abstraction/AbstractionExercise.svelte';
   import AbstractionCode from './abstraction/AbstractionCode.svelte';
 
+  // Practice topic components
+  import TestingExplain from './testing/TestingExplain.svelte';
+  import TestingDemo from './testing/TestingDemo.svelte';
+  import TestingExercise from './testing/TestingExercise.svelte';
+  import TestingCode from './testing/TestingCode.svelte';
+
+  import QAExplain from './qa/QAExplain.svelte';
+  import QADemo from './qa/QADemo.svelte';
+  import QAExercise from './qa/QAExercise.svelte';
+  import QACode from './qa/QACode.svelte';
+
   interface Props {
     topicSlug: string;
   }
@@ -96,6 +107,8 @@
     yellow: 'text-yellow-700',
     pink: 'text-pink-700',
     indigo: 'text-indigo-700',
+    teal: 'text-teal-700',
+    rose: 'text-rose-700',
   };
 
   onMount(async () => {
@@ -148,6 +161,8 @@
     inheritance: { explain: InheritanceExplain, demo: InheritanceDemo, exercise: InheritanceExercise, code: InheritanceCode },
     polymorphism: { explain: PolymorphismExplain, demo: PolymorphismDemo, exercise: PolymorphismExercise, code: PolymorphismCode },
     abstraction: { explain: AbstractionExplain, demo: AbstractionDemo, exercise: AbstractionExercise, code: AbstractionCode },
+    testing: { explain: TestingExplain, demo: TestingDemo, exercise: TestingExercise, code: TestingCode },
+    qa: { explain: QAExplain, demo: QADemo, exercise: QAExercise, code: QACode },
   };
 </script>
 

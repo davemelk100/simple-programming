@@ -90,7 +90,24 @@ export const oopTopics: Topic[] = [
   },
 ];
 
-export const allTopics = [...topics, ...oopTopics];
+export const practiceTopics: Topic[] = [
+  {
+    slug: 'testing',
+    title: 'Writing Tests',
+    description: 'Prove your code works with automated checks',
+    icon: '🧪',
+    color: 'teal',
+  },
+  {
+    slug: 'qa',
+    title: 'Quality Assurance',
+    description: 'Make sure software works for real people',
+    icon: '🔍',
+    color: 'rose',
+  },
+];
+
+export const allTopics = [...topics, ...oopTopics, ...practiceTopics];
 
 export function getTopicBySlug(slug: string): Topic | undefined {
   return allTopics.find((t) => t.slug === slug);

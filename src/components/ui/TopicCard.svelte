@@ -16,6 +16,8 @@
     yellow: { border: 'border-l-yellow-500', bg: 'bg-yellow-50', text: 'text-yellow-700' },
     pink: { border: 'border-l-pink-500', bg: 'bg-pink-50', text: 'text-pink-700' },
     indigo: { border: 'border-l-indigo-500', bg: 'bg-indigo-50', text: 'text-indigo-700' },
+    teal: { border: 'border-l-teal-500', bg: 'bg-teal-50', text: 'text-teal-700' },
+    rose: { border: 'border-l-rose-500', bg: 'bg-rose-50', text: 'text-rose-700' },
   };
 
   let colors = $derived(colorMap[topic.color] ?? colorMap.blue);
