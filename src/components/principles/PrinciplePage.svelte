@@ -123,8 +123,8 @@
   <div class="space-y-6">
     <!-- Header + Tabs -->
     <div class="flex flex-col gap-4">
-      <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">2. Syntax & Principles</p>
-      <SubNav items={principles} currentSlug={principleSlug} basePath="/principles" />
+      <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 sm:hidden">2. Syntax & Principles</p>
+      <SubNav items={principles} currentSlug={principleSlug} basePath="/principles" label="2. Syntax & Principles" />
       <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <span class="text-2xl">{principle.icon}</span>
         <h1 class="text-2xl font-black {colorMap[principle.color] ?? 'text-slate-800'}">{principle.title}</h1>

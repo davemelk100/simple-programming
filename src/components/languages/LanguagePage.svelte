@@ -110,8 +110,8 @@
   <div class="space-y-6">
     <!-- Header + Tabs -->
     <div class="flex flex-col gap-4">
-      <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">3. Languages & Tools</p>
-      <SubNav items={languages} currentSlug={languageSlug} basePath="/languages" />
+      <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 sm:hidden">3. Languages & Tools</p>
+      <SubNav items={languages} currentSlug={languageSlug} basePath="/languages" label="3. Languages & Tools" />
       <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <span class="text-2xl">{language.icon}</span>
         <h1 class="text-2xl font-black {colorMap[language.color] ?? 'text-slate-800'}">{language.title}</h1>

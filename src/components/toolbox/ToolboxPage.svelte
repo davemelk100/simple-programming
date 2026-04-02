@@ -101,8 +101,8 @@
 {#if tool}
   <div class="space-y-6">
     <div class="flex flex-col gap-4">
-      <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">3. Languages & Tools</p>
-      <SubNav items={toolboxTopics} currentSlug={toolboxSlug} basePath="/toolbox" />
+      <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 sm:hidden">3. Languages & Tools</p>
+      <SubNav items={toolboxTopics} currentSlug={toolboxSlug} basePath="/toolbox" label="3. Languages & Tools" />
       <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <span class="text-2xl">{tool.icon}</span>
         <h1 class="text-2xl font-black {colorMap[tool.color] ?? 'text-slate-800'}">{tool.title}</h1>

@@ -5,9 +5,10 @@
     items: Topic[];
     currentSlug: string;
     basePath: string;
+    label?: string;
   }
 
-  let { items, currentSlug, basePath }: Props = $props();
+  let { items, currentSlug, basePath, label }: Props = $props();
 
   let dropdownOpen = $state(false);
   let currentItem = $derived(items.find(i => i.slug === currentSlug));
@@ -53,16 +54,21 @@
   {/if}
 </div>
 
-<!-- Desktop: pills -->
-<nav class="hidden sm:flex sm:flex-wrap gap-1.5">
-  {#each items as item}
-    {@const active = item.slug === currentSlug}
-    <a
-      href="{basePath}/{item.slug}"
-      class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium no-underline transition-colors {active ? 'bg-slate-800 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}"
-    >
-      <span class="text-sm">{item.icon}</span>
-      {item.title}
-    </a>
-  {/each}
+<!-- Desktop: label + pills on one row -->
+<nav class="hidden sm:flex sm:items-center gap-3">
+  {#if label}
+    <span class="shrink-0 text-xs font-semibold uppercase tracking-wider text-slate-400">{label}</span>
+  {/if}
+  <div class="flex flex-wrap gap-1.5">
+    {#each items as item}
+      {@const active = item.slug === currentSlug}
+      <a
+        href="{basePath}/{item.slug}"
+        class="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium no-underline transition-colors {active ? 'bg-slate-700 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}"
+      >
+        <span>{item.icon}</span>
+        {item.title}
+      </a>
+    {/each}
+  </div>
 </nav>
