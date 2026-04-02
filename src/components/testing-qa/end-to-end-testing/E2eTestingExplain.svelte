@@ -6,21 +6,11 @@
   interface Props { oncomplete?: () => void; }
   let { oncomplete }: Props = $props();
 
-  let visibleCards = $state(0);
-
-  const cards = [
-    { emoji: '🛒', title: 'Full Journey', desc: 'E2E tests walk through the entire app like a real user — open, click, type, submit, verify.' },
-    { emoji: '🕵️', title: 'Secret Shopper', desc: 'Think of a secret shopper who tests the whole store: walk in, browse, pick items, checkout, leave.' },
-    { emoji: '🛡️', title: 'Confidence', desc: 'If the critical flows work end-to-end, you know your app works for real users.' },
-  ];
-
+  let visibleSections = $state(0);
   onMount(() => {
     const interval = setInterval(() => {
-      if (visibleCards < cards.length) {
-        visibleCards++;
-      } else {
-        clearInterval(interval);
-      }
+      if (visibleSections < 4) visibleSections++;
+      else clearInterval(interval);
     }, 600);
     return () => clearInterval(interval);
   });
@@ -28,85 +18,86 @@
 
 <div class="space-y-8">
   {#if !advanced}
+
   <div>
     <h2 class="mb-2 text-2xl font-bold text-slate-800">What Is End-to-End Testing?</h2>
     <p class="text-slate-600">
-      End-to-end (E2E) testing means <strong>simulating a real user</strong> clicking through your app from start to finish. Instead of testing a single function, you test an entire flow: open the browser, navigate to a page, fill in a form, click a button, and verify what happens next.
+      End-to-end (E2E) testing means <strong>simulating a real user</strong> clicking through your app. Think of it as a <strong>robot using your website</strong> -- it opens a browser, navigates pages, fills in forms, clicks buttons, and checks that everything works the way a real person would expect. If anything breaks along the way, the test fails and tells you exactly where.
     </p>
   </div>
 
-  <div class="grid gap-4 sm:grid-cols-3">
-    {#each cards as card, i}
-      <div
-        class="rounded-xl border-2 border-purple-200 bg-purple-50 p-5 text-center transition-all duration-700
-          {i < visibleCards ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}"
-      >
-        <div class="mb-2 text-4xl">{card.emoji}</div>
-        <h3 class="mb-1 font-bold text-slate-800">{card.title}</h3>
-        <p class="text-sm text-slate-600">{card.desc}</p>
-      </div>
-    {/each}
-  </div>
-
-  <div class="space-y-4">
-    <h3 class="text-lg font-bold text-slate-800">The Secret Shopper Metaphor</h3>
+  <div class="space-y-4 transition-all duration-700 {visibleSections >= 1 ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}">
+    <h3 class="text-lg font-bold text-slate-800">The Testing Pyramid</h3>
     <p class="text-slate-600">
-      Imagine a <strong>secret shopper</strong> hired to evaluate a store. They don't just check one shelf — they test the <em>entire experience</em>: walk in the front door, browse products, pick items, go to checkout, pay, and leave. If any part of that journey breaks, the shopper reports it. E2E tests do exactly this for your app.
+      Not all tests are created equal. The <strong>testing pyramid</strong> shows how many of each type you should write:
     </p>
-  </div>
-
-  <div class="space-y-4">
-    <h3 class="text-lg font-bold text-slate-800">Popular E2E Testing Tools</h3>
-    <div class="grid gap-4 sm:grid-cols-2">
-      <div class="rounded-xl border-2 border-purple-200 bg-purple-50 p-4">
-        <h4 class="mb-1 font-bold text-purple-700">Playwright</h4>
-        <p class="text-sm text-slate-600">Made by Microsoft. Tests Chrome, Firefox, and Safari. Fast, reliable, and supports multiple languages. The modern choice for most teams.</p>
+    <div class="flex flex-col items-center gap-2">
+      <div class="flex w-32 items-center justify-center rounded-lg border-2 border-red-200 bg-red-50 py-3 text-center">
+        <div>
+          <p class="text-sm font-bold text-red-700">E2E</p>
+          <p class="text-xs text-slate-500">Few</p>
+        </div>
       </div>
-      <div class="rounded-xl border-2 border-purple-200 bg-purple-50 p-4">
-        <h4 class="mb-1 font-bold text-purple-700">Cypress</h4>
-        <p class="text-sm text-slate-600">Developer-friendly with a beautiful UI. Runs inside the browser for easy debugging. Great for single-page apps and smaller projects.</p>
+      <div class="flex w-52 items-center justify-center rounded-lg border-2 border-yellow-200 bg-yellow-50 py-3 text-center">
+        <div>
+          <p class="text-sm font-bold text-yellow-700">Integration</p>
+          <p class="text-xs text-slate-500">Some</p>
+        </div>
+      </div>
+      <div class="flex w-72 items-center justify-center rounded-lg border-2 border-green-200 bg-green-50 py-3 text-center">
+        <div>
+          <p class="text-sm font-bold text-green-700">Unit</p>
+          <p class="text-xs text-slate-500">Many</p>
+        </div>
       </div>
     </div>
+    <p class="text-sm text-slate-500 text-center">E2E tests sit at the top: slowest but highest confidence. Unit tests form the base: fastest but narrowest scope.</p>
   </div>
 
-  <div class="space-y-4">
-    <h3 class="text-lg font-bold text-slate-800">What Should You E2E Test?</h3>
+  <div class="space-y-4 transition-all duration-700 {visibleSections >= 2 ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}">
+    <h3 class="text-lg font-bold text-slate-800">What Do E2E Tests Check?</h3>
     <p class="text-slate-600">
-      E2E tests are <strong>slow and expensive</strong> compared to unit tests, so you can't test everything. Focus on <strong>critical user flows</strong> — the paths that matter most to your business:
+      E2E tests focus on <strong>critical user flows</strong> -- the journeys that matter most to your business:
     </p>
     <ul class="space-y-2 text-slate-600">
       <li class="flex items-start gap-2">
         <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-purple-500"></span>
-        <span><strong>Login/Signup:</strong> If users can't sign in, nothing else matters.</span>
+        <span><strong>Login flows:</strong> Can users sign in and reach their dashboard?</span>
       </li>
       <li class="flex items-start gap-2">
         <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-purple-500"></span>
-        <span><strong>Checkout/Payment:</strong> A broken checkout means lost revenue.</span>
+        <span><strong>Checkout processes:</strong> Can a customer add items to the cart and complete a purchase?</span>
       </li>
       <li class="flex items-start gap-2">
         <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-purple-500"></span>
-        <span><strong>Core workflows:</strong> Whatever your app's main purpose is (posting, searching, uploading, etc.).</span>
+        <span><strong>Form submissions:</strong> Does the contact form actually send a message and show confirmation?</span>
       </li>
     </ul>
   </div>
 
-  <div class="space-y-4">
-    <h3 class="text-lg font-bold text-slate-800">Why E2E Is Slow but Valuable</h3>
-    <div class="rounded-xl border-2 border-purple-200 bg-purple-50 p-5">
-      <p class="text-sm text-slate-600 mb-3">
-        E2E tests launch a real browser, load your entire app, and interact with it. This means they're <strong>10-100x slower</strong> than unit tests. But they catch problems that no other test type can — like a button that renders but doesn't actually submit the form, or a redirect that goes to the wrong page.
-      </p>
-      <div class="flex items-center gap-4 text-sm">
-        <div class="rounded-lg bg-green-100 px-3 py-1.5 text-green-700">Unit: ~5ms</div>
-        <span class="text-slate-400">vs</span>
-        <div class="rounded-lg bg-yellow-100 px-3 py-1.5 text-yellow-700">Integration: ~200ms</div>
-        <span class="text-slate-400">vs</span>
-        <div class="rounded-lg bg-red-100 px-3 py-1.5 text-red-700">E2E: ~5-30s</div>
+  <div class="space-y-4 transition-all duration-700 {visibleSections >= 3 ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}">
+    <h3 class="text-lg font-bold text-slate-800">Popular E2E Testing Tools</h3>
+    <div class="grid gap-4 sm:grid-cols-2">
+      <div class="rounded-xl border-2 border-purple-200 bg-purple-50 p-4">
+        <h4 class="mb-1 font-bold text-purple-700">Playwright</h4>
+        <p class="text-sm text-slate-600">Made by Microsoft. Tests Chrome, Firefox, and Safari. Fast, reliable, and the modern choice for most teams.</p>
+      </div>
+      <div class="rounded-xl border-2 border-purple-200 bg-purple-50 p-4">
+        <h4 class="mb-1 font-bold text-purple-700">Cypress</h4>
+        <p class="text-sm text-slate-600">Developer-friendly with a beautiful UI. Runs inside the browser for easy debugging. Great for single-page apps.</p>
+      </div>
+      <div class="rounded-xl border-2 border-purple-200 bg-purple-50 p-4">
+        <h4 class="mb-1 font-bold text-purple-700">Selenium</h4>
+        <p class="text-sm text-slate-600">The original browser automation tool. Supports many languages and browsers. Still widely used in enterprise.</p>
+      </div>
+      <div class="rounded-xl border-2 border-purple-200 bg-purple-50 p-4">
+        <h4 class="mb-1 font-bold text-purple-700">WebdriverIO</h4>
+        <p class="text-sm text-slate-600">Built on WebDriver protocol. Works for both web and mobile testing. Flexible and extensible.</p>
       </div>
     </div>
   </div>
 
-  <div>
+  <div class="transition-all duration-700 {visibleSections >= 4 ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}">
     <button
       onclick={oncomplete}
       class="rounded-full bg-purple-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-purple-700 active:scale-95"
@@ -120,144 +111,13 @@
   <div class="space-y-8">
     <div>
       <h2 class="mb-2 text-2xl font-bold text-slate-800">End-to-End Testing (Advanced)</h2>
-      <p class="text-slate-600">Deep dive into E2E strategies, patterns, and professional practices.</p>
+      <p class="text-slate-600">Professional patterns and strategies for robust E2E test suites.</p>
     </div>
 
     <div class="space-y-4">
-      <h3 class="text-lg font-bold text-slate-800">Playwright vs Cypress</h3>
-      <div class="overflow-x-auto">
-        <table class="w-full text-sm border-collapse">
-          <thead>
-            <tr class="border-b-2 border-purple-200">
-              <th class="py-2 pr-4 text-left text-slate-700">Feature</th>
-              <th class="py-2 px-4 text-left text-purple-700">Playwright</th>
-              <th class="py-2 px-4 text-left text-purple-700">Cypress</th>
-            </tr>
-          </thead>
-          <tbody class="text-slate-600">
-            <tr class="border-b border-slate-100">
-              <td class="py-2 pr-4 font-semibold">Browsers</td>
-              <td class="py-2 px-4">Chrome, Firefox, Safari, Edge</td>
-              <td class="py-2 px-4">Chrome, Firefox, Edge (no Safari)</td>
-            </tr>
-            <tr class="border-b border-slate-100">
-              <td class="py-2 pr-4 font-semibold">Multi-tab</td>
-              <td class="py-2 px-4">Yes</td>
-              <td class="py-2 px-4">No</td>
-            </tr>
-            <tr class="border-b border-slate-100">
-              <td class="py-2 pr-4 font-semibold">Language</td>
-              <td class="py-2 px-4">JS, TS, Python, C#, Java</td>
-              <td class="py-2 px-4">JS, TS only</td>
-            </tr>
-            <tr class="border-b border-slate-100">
-              <td class="py-2 pr-4 font-semibold">Speed</td>
-              <td class="py-2 px-4">Very fast (headless by default)</td>
-              <td class="py-2 px-4">Moderate (runs in browser)</td>
-            </tr>
-            <tr class="border-b border-slate-100">
-              <td class="py-2 pr-4 font-semibold">Debugging</td>
-              <td class="py-2 px-4">Trace viewer, screenshots</td>
-              <td class="py-2 px-4">Time-travel UI (excellent)</td>
-            </tr>
-            <tr>
-              <td class="py-2 pr-4 font-semibold">Parallelism</td>
-              <td class="py-2 px-4">Built-in, per-worker</td>
-              <td class="py-2 px-4">Requires paid dashboard</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="space-y-4">
-      <h3 class="text-lg font-bold text-slate-800">Visual Regression Testing</h3>
+      <h3 class="text-lg font-bold text-slate-800">Page Object Model Pattern</h3>
       <p class="text-slate-600">
-        Visual regression tests take <strong>screenshots</strong> of your pages and compare them pixel-by-pixel against a baseline. If a CSS change shifts a button 2 pixels or changes a color, the test catches it. Tools like Playwright's <code class="rounded bg-slate-100 px-1 text-sm text-purple-700">toHaveScreenshot()</code> make this easy.
-      </p>
-      <pre class="code-block"><code>{@html `<span class="cmt">// Visual regression with Playwright</span>
-<span class="kw">await</span> <span class="fn">expect</span>(<span class="var">page</span>).<span class="fn">toHaveScreenshot</span>(<span class="str">'homepage.png'</span>);
-<span class="cmt">// First run: saves baseline screenshot</span>
-<span class="cmt">// Later runs: compares against baseline, fails on diff</span>`}</code></pre>
-    </div>
-
-    <div class="space-y-4">
-      <h3 class="text-lg font-bold text-slate-800">Accessibility Testing with axe</h3>
-      <p class="text-slate-600">
-        Integrate accessibility audits directly into E2E tests. The <code class="rounded bg-slate-100 px-1 text-sm text-purple-700">@axe-core/playwright</code> package scans pages for WCAG violations — missing alt text, poor contrast, missing labels, and more.
-      </p>
-      <pre class="code-block"><code>{@html `<span class="kw">import</span> <span class="var">AxeBuilder</span> <span class="kw">from</span> <span class="str">'@axe-core/playwright'</span>;
-
-<span class="fn">test</span>(<span class="str">'homepage has no a11y violations'</span>, <span class="kw">async</span> ({ <span class="arg">page</span> }) <span class="op">=></span> {
-  <span class="kw">await</span> <span class="var">page</span>.<span class="fn">goto</span>(<span class="str">'/'</span>);
-  <span class="kw">const</span> <span class="var">results</span> <span class="op">=</span> <span class="kw">await new</span> <span class="fn">AxeBuilder</span>({ <span class="var">page</span> }).<span class="fn">analyze</span>();
-  <span class="fn">expect</span>(<span class="var">results</span>.<span class="var">violations</span>).<span class="fn">toEqual</span>([]);
-});`}</code></pre>
-    </div>
-
-    <div class="space-y-4">
-      <h3 class="text-lg font-bold text-slate-800">Mobile Viewport Testing</h3>
-      <p class="text-slate-600">
-        Test how your app looks and behaves on different screen sizes by configuring device emulation. Playwright has built-in device descriptors.
-      </p>
-      <pre class="code-block"><code>{@html `<span class="kw">import</span> { <span class="var">devices</span> } <span class="kw">from</span> <span class="str">'@playwright/test'</span>;
-
-<span class="cmt">// In playwright.config.ts</span>
-<span class="var">projects</span>: [
-  { <span class="var">name</span>: <span class="str">'Desktop Chrome'</span>, <span class="var">use</span>: { ...<span class="var">devices</span>[<span class="str">'Desktop Chrome'</span>] } },
-  { <span class="var">name</span>: <span class="str">'Mobile Safari'</span>, <span class="var">use</span>: { ...<span class="var">devices</span>[<span class="str">'iPhone 13'</span>] } },
-  { <span class="var">name</span>: <span class="str">'Tablet'</span>, <span class="var">use</span>: { ...<span class="var">devices</span>[<span class="str">'iPad Mini'</span>] } },
-]`}</code></pre>
-    </div>
-
-    <div class="space-y-4">
-      <h3 class="text-lg font-bold text-slate-800">Network Interception</h3>
-      <p class="text-slate-600">
-        Intercept and mock API responses to test edge cases (errors, slow responses, empty data) without needing a real backend.
-      </p>
-      <pre class="code-block"><code>{@html `<span class="cmt">// Mock an API response</span>
-<span class="kw">await</span> <span class="var">page</span>.<span class="fn">route</span>(<span class="str">'**/api/users'</span>, (<span class="arg">route</span>) <span class="op">=></span> {
-  <span class="var">route</span>.<span class="fn">fulfill</span>({
-    <span class="var">status</span>: <span class="num">200</span>,
-    <span class="var">body</span>: <span class="fn">JSON</span>.<span class="fn">stringify</span>([{ <span class="var">name</span>: <span class="str">'Alice'</span> }])
-  });
-});
-
-<span class="cmt">// Test error state</span>
-<span class="kw">await</span> <span class="var">page</span>.<span class="fn">route</span>(<span class="str">'**/api/users'</span>, (<span class="arg">route</span>) <span class="op">=></span> {
-  <span class="var">route</span>.<span class="fn">fulfill</span>({ <span class="var">status</span>: <span class="num">500</span> });
-});`}</code></pre>
-    </div>
-
-    <div class="space-y-4">
-      <h3 class="text-lg font-bold text-slate-800">Dealing with Flaky Tests</h3>
-      <p class="text-slate-600">
-        Flaky tests pass sometimes and fail sometimes without any code change. They erode trust in your test suite. Common causes and fixes:
-      </p>
-      <ul class="space-y-2 text-slate-600">
-        <li class="flex items-start gap-2">
-          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-purple-500"></span>
-          <span><strong>Timing issues:</strong> Use Playwright's auto-waiting instead of <code class="rounded bg-slate-100 px-1 text-sm text-purple-700">sleep()</code>. Wait for specific elements, not arbitrary time.</span>
-        </li>
-        <li class="flex items-start gap-2">
-          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-purple-500"></span>
-          <span><strong>Shared state:</strong> Each test should start with a clean slate. Use test isolation (fresh browser context).</span>
-        </li>
-        <li class="flex items-start gap-2">
-          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-purple-500"></span>
-          <span><strong>Animation/transitions:</strong> Disable CSS animations in test mode or wait for them to complete.</span>
-        </li>
-        <li class="flex items-start gap-2">
-          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-purple-500"></span>
-          <span><strong>Retries:</strong> Configure automatic retries as a safety net, but always investigate root causes.</span>
-        </li>
-      </ul>
-    </div>
-
-    <div class="space-y-4">
-      <h3 class="text-lg font-bold text-slate-800">Page Object Model (POM)</h3>
-      <p class="text-slate-600">
-        The Page Object Model is a design pattern that organizes your E2E selectors and actions into reusable classes. Instead of scattering <code class="rounded bg-slate-100 px-1 text-sm text-purple-700">page.click('#login-btn')</code> everywhere, you create a <code class="rounded bg-slate-100 px-1 text-sm text-purple-700">LoginPage</code> object with methods like <code class="rounded bg-slate-100 px-1 text-sm text-purple-700">login(email, password)</code>.
+        The Page Object Model (POM) encapsulates page interactions into <strong>reusable classes</strong>. Instead of scattering selectors across dozens of tests, you create one class per page with methods like <code class="rounded bg-slate-100 px-1 text-purple-700">login(email, password)</code>. When the UI changes, you update one place instead of every test.
       </p>
       <pre class="code-block"><code>{@html `<span class="cmt">// page-objects/LoginPage.ts</span>
 <span class="kw">class</span> <span class="fn">LoginPage</span> {
@@ -270,22 +130,79 @@
   }
 }
 
-<span class="cmt">// In your test — clean and readable</span>
+<span class="cmt">// In your test -- clean and readable</span>
 <span class="kw">const</span> <span class="var">loginPage</span> <span class="op">=</span> <span class="kw">new</span> <span class="fn">LoginPage</span>(<span class="var">page</span>);
 <span class="kw">await</span> <span class="var">loginPage</span>.<span class="fn">login</span>(<span class="str">'alice@test.com'</span>, <span class="str">'secret'</span>);`}</code></pre>
     </div>
 
     <div class="space-y-4">
-      <h3 class="text-lg font-bold text-slate-800">CI Integration &amp; Parallelization</h3>
+      <h3 class="text-lg font-bold text-slate-800">Handling Flaky Tests</h3>
       <p class="text-slate-600">
-        Run E2E tests in your CI pipeline on every pull request. Use parallelization (sharding) to split tests across multiple machines and cut run time dramatically.
+        A <strong>flaky test</strong> passes sometimes and fails sometimes without any code change. Flaky tests erode trust in your entire test suite. Common causes and fixes:
       </p>
-      <pre class="code-block"><code>{@html `<span class="cmt"># GitHub Actions — run E2E in parallel shards</span>
+      <ul class="space-y-2 text-slate-600">
+        <li class="flex items-start gap-2">
+          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-purple-500"></span>
+          <span><strong>Timing issues:</strong> Use auto-waiting (Playwright does this by default) instead of <code class="rounded bg-slate-100 px-1 text-sm text-purple-700">sleep()</code>.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-purple-500"></span>
+          <span><strong>Shared state:</strong> Each test should start fresh. Use isolated browser contexts.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-purple-500"></span>
+          <span><strong>Animations:</strong> Disable CSS animations in test mode or wait for them to complete.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-purple-500"></span>
+          <span><strong>Retries:</strong> Configure automatic retries as a safety net, but always investigate root causes.</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="space-y-4">
+      <h3 class="text-lg font-bold text-slate-800">Visual Regression Testing</h3>
+      <p class="text-slate-600">
+        Visual regression tests take <strong>screenshots</strong> of your pages and compare them pixel-by-pixel against a baseline. If a CSS change shifts a button or changes a color, the test catches it. Playwright's <code class="rounded bg-slate-100 px-1 text-sm text-purple-700">toHaveScreenshot()</code> makes this easy to set up.
+      </p>
+      <div class="rounded-xl border-2 border-purple-200 bg-purple-50 p-4">
+        <p class="text-sm text-slate-600">First run saves the baseline screenshot. Every subsequent run compares against it. If the diff exceeds the threshold, the test fails and shows you exactly which pixels changed.</p>
+      </div>
+    </div>
+
+    <div class="space-y-4">
+      <h3 class="text-lg font-bold text-slate-800">CI/CD Integration for E2E Tests</h3>
+      <p class="text-slate-600">
+        Run E2E tests automatically on every pull request in your CI pipeline. This catches regressions before they reach production. Key practices:
+      </p>
+      <ul class="space-y-2 text-slate-600">
+        <li class="flex items-start gap-2">
+          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-purple-500"></span>
+          <span><strong>Install browsers:</strong> Use <code class="rounded bg-slate-100 px-1 text-sm text-purple-700">npx playwright install --with-deps</code> in CI.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-purple-500"></span>
+          <span><strong>Upload artifacts:</strong> Save screenshots and traces on failure for debugging.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-purple-500"></span>
+          <span><strong>Use containers:</strong> Run tests in Docker for consistent environments.</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="space-y-4">
+      <h3 class="text-lg font-bold text-slate-800">Parallel Test Execution</h3>
+      <p class="text-slate-600">
+        E2E tests are slow individually, but you can run them in <strong>parallel</strong> to dramatically reduce total execution time. Playwright supports parallelism natively with workers, and CI systems can shard tests across multiple machines.
+      </p>
+      <pre class="code-block"><code>{@html `<span class="cmt"># GitHub Actions -- run E2E in parallel shards</span>
 <span class="var">strategy</span>:
   <span class="var">matrix</span>:
     <span class="var">shard</span>: [<span class="num">1</span>/<span class="num">4</span>, <span class="num">2</span>/<span class="num">4</span>, <span class="num">3</span>/<span class="num">4</span>, <span class="num">4</span>/<span class="num">4</span>]
 <span class="var">steps</span>:
   - <span class="var">run</span>: npx playwright test <span class="op">--</span>shard=\${{ matrix.shard }}`}</code></pre>
+      <p class="text-sm text-slate-500">With 4 shards, a 20-minute test suite can finish in about 5 minutes.</p>
     </div>
 
     <div>

@@ -6,106 +6,159 @@
   interface Props { oncomplete?: () => void; }
   let { oncomplete }: Props = $props();
 
-  // === Basic mode: Spot the Integration ===
-  interface Snippet {
-    code: string;
-    correctAnswer: 'unit' | 'integration';
-    userAnswer: 'unit' | 'integration' | null;
-    explanation: string;
-  }
-
-  let snippets: Snippet[] = $state([
-    {
-      code: 'expect(add(2, 3)).toBe(5)',
-      correctAnswer: 'unit',
-      userAnswer: null,
-      explanation: 'This tests a pure function in isolation with no external dependencies -- a classic unit test.',
-    },
-    {
-      code: 'const res = await request(app).get("/users").expect(200)',
-      correctAnswer: 'integration',
-      userAnswer: null,
-      explanation: 'This sends an HTTP request to a real route handler, which likely connects to middleware and a database -- integration test.',
-    },
-    {
-      code: 'expect(capitalize("hello")).toBe("Hello")',
-      correctAnswer: 'unit',
-      userAnswer: null,
-      explanation: 'Testing a single string function with no dependencies. Pure unit test.',
-    },
-    {
-      code: 'await db.insert(user); const found = await db.findById(user.id); expect(found.name).toBe("Alice")',
-      correctAnswer: 'integration',
-      userAnswer: null,
-      explanation: 'This test writes to a real database and reads back. It is testing the integration between your code and the database.',
-    },
-    {
-      code: 'const spy = vi.fn(); notifyUser(spy, "Hello"); expect(spy).toHaveBeenCalledWith("Hello")',
-      correctAnswer: 'unit',
-      userAnswer: null,
-      explanation: 'The dependency is mocked with vi.fn(). No real external system is involved -- this is a unit test.',
-    },
-  ]);
-
-  let basicScore = $derived(snippets.filter(s => s.userAnswer === s.correctAnswer).length);
-  let basicComplete = $derived(snippets.every(s => s.userAnswer !== null));
-
-  function selectAnswer(index: number, answer: 'unit' | 'integration') {
-    if (snippets[index].userAnswer === null) {
-      snippets[index].userAnswer = answer;
-    }
-  }
-
-  // === Advanced mode: Test an API Endpoint ===
-  interface Assertion {
+  // === Basic mode: 3-module chain ===
+  interface Connection {
+    from: string;
+    to: string;
     label: string;
-    placeholder: string;
-    correctAnswers: string[];
-    userAnswer: string;
-    result: 'correct' | 'wrong' | null;
-    hint: string;
-    explanation: string;
+    status: 'untested' | 'testing' | 'pass' | 'fail';
+    failMessage: string;
+    shouldFail: boolean;
   }
 
-  let assertions: Assertion[] = $state([
+  let basicModules = ['UserForm', 'API', 'Database'];
+
+  let basicConnections: Connection[] = $state([
     {
-      label: 'Expected status code for a successful creation',
-      placeholder: 'e.g., 200',
-      correctAnswers: ['201'],
-      userAnswer: '',
-      result: null,
-      hint: 'What HTTP status code means "Created"?',
-      explanation: '201 Created is the standard response for a successful POST that creates a new resource.',
+      from: 'UserForm',
+      to: 'API',
+      label: 'Submit form data',
+      status: 'untested',
+      failMessage: '',
+      shouldFail: false,
     },
     {
-      label: 'Property to check in the response body for the created user\'s name',
-      placeholder: 'e.g., res.body.???',
-      correctAnswers: ['name', 'res.body.name', 'body.name'],
-      userAnswer: '',
-      result: null,
-      hint: 'What field holds the user\'s name in the response JSON?',
-      explanation: 'res.body.name contains the name of the newly created user returned by the API.',
+      from: 'API',
+      to: 'Database',
+      label: 'Save to database',
+      status: 'untested',
+      failMessage: '',
+      shouldFail: false,
     },
     {
-      label: 'What side effect should you verify in the database?',
-      placeholder: 'Describe what to check...',
-      correctAnswers: ['user exists', 'user was created', 'user saved', 'record exists', 'inserted', 'user inserted', 'created', 'saved'],
-      userAnswer: '',
-      result: null,
-      hint: 'After creating a user via the API, what should be true in the database?',
-      explanation: 'You should verify the user record actually exists in the database, not just trust the API response.',
+      from: 'Database',
+      to: 'API',
+      label: 'Return saved record',
+      status: 'untested',
+      failMessage: '',
+      shouldFail: false,
     },
   ]);
 
-  let advSubmitted = $state(false);
-  let advScore = $derived(assertions.filter(a => a.result === 'correct').length);
+  let basicRound = $state(0);
+  let basicAllTested = $derived(basicConnections.every(c => c.status === 'pass' || c.status === 'fail'));
 
-  function checkAssertions() {
-    advSubmitted = true;
-    for (const a of assertions) {
-      const answer = a.userAnswer.trim().toLowerCase();
-      a.result = a.correctAnswers.some(c => answer.includes(c.toLowerCase())) ? 'correct' : 'wrong';
-    }
+  function resetBasicConnections(failIndex: number) {
+    basicConnections = [
+      {
+        from: 'UserForm',
+        to: 'API',
+        label: 'Submit form data',
+        status: 'untested',
+        failMessage: 'API received malformed JSON from the form',
+        shouldFail: failIndex === 0,
+      },
+      {
+        from: 'API',
+        to: 'Database',
+        label: 'Save to database',
+        status: 'untested',
+        failMessage: 'API returned wrong format -- expected { id, name } but got { user_id, full_name }',
+        shouldFail: failIndex === 1,
+      },
+      {
+        from: 'Database',
+        to: 'API',
+        label: 'Return saved record',
+        status: 'untested',
+        failMessage: 'Database returned null -- record was not actually saved',
+        shouldFail: failIndex === 2,
+      },
+    ];
+  }
+
+  onMount(() => {
+    const failIndex = Math.floor(Math.random() * 3);
+    resetBasicConnections(failIndex);
+  });
+
+  function testBasicConnection(index: number) {
+    if (basicConnections[index].status !== 'untested') return;
+    basicConnections[index].status = 'testing';
+    setTimeout(() => {
+      basicConnections[index].status = basicConnections[index].shouldFail ? 'fail' : 'pass';
+    }, 800);
+  }
+
+  function retryBasic() {
+    basicRound++;
+    const failIndex = Math.floor(Math.random() * 3);
+    resetBasicConnections(failIndex);
+  }
+
+  // === Advanced mode: complex dependency graph ===
+  interface AdvModule {
+    name: string;
+    x: number;
+    y: number;
+  }
+
+  interface AdvConnection {
+    fromIdx: number;
+    toIdx: number;
+    label: string;
+    status: 'untested' | 'testing' | 'pass' | 'fail';
+    failMessage: string;
+    shouldFail: boolean;
+  }
+
+  let advModules: AdvModule[] = [
+    { name: 'Web UI', x: 50, y: 0 },
+    { name: 'Auth Service', x: 0, y: 1 },
+    { name: 'API Gateway', x: 50, y: 1 },
+    { name: 'User Service', x: 100, y: 1 },
+    { name: 'Cache', x: 25, y: 2 },
+    { name: 'Database', x: 75, y: 2 },
+  ];
+
+  let advConnections: AdvConnection[] = $state([]);
+
+  function resetAdvConnections() {
+    const failIdx = Math.floor(Math.random() * 6);
+    advConnections = [
+      { fromIdx: 0, toIdx: 2, label: 'HTTP request', status: 'untested', failMessage: 'CORS headers missing -- browser blocked the request', shouldFail: failIdx === 0 },
+      { fromIdx: 2, toIdx: 1, label: 'Verify token', status: 'untested', failMessage: 'Auth service returned 503 -- service unavailable', shouldFail: failIdx === 1 },
+      { fromIdx: 2, toIdx: 3, label: 'Fetch user', status: 'untested', failMessage: 'User service timeout after 30s -- no response', shouldFail: failIdx === 2 },
+      { fromIdx: 3, toIdx: 4, label: 'Check cache', status: 'untested', failMessage: 'Cache key format mismatch -- expected user:1, got users/1', shouldFail: failIdx === 3 },
+      { fromIdx: 3, toIdx: 5, label: 'Query DB', status: 'untested', failMessage: 'SQL error -- column "full_name" does not exist, expected "name"', shouldFail: failIdx === 4 },
+      { fromIdx: 1, toIdx: 5, label: 'Load roles', status: 'untested', failMessage: 'Database connection pool exhausted -- too many concurrent connections', shouldFail: failIdx === 5 },
+    ];
+  }
+
+  onMount(() => {
+    resetAdvConnections();
+  });
+
+  let advAllTested = $derived(advConnections.length > 0 && advConnections.every(c => c.status === 'pass' || c.status === 'fail'));
+
+  function testAdvConnection(index: number) {
+    if (advConnections[index].status !== 'untested') return;
+    advConnections[index].status = 'testing';
+    setTimeout(() => {
+      advConnections[index].status = advConnections[index].shouldFail ? 'fail' : 'pass';
+    }, 800);
+  }
+
+  function testAllAdv() {
+    advConnections.forEach((c, i) => {
+      if (c.status === 'untested') {
+        setTimeout(() => testAdvConnection(i), i * 400);
+      }
+    });
+  }
+
+  function retryAdv() {
+    resetAdvConnections();
   }
 </script>
 
@@ -113,63 +166,92 @@
   {#if !advanced}
 
   <div>
-    <h2 class="mb-2 text-2xl font-bold text-slate-800">Try It: Spot the Integration</h2>
+    <h2 class="mb-2 text-2xl font-bold text-slate-800">Try It: Test the Connections</h2>
     <p class="text-slate-600">
-      Look at each code snippet and decide: is it a <strong>unit test</strong> or an <strong>integration test</strong>? Click the correct label for each.
+      Below are three modules connected in a chain. Click each connection to <strong>run an integration test</strong> on it. One connection has a bug -- find it!
     </p>
   </div>
 
-  <div class="space-y-4">
-    {#each snippets as snippet, i}
-      <div class="rounded-xl border-2 {snippet.userAnswer === null ? 'border-blue-200 bg-blue-50' : snippet.userAnswer === snippet.correctAnswer ? 'border-green-300 bg-green-50' : 'border-red-300 bg-red-50'} p-5 space-y-3">
-        <div class="rounded-lg bg-slate-800 px-4 py-3 font-mono text-sm text-slate-200">
-          {snippet.code}
+  <div class="rounded-xl border-2 border-blue-200 bg-blue-50 p-6 space-y-6">
+    <!-- Module diagram -->
+    <div class="flex items-center justify-center gap-2 sm:gap-4">
+      {#each basicModules as mod, i}
+        <div class="rounded-xl border-2 border-blue-300 bg-white px-3 py-3 sm:px-5 text-center shadow-sm">
+          <p class="text-sm font-bold text-blue-700">{mod}</p>
         </div>
-        <div class="flex gap-3">
-          <button
-            onclick={() => selectAnswer(i, 'unit')}
-            disabled={snippet.userAnswer !== null}
-            class="rounded-lg px-5 py-2 text-sm font-semibold border-2 transition-all
-              {snippet.userAnswer === 'unit'
-                ? (snippet.correctAnswer === 'unit' ? 'bg-green-600 text-white border-green-600' : 'bg-red-600 text-white border-red-600')
-                : 'bg-white text-green-700 border-green-300 hover:bg-green-50'}
-              disabled:cursor-default"
-          >
-            Unit Test
-          </button>
-          <button
-            onclick={() => selectAnswer(i, 'integration')}
-            disabled={snippet.userAnswer !== null}
-            class="rounded-lg px-5 py-2 text-sm font-semibold border-2 transition-all
-              {snippet.userAnswer === 'integration'
-                ? (snippet.correctAnswer === 'integration' ? 'bg-green-600 text-white border-green-600' : 'bg-red-600 text-white border-red-600')
-                : 'bg-white text-blue-700 border-blue-300 hover:bg-blue-50'}
-              disabled:cursor-default"
-          >
-            Integration Test
-          </button>
-        </div>
-        {#if snippet.userAnswer !== null}
-          <p class="text-sm {snippet.userAnswer === snippet.correctAnswer ? 'text-green-700' : 'text-red-700'} font-semibold">
-            {snippet.userAnswer === snippet.correctAnswer ? 'Correct!' : 'Not quite.'} {snippet.explanation}
-          </p>
+        {#if i < basicModules.length - 1}
+          <span class="text-blue-400 text-xl">&#8594;</span>
         {/if}
-      </div>
-    {/each}
-  </div>
-
-  {#if basicComplete}
-    <div class="rounded-xl border-2 border-green-300 bg-green-50 p-5 text-center">
-      <p class="text-lg font-bold text-green-700">{basicScore} / {snippets.length} correct! {basicScore === snippets.length ? 'Perfect score!' : 'Review the explanations to strengthen your understanding.'}</p>
+      {/each}
     </div>
-  {/if}
+
+    <!-- Connection tests -->
+    <div class="space-y-3">
+      {#each basicConnections as conn, i}
+        <button
+          onclick={() => testBasicConnection(i)}
+          disabled={conn.status !== 'untested'}
+          class="flex w-full items-center gap-3 rounded-lg border-2 p-4 text-left transition-all
+            {conn.status === 'pass' ? 'border-green-400 bg-green-50' :
+             conn.status === 'fail' ? 'border-red-400 bg-red-50' :
+             conn.status === 'testing' ? 'border-yellow-400 bg-yellow-50' :
+             'border-blue-200 bg-white hover:shadow-md active:scale-[0.98]'}
+            {conn.status === 'untested' ? 'cursor-pointer' : 'cursor-default'}"
+        >
+          <span class="flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold
+            {conn.status === 'pass' ? 'bg-green-500 text-white' :
+             conn.status === 'fail' ? 'bg-red-500 text-white' :
+             conn.status === 'testing' ? 'bg-yellow-500 text-white' :
+             'bg-blue-100 text-blue-700'}">
+            {#if conn.status === 'pass'}&#10003;{:else if conn.status === 'fail'}&#10007;{:else if conn.status === 'testing'}...{:else}{i + 1}{/if}
+          </span>
+          <div class="flex-1">
+            <p class="font-semibold text-slate-800">{conn.from} &#8594; {conn.to}</p>
+            <p class="text-sm text-slate-500">{conn.label}</p>
+          </div>
+          {#if conn.status === 'untested'}
+            <span class="rounded-lg bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">Click to test</span>
+          {:else if conn.status === 'testing'}
+            <span class="rounded-lg bg-yellow-100 px-3 py-1 text-xs font-semibold text-yellow-700">Testing...</span>
+          {:else if conn.status === 'pass'}
+            <span class="rounded-lg bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">PASS</span>
+          {:else}
+            <span class="rounded-lg bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">FAIL</span>
+          {/if}
+        </button>
+        {#if conn.status === 'fail'}
+          <div class="ml-11 rounded-lg border-2 border-red-300 bg-red-50 p-3">
+            <p class="text-sm font-semibold text-red-700">Error: {conn.failMessage}</p>
+            <p class="mt-1 text-xs text-red-600">This is an integration bug -- each module works alone, but they fail when connected.</p>
+          </div>
+        {/if}
+      {/each}
+    </div>
+
+    {#if basicAllTested}
+      <div class="flex items-center gap-3">
+        <div class="rounded-xl border-2 border-blue-300 bg-blue-100 p-4 flex-1 text-center">
+          <p class="font-bold text-blue-700">
+            {basicConnections.filter(c => c.status === 'pass').length} / {basicConnections.length} connections passed.
+            {basicConnections.some(c => c.status === 'fail') ? 'You found the broken connection!' : 'All connections work!'}
+          </p>
+        </div>
+        <button
+          onclick={retryBasic}
+          class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 active:scale-95"
+        >
+          Try Again
+        </button>
+      </div>
+    {/if}
+  </div>
 
   <div>
     <button
       onclick={oncomplete}
       class="rounded-full bg-blue-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-blue-700 active:scale-95"
     >
-      I've identified the test types
+      I've tested the connections
     </button>
   </div>
 
@@ -177,60 +259,117 @@
 
   <div class="space-y-8">
     <div>
-      <h2 class="mb-2 text-2xl font-bold text-slate-800">Try It: Test an API Endpoint</h2>
+      <h2 class="mb-2 text-2xl font-bold text-slate-800">Try It: Complex Dependency Graph</h2>
       <p class="text-slate-600">
-        Below is an Express route that creates a user. Write the assertions you would use to test it.
+        Real systems have many integration points. Click each connection to test it, or use "Test All" to run them in sequence. One connection has a bug hiding in it.
       </p>
     </div>
 
     <div class="rounded-xl border-2 border-blue-200 bg-blue-50 p-6 space-y-6">
-      <!-- Route handler -->
-      <div>
-        <h4 class="mb-2 text-sm font-bold text-slate-700">Route Under Test</h4>
-        <pre class="code-block"><code>{@html `<span class="var">router</span>.<span class="fn">post</span>(<span class="str">'/users'</span>, <span class="kw">async</span> (<span class="arg">req</span>, <span class="arg">res</span>) => {
-  <span class="kw">const</span> { <span class="var">name</span>, <span class="var">email</span> } = <span class="arg">req</span>.<span class="var">body</span>;
-  <span class="kw">const</span> <span class="var">user</span> = <span class="kw">await</span> <span class="var">db</span>.<span class="fn">insert</span>(<span class="str">'users'</span>, { <span class="var">name</span>, <span class="var">email</span> });
-  <span class="var">res</span>.<span class="fn">status</span>(<span class="num">201</span>).<span class="fn">json</span>(<span class="var">user</span>);
-});`}</code></pre>
+      <!-- Advanced module diagram -->
+      <div class="space-y-4">
+        <!-- Row 0: Web UI -->
+        <div class="flex justify-center">
+          <div class="rounded-xl border-2 border-blue-300 bg-white px-5 py-3 text-center shadow-sm">
+            <p class="text-sm font-bold text-blue-700">{advModules[0].name}</p>
+          </div>
+        </div>
+        <!-- Arrows down -->
+        <div class="flex justify-center">
+          <span class="text-blue-400 text-xl">&#8595;</span>
+        </div>
+        <!-- Row 1: Auth, API Gateway, User Service -->
+        <div class="flex items-center justify-center gap-4 sm:gap-8">
+          <div class="rounded-xl border-2 border-blue-300 bg-white px-4 py-3 text-center shadow-sm">
+            <p class="text-xs font-bold text-blue-700">{advModules[1].name}</p>
+          </div>
+          <div class="rounded-xl border-2 border-blue-300 bg-white px-4 py-3 text-center shadow-sm">
+            <p class="text-xs font-bold text-blue-700">{advModules[2].name}</p>
+          </div>
+          <div class="rounded-xl border-2 border-blue-300 bg-white px-4 py-3 text-center shadow-sm">
+            <p class="text-xs font-bold text-blue-700">{advModules[3].name}</p>
+          </div>
+        </div>
+        <!-- Arrows down -->
+        <div class="flex justify-center gap-16">
+          <span class="text-blue-400 text-xl">&#8601;</span>
+          <span class="text-blue-400 text-xl">&#8600;</span>
+        </div>
+        <!-- Row 2: Cache, Database -->
+        <div class="flex items-center justify-center gap-8 sm:gap-16">
+          <div class="rounded-xl border-2 border-blue-300 bg-white px-5 py-3 text-center shadow-sm">
+            <p class="text-sm font-bold text-blue-700">{advModules[4].name}</p>
+          </div>
+          <div class="rounded-xl border-2 border-blue-300 bg-white px-5 py-3 text-center shadow-sm">
+            <p class="text-sm font-bold text-blue-700">{advModules[5].name}</p>
+          </div>
+        </div>
       </div>
 
-      <!-- Assertion inputs -->
-      <div class="space-y-4">
-        <h4 class="text-sm font-bold text-slate-700">Write Your Assertions</h4>
-        {#each assertions as assertion, i}
-          <div class="rounded-lg border-2 {assertion.result === 'correct' ? 'border-green-400 bg-green-100' : assertion.result === 'wrong' ? 'border-red-400 bg-red-100' : 'border-blue-200 bg-white'} p-4 space-y-2">
-            <p class="text-sm font-semibold text-slate-700">{i + 1}. {assertion.label}</p>
-            <p class="text-xs text-slate-500">Hint: {assertion.hint}</p>
-            <input
-              type="text"
-              bind:value={assertion.userAnswer}
-              placeholder={assertion.placeholder}
-              disabled={advSubmitted}
-              class="w-full rounded-lg border-2 border-blue-300 bg-white px-4 py-2 text-sm text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:outline-none disabled:opacity-50"
-            />
-            {#if advSubmitted}
-              <p class="text-sm font-semibold {assertion.result === 'correct' ? 'text-green-700' : 'text-red-700'}">
-                {assertion.result === 'correct' ? 'Correct!' : 'Not quite.'} {assertion.explanation}
-              </p>
+      <!-- Connection tests -->
+      <div class="space-y-3">
+        {#each advConnections as conn, i}
+          <button
+            onclick={() => testAdvConnection(i)}
+            disabled={conn.status !== 'untested'}
+            class="flex w-full items-center gap-3 rounded-lg border-2 p-3 text-left transition-all
+              {conn.status === 'pass' ? 'border-green-400 bg-green-50' :
+               conn.status === 'fail' ? 'border-red-400 bg-red-50' :
+               conn.status === 'testing' ? 'border-yellow-400 bg-yellow-50' :
+               'border-blue-200 bg-white hover:shadow-md active:scale-[0.98]'}
+              {conn.status === 'untested' ? 'cursor-pointer' : 'cursor-default'}"
+          >
+            <span class="flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold
+              {conn.status === 'pass' ? 'bg-green-500 text-white' :
+               conn.status === 'fail' ? 'bg-red-500 text-white' :
+               conn.status === 'testing' ? 'bg-yellow-500 text-white' :
+               'bg-blue-100 text-blue-700'}">
+              {#if conn.status === 'pass'}&#10003;{:else if conn.status === 'fail'}&#10007;{:else if conn.status === 'testing'}...{:else}{i + 1}{/if}
+            </span>
+            <div class="flex-1">
+              <p class="text-sm font-semibold text-slate-800">{advModules[conn.fromIdx].name} &#8594; {advModules[conn.toIdx].name}</p>
+              <p class="text-xs text-slate-500">{conn.label}</p>
+            </div>
+            {#if conn.status === 'pass'}
+              <span class="rounded bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-700">PASS</span>
+            {:else if conn.status === 'fail'}
+              <span class="rounded bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-700">FAIL</span>
+            {:else if conn.status === 'testing'}
+              <span class="rounded bg-yellow-100 px-2 py-0.5 text-xs font-semibold text-yellow-700">Testing...</span>
             {/if}
-          </div>
+          </button>
+          {#if conn.status === 'fail'}
+            <div class="ml-10 rounded-lg border-2 border-red-300 bg-red-50 p-3">
+              <p class="text-sm font-semibold text-red-700">Error: {conn.failMessage}</p>
+            </div>
+          {/if}
         {/each}
       </div>
 
-      {#if !advSubmitted}
-        <button
-          onclick={checkAssertions}
-          class="rounded-lg bg-blue-600 px-6 py-2 text-sm font-semibold text-white hover:bg-blue-700 active:scale-95"
-        >
-          Check Assertions
-        </button>
-      {:else}
-        <div class="rounded-xl border-2 {advScore === assertions.length ? 'border-green-400 bg-green-100' : 'border-yellow-400 bg-yellow-100'} p-4 text-center">
-          <p class="font-bold {advScore === assertions.length ? 'text-green-700' : 'text-yellow-700'}">
-            {advScore} / {assertions.length} correct. {advScore === assertions.length ? 'Excellent! You know how to test API endpoints thoroughly.' : 'Review the explanations -- integration tests should verify status, response body, AND side effects.'}
-          </p>
-        </div>
-      {/if}
+      <div class="flex gap-3">
+        {#if !advAllTested}
+          <button
+            onclick={testAllAdv}
+            class="rounded-lg bg-blue-600 px-5 py-2 text-sm font-semibold text-white hover:bg-blue-700 active:scale-95"
+          >
+            Test All Connections
+          </button>
+        {/if}
+        {#if advAllTested}
+          <div class="rounded-xl border-2 border-blue-300 bg-blue-100 p-4 flex-1 text-center">
+            <p class="font-bold text-blue-700">
+              {advConnections.filter(c => c.status === 'pass').length} / {advConnections.length} connections passed.
+              {advConnections.some(c => c.status === 'fail') ? 'You found the integration failure!' : 'All clear!'}
+            </p>
+          </div>
+          <button
+            onclick={retryAdv}
+            class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 active:scale-95"
+          >
+            Try Again
+          </button>
+        {/if}
+      </div>
     </div>
 
     <div>
@@ -238,17 +377,9 @@
         onclick={oncomplete}
         class="rounded-full bg-blue-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-blue-700 active:scale-95"
       >
-        I've tested the API endpoint
+        I've tested the connections
       </button>
     </div>
   </div>
   {/if}
 </div>
-
-<style>
-  .code-block { background-color: #0f172a; border: 1px solid #334155; border-radius: 0.5rem; padding: 1rem 1.25rem; font-size: 0.875rem; line-height: 1.7; overflow-x: auto; }
-  .code-block :global(.kw) { color: #c084fc; } .code-block :global(.var) { color: #93c5fd; }
-  .code-block :global(.str) { color: #fcd34d; } .code-block :global(.num) { color: #fcd34d; }
-  .code-block :global(.cmt) { color: #475569; } .code-block :global(.fn) { color: #93c5fd; }
-  .code-block :global(.op) { color: #94a3b8; } .code-block :global(.arg) { color: #fdba74; }
-</style>

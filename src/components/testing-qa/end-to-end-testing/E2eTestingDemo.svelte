@@ -3,328 +3,425 @@
   import { getAdvanced, onAdvancedChange } from '../../../lib/mode';
   let advanced = $state(false);
   onMount(() => { advanced = getAdvanced(); return onAdvancedChange((v) => (advanced = v)); });
-  interface Props { oncomplete?: (score: number) => void; }
+  interface Props { oncomplete?: () => void; }
   let { oncomplete }: Props = $props();
 
-  // === Basic mode: User Flow Builder ===
-  interface FlowStep {
-    id: number;
+  // === Basic mode: Login flow test runner ===
+  interface TestStep {
     label: string;
-    code: string;
+    field: 'username' | 'password' | 'button' | 'dashboard';
+    value?: string;
+    logMessage: string;
   }
 
-  const correctOrder: FlowStep[] = [
-    { id: 1, label: 'Navigate to /login', code: "await page.goto('/login');" },
-    { id: 2, label: 'Type email address', code: "await page.fill('[data-testid=\"email\"]', 'user@example.com');" },
-    { id: 3, label: 'Type password', code: "await page.fill('[data-testid=\"password\"]', 'secret123');" },
-    { id: 4, label: 'Click the submit button', code: "await page.click('[data-testid=\"submit\"]');" },
-    { id: 5, label: 'Verify redirect to dashboard', code: "await expect(page).toHaveURL('/dashboard');" },
+  const basicSteps: TestStep[] = [
+    { label: 'Type username', field: 'username', value: 'alice', logMessage: 'Filling [data-testid="username"] with "alice"' },
+    { label: 'Type password', field: 'password', value: 'secret123', logMessage: 'Filling [data-testid="password"] with "***"' },
+    { label: 'Click login', field: 'button', logMessage: 'Clicking [data-testid="login-button"]' },
+    { label: 'Verify dashboard', field: 'dashboard', logMessage: 'Expecting page to show "Welcome, Alice"' },
   ];
 
-  // Shuffle for the user
-  function shuffle<T>(arr: T[]): T[] {
-    const a = [...arr];
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
+  // === Advanced mode: Multi-step flow ===
+  interface AdvancedStep {
+    label: string;
+    field: string;
+    value?: string;
+    logMessage: string;
   }
 
-  let userOrder = $state<FlowStep[]>(shuffle(correctOrder));
-  let selectedIndex = $state<number | null>(null);
-  let basicChecked = $state(false);
-  let basicCorrect = $state(false);
+  const advancedSteps: AdvancedStep[] = [
+    { label: 'Type username', field: 'username', value: 'alice', logMessage: 'Filling [data-testid="username"] with "alice"' },
+    { label: 'Type password', field: 'password', value: 'secret123', logMessage: 'Filling [data-testid="password"] with "***"' },
+    { label: 'Click login', field: 'login-btn', logMessage: 'Clicking [data-testid="login-button"]' },
+    { label: 'Navigate to products', field: 'nav-products', logMessage: 'Clicking link "Products"' },
+    { label: 'Add item to cart', field: 'add-cart', logMessage: 'Clicking [data-testid="add-to-cart-1"]' },
+    { label: 'Go to checkout', field: 'nav-checkout', logMessage: 'Clicking link "Checkout"' },
+    { label: 'Verify cart total', field: 'verify-total', logMessage: 'Expecting text "$29.99" to be visible' },
+  ];
 
-  function selectStep(index: number) {
-    if (basicChecked) return;
-    if (selectedIndex === null) {
-      selectedIndex = index;
-    } else {
-      // Swap
-      const newOrder = [...userOrder];
-      [newOrder[selectedIndex], newOrder[index]] = [newOrder[index], newOrder[selectedIndex]];
-      userOrder = newOrder;
-      selectedIndex = null;
-    }
+  let currentStep = $state(-1);
+  let running = $state(false);
+  let finished = $state(false);
+  let usernameValue = $state('');
+  let passwordValue = $state('');
+  let showDashboard = $state(false);
+  let logEntries = $state<{ time: string; message: string; status: 'running' | 'pass' }[]>([]);
+
+  // Advanced state
+  let advCurrentStep = $state(-1);
+  let advRunning = $state(false);
+  let advFinished = $state(false);
+  let advUsernameValue = $state('');
+  let advPasswordValue = $state('');
+  let advScreen = $state<'login' | 'dashboard' | 'products' | 'checkout'>('login');
+  let advCartCount = $state(0);
+  let advLogEntries = $state<{ time: string; message: string; status: 'running' | 'pass' }[]>([]);
+
+  function getTimestamp(): string {
+    const now = new Date();
+    return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}.${now.getMilliseconds().toString().padStart(3, '0')}`;
   }
 
-  function moveUp(index: number) {
-    if (basicChecked || index === 0) return;
-    const newOrder = [...userOrder];
-    [newOrder[index - 1], newOrder[index]] = [newOrder[index], newOrder[index - 1]];
-    userOrder = newOrder;
+  function runBasicTest() {
+    if (running) return;
+    running = true;
+    finished = false;
+    currentStep = -1;
+    usernameValue = '';
+    passwordValue = '';
+    showDashboard = false;
+    logEntries = [];
+
+    let step = 0;
+    const interval = setInterval(() => {
+      if (step >= basicSteps.length) {
+        clearInterval(interval);
+        running = false;
+        finished = true;
+        return;
+      }
+
+      const s = basicSteps[step];
+      currentStep = step;
+      logEntries = [...logEntries, { time: getTimestamp(), message: s.logMessage, status: 'running' }];
+
+      setTimeout(() => {
+        if (s.field === 'username') usernameValue = s.value ?? '';
+        else if (s.field === 'password') passwordValue = s.value ?? '';
+        else if (s.field === 'dashboard') showDashboard = true;
+
+        logEntries = logEntries.map((e, i) => i === logEntries.length - 1 ? { ...e, status: 'pass' as const } : e);
+      }, 400);
+
+      step++;
+    }, 900);
   }
 
-  function moveDown(index: number) {
-    if (basicChecked || index === userOrder.length - 1) return;
-    const newOrder = [...userOrder];
-    [newOrder[index + 1], newOrder[index]] = [newOrder[index], newOrder[index + 1]];
-    userOrder = newOrder;
-  }
+  function runAdvancedTest() {
+    if (advRunning) return;
+    advRunning = true;
+    advFinished = false;
+    advCurrentStep = -1;
+    advUsernameValue = '';
+    advPasswordValue = '';
+    advScreen = 'login';
+    advCartCount = 0;
+    advLogEntries = [];
 
-  function checkOrder() {
-    basicChecked = true;
-    basicCorrect = userOrder.every((step, i) => step.id === correctOrder[i].id);
-    const score = basicCorrect ? correctOrder.length : userOrder.filter((step, i) => step.id === correctOrder[i].id).length;
-    oncomplete?.(score);
+    let step = 0;
+    const interval = setInterval(() => {
+      if (step >= advancedSteps.length) {
+        clearInterval(interval);
+        advRunning = false;
+        advFinished = true;
+        return;
+      }
+
+      const s = advancedSteps[step];
+      advCurrentStep = step;
+      advLogEntries = [...advLogEntries, { time: getTimestamp(), message: s.logMessage, status: 'running' }];
+
+      setTimeout(() => {
+        if (s.field === 'username') advUsernameValue = s.value ?? '';
+        else if (s.field === 'password') advPasswordValue = s.value ?? '';
+        else if (s.field === 'login-btn') advScreen = 'dashboard';
+        else if (s.field === 'nav-products') advScreen = 'products';
+        else if (s.field === 'add-cart') advCartCount = 1;
+        else if (s.field === 'nav-checkout') advScreen = 'checkout';
+
+        advLogEntries = advLogEntries.map((e, i) => i === advLogEntries.length - 1 ? { ...e, status: 'pass' as const } : e);
+      }, 400);
+
+      step++;
+    }, 900);
   }
 
   function resetBasic() {
-    userOrder = shuffle(correctOrder);
-    selectedIndex = null;
-    basicChecked = false;
-    basicCorrect = false;
+    currentStep = -1;
+    running = false;
+    finished = false;
+    usernameValue = '';
+    passwordValue = '';
+    showDashboard = false;
+    logEntries = [];
   }
 
-  // === Advanced mode: Test Debugger ===
-  interface TraceStep {
-    stepNum: number;
-    action: string;
-    screenshot: string;
-    passed: boolean;
+  function resetAdvanced() {
+    advCurrentStep = -1;
+    advRunning = false;
+    advFinished = false;
+    advUsernameValue = '';
+    advPasswordValue = '';
+    advScreen = 'login';
+    advCartCount = 0;
+    advLogEntries = [];
   }
-
-  interface DebugScenario {
-    title: string;
-    steps: TraceStep[];
-    failedStep: number;
-    question: string;
-    options: string[];
-    correctIndex: number;
-    explanation: string;
-  }
-
-  const debugScenarios: DebugScenario[] = [
-    {
-      title: 'Login Flow Failure',
-      steps: [
-        { stepNum: 1, action: 'Navigate to /login', screenshot: 'Login page loads. Email and password fields visible. Submit button shows "Log In".', passed: true },
-        { stepNum: 2, action: 'Fill email: user@test.com', screenshot: 'Email field now contains "user@test.com". Password field still empty.', passed: true },
-        { stepNum: 3, action: 'Fill password: secret123', screenshot: 'Password field shows dots (masked). Both fields filled.', passed: true },
-        { stepNum: 4, action: 'Click "Log In" button', screenshot: 'Red error banner appears: "Invalid credentials". Still on /login page.', passed: false },
-        { stepNum: 5, action: 'Expect URL to be /dashboard', screenshot: 'URL is still /login. Assertion failed: expected "/dashboard", received "/login".', passed: false },
-      ],
-      failedStep: 4,
-      question: 'Why did this test fail?',
-      options: [
-        'The email field selector was wrong',
-        'The test credentials are invalid — the backend rejected them',
-        'The submit button was not clickable',
-        'The page took too long to load',
-      ],
-      correctIndex: 1,
-      explanation: 'The screenshot at step 4 shows "Invalid credentials" — the backend rejected the login. The test needs valid test credentials, or the API should be mocked.',
-    },
-    {
-      title: 'Search Feature Failure',
-      steps: [
-        { stepNum: 1, action: 'Navigate to /search', screenshot: 'Search page loads. Search input visible with placeholder "Search products...".', passed: true },
-        { stepNum: 2, action: 'Fill search: "laptop"', screenshot: 'Search input shows "laptop". No results yet (need to submit).', passed: true },
-        { stepNum: 3, action: 'Click search button', screenshot: 'Loading spinner appears briefly. Then page shows "0 results found" message.', passed: true },
-        { stepNum: 4, action: 'Expect at least 1 result', screenshot: 'Page shows "0 results found for laptop". The results container is empty.', passed: false },
-      ],
-      failedStep: 4,
-      question: 'What is the most likely cause?',
-      options: [
-        'The search input didn\'t accept the text',
-        'The search button was never clicked',
-        'The test database is empty or not seeded with test data',
-        'The CSS is hiding the results',
-      ],
-      correctIndex: 2,
-      explanation: 'The search executed successfully (we see "0 results found"), but returned no results. This strongly suggests the test database has no product data. E2E tests need seeded test data to work reliably.',
-    },
-  ];
-
-  let advScenarioIndex = $state(0);
-  let advSelected = $state<number | null>(null);
-  let advResults = $state<('correct' | 'wrong' | null)[]>(Array(debugScenarios.length).fill(null));
-  let advShowExplanation = $state(false);
-  let advDone = $derived(advScenarioIndex >= debugScenarios.length);
-
-  function checkAdvAnswer(optIndex: number) {
-    if (advSelected !== null) return;
-    advSelected = optIndex;
-    const correct = optIndex === debugScenarios[advScenarioIndex].correctIndex;
-    advResults[advScenarioIndex] = correct ? 'correct' : 'wrong';
-    advResults = [...advResults];
-    advShowExplanation = true;
-  }
-
-  function nextScenario() {
-    advSelected = null;
-    advShowExplanation = false;
-    advScenarioIndex++;
-  }
-
-  $effect(() => {
-    if (advDone) {
-      const score = advResults.filter((r) => r === 'correct').length;
-      oncomplete?.(score);
-    }
-  });
 </script>
 
 <div class="space-y-8">
   {#if !advanced}
 
   <div>
-    <h2 class="mb-2 text-2xl font-bold text-slate-800">Try It: User Flow Builder</h2>
+    <h2 class="mb-2 text-2xl font-bold text-slate-800">Try It: E2E Test Runner</h2>
     <p class="text-slate-600">
-      Arrange these steps in the correct order to build a login E2E test. Click two steps to swap them, or use the arrows.
+      Watch an E2E test automate a login flow. Click <strong>Run E2E Test</strong> to see the robot user in action.
     </p>
   </div>
 
-  <div class="space-y-2">
-    {#each userOrder as step, i}
-      <div class="flex items-center gap-2">
-        <div class="flex flex-col gap-1">
-          <button
-            onclick={() => moveUp(i)}
-            disabled={basicChecked || i === 0}
-            class="rounded px-1.5 py-0.5 text-xs text-slate-400 hover:bg-slate-100 hover:text-slate-600 disabled:opacity-30"
-            aria-label="Move up"
-          >&#9650;</button>
-          <button
-            onclick={() => moveDown(i)}
-            disabled={basicChecked || i === userOrder.length - 1}
-            class="rounded px-1.5 py-0.5 text-xs text-slate-400 hover:bg-slate-100 hover:text-slate-600 disabled:opacity-30"
-            aria-label="Move down"
-          >&#9660;</button>
-        </div>
-        <button
-          onclick={() => selectStep(i)}
-          disabled={basicChecked}
-          class="flex-1 rounded-xl border-2 p-4 text-left transition-all
-            {selectedIndex === i ? 'border-purple-500 bg-purple-50 ring-2 ring-purple-300' : 'border-slate-200 hover:border-purple-300'}
-            {basicChecked && step.id === correctOrder[i].id ? 'border-green-400 bg-green-50' : ''}
-            {basicChecked && step.id !== correctOrder[i].id ? 'border-red-400 bg-red-50' : ''}"
-        >
-          <div class="flex items-center gap-3">
-            <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-purple-100 text-sm font-bold text-purple-700">{i + 1}</span>
-            <span class="font-medium text-slate-700">{step.label}</span>
+  <div class="grid gap-6 lg:grid-cols-2">
+    <!-- Mini web app -->
+    <div class="space-y-4">
+      <h3 class="text-sm font-bold uppercase tracking-wider text-slate-500">Mini App</h3>
+      <div class="rounded-xl border-2 border-slate-200 bg-white p-6 shadow-sm">
+        {#if !showDashboard}
+          <div class="space-y-4">
+            <h4 class="text-lg font-bold text-slate-800">Log In</h4>
+            <div>
+              <label class="mb-1 block text-sm font-medium text-slate-600">Username</label>
+              <div class="rounded-lg border-2 px-3 py-2 text-sm transition-colors {currentStep === 0 ? 'border-purple-500 bg-purple-50 ring-2 ring-purple-200' : 'border-slate-200'}">
+                {usernameValue || '\u00A0'}
+              </div>
+            </div>
+            <div>
+              <label class="mb-1 block text-sm font-medium text-slate-600">Password</label>
+              <div class="rounded-lg border-2 px-3 py-2 text-sm transition-colors {currentStep === 1 ? 'border-purple-500 bg-purple-50 ring-2 ring-purple-200' : 'border-slate-200'}">
+                {passwordValue ? '********' : '\u00A0'}
+              </div>
+            </div>
+            <div class="rounded-lg border-2 px-4 py-2 text-center text-sm font-semibold transition-colors {currentStep === 2 ? 'border-purple-500 bg-purple-600 text-white ring-2 ring-purple-200' : 'border-slate-200 bg-slate-50 text-slate-700'}">
+              Log In
+            </div>
           </div>
-        </button>
+        {:else}
+          <div class="space-y-3 transition-all duration-500 {currentStep === 3 ? 'ring-2 ring-purple-200 rounded-lg' : ''}">
+            <div class="rounded-lg bg-green-50 border-2 border-green-200 p-4 text-center">
+              <p class="text-lg font-bold text-green-700">Welcome, Alice</p>
+              <p class="text-sm text-slate-500">Dashboard loaded successfully</p>
+            </div>
+          </div>
+        {/if}
       </div>
-    {/each}
+    </div>
+
+    <!-- Test steps indicator -->
+    <div class="space-y-4">
+      <h3 class="text-sm font-bold uppercase tracking-wider text-slate-500">Test Steps</h3>
+      <div class="space-y-2">
+        {#each basicSteps as step, i}
+          <div class="flex items-center gap-3 rounded-lg border-2 p-3 transition-all
+            {i === currentStep ? 'border-purple-500 bg-purple-50' : i < currentStep ? 'border-green-300 bg-green-50' : 'border-slate-200 bg-white'}">
+            <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm font-bold
+              {i < currentStep || (i === currentStep && logEntries[i]?.status === 'pass') ? 'bg-green-500 text-white' : i === currentStep ? 'bg-purple-500 text-white' : 'bg-slate-200 text-slate-500'}">
+              {#if i < currentStep || (i === currentStep && logEntries[i]?.status === 'pass')}
+                &#10003;
+              {:else}
+                {i + 1}
+              {/if}
+            </span>
+            <span class="text-sm font-medium {i <= currentStep ? 'text-slate-800' : 'text-slate-400'}">{step.label}</span>
+          </div>
+        {/each}
+      </div>
+    </div>
   </div>
 
-  {#if !basicChecked}
+  <!-- Test log -->
+  <div class="space-y-2">
+    <h3 class="text-sm font-bold uppercase tracking-wider text-slate-500">Test Log</h3>
+    <div class="rounded-xl border bg-slate-900 p-4 font-mono text-sm min-h-[120px] max-h-[200px] overflow-y-auto">
+      {#if logEntries.length === 0}
+        <p class="text-slate-500">Waiting to run...</p>
+      {/if}
+      {#each logEntries as entry}
+        <div class="flex gap-2">
+          <span class="text-slate-500">[{entry.time}]</span>
+          <span class="{entry.status === 'pass' ? 'text-green-400' : 'text-yellow-400'}">{entry.message}</span>
+          {#if entry.status === 'pass'}
+            <span class="text-green-400">PASS</span>
+          {:else}
+            <span class="text-yellow-400 animate-pulse">...</span>
+          {/if}
+        </div>
+      {/each}
+      {#if finished}
+        <div class="mt-2 text-green-400 font-bold">All tests passed! (4/4)</div>
+      {/if}
+    </div>
+  </div>
+
+  <div class="flex gap-3">
     <button
-      onclick={checkOrder}
-      class="rounded-lg bg-purple-600 px-6 py-2.5 font-semibold text-white transition-all hover:bg-purple-700 active:scale-95"
+      onclick={runBasicTest}
+      disabled={running}
+      class="rounded-full bg-purple-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-purple-700 active:scale-95 disabled:opacity-50"
     >
-      Check Order
+      {running ? 'Running...' : 'Run E2E Test'}
     </button>
-  {:else}
-    <div class="space-y-4">
-      <div class="rounded-xl border-2 {basicCorrect ? 'border-green-200 bg-green-50' : 'border-yellow-200 bg-yellow-50'} p-5">
-        <p class="font-bold {basicCorrect ? 'text-green-700' : 'text-yellow-700'}">
-          {basicCorrect ? 'Perfect! You got the order exactly right.' : 'Not quite right. Here is the correct order and the Playwright code:'}
-        </p>
-      </div>
-
-      <div class="rounded-xl border-2 border-purple-200 bg-purple-50 p-5">
-        <p class="mb-3 text-sm font-semibold text-slate-500">Generated Playwright Test</p>
-        <pre class="code-block"><code>{@html `<span class="fn">test</span>(<span class="str">'user can log in'</span>, <span class="kw">async</span> ({ <span class="arg">page</span> }) <span class="op">=></span> {
-${correctOrder.map(s => `  <span class="cmt">// ${s.label}</span>\n  <span class="var">${s.code}</span>`).join('\n')}
-});`}</code></pre>
-      </div>
-
+    {#if finished}
       <button
         onclick={resetBasic}
-        class="rounded-lg bg-purple-600 px-6 py-2.5 font-semibold text-white transition-all hover:bg-purple-700 active:scale-95"
+        class="rounded-full border-2 border-purple-300 px-6 py-3 font-semibold text-purple-700 transition-all hover:bg-purple-50 active:scale-95"
       >
-        Try Again
+        Reset
       </button>
-    </div>
-  {/if}
+      <button
+        onclick={oncomplete}
+        class="rounded-full bg-purple-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-purple-700 active:scale-95"
+      >
+        Continue
+      </button>
+    {/if}
+  </div>
 
   {:else}
 
   <div>
-    <h2 class="mb-2 text-2xl font-bold text-slate-800">Try It: Test Debugger</h2>
+    <h2 class="mb-2 text-2xl font-bold text-slate-800">Try It: Multi-Step E2E Flow</h2>
     <p class="text-slate-600">
-      Examine the test trace below. Each step shows what happened and what the page looked like. Find the failure and diagnose the root cause.
+      This advanced test simulates a full user journey: <strong>login, navigate, add to cart, and checkout</strong>.
     </p>
   </div>
 
-  <div class="flex gap-2">
-    {#each debugScenarios as _, i}
-      <div class="h-3 w-3 rounded-full transition-colors {advResults[i] === 'correct' ? 'bg-green-500' : advResults[i] === 'wrong' ? 'bg-red-500' : i === advScenarioIndex ? 'bg-purple-500' : 'bg-slate-200'}"></div>
-    {/each}
-  </div>
-
-  {#if !advDone}
-    {@const scenario = debugScenarios[advScenarioIndex]}
+  <div class="grid gap-6 lg:grid-cols-2">
+    <!-- Mini web app (advanced) -->
     <div class="space-y-4">
-      <h3 class="text-lg font-bold text-slate-800">{scenario.title}</h3>
+      <h3 class="text-sm font-bold uppercase tracking-wider text-slate-500">Mini App</h3>
+      <div class="rounded-xl border-2 border-slate-200 bg-white p-6 shadow-sm">
+        {#if advScreen === 'login'}
+          <div class="space-y-4">
+            <h4 class="text-lg font-bold text-slate-800">Log In</h4>
+            <div>
+              <label class="mb-1 block text-sm font-medium text-slate-600">Username</label>
+              <div class="rounded-lg border-2 px-3 py-2 text-sm transition-colors {advCurrentStep === 0 ? 'border-purple-500 bg-purple-50 ring-2 ring-purple-200' : 'border-slate-200'}">
+                {advUsernameValue || '\u00A0'}
+              </div>
+            </div>
+            <div>
+              <label class="mb-1 block text-sm font-medium text-slate-600">Password</label>
+              <div class="rounded-lg border-2 px-3 py-2 text-sm transition-colors {advCurrentStep === 1 ? 'border-purple-500 bg-purple-50 ring-2 ring-purple-200' : 'border-slate-200'}">
+                {advPasswordValue ? '********' : '\u00A0'}
+              </div>
+            </div>
+            <div class="rounded-lg border-2 px-4 py-2 text-center text-sm font-semibold transition-colors {advCurrentStep === 2 ? 'border-purple-500 bg-purple-600 text-white ring-2 ring-purple-200' : 'border-slate-200 bg-slate-50 text-slate-700'}">
+              Log In
+            </div>
+          </div>
+        {:else if advScreen === 'dashboard'}
+          <div class="space-y-3">
+            <div class="rounded-lg bg-green-50 border-2 border-green-200 p-3 text-center">
+              <p class="font-bold text-green-700">Welcome, Alice</p>
+            </div>
+            <div class="flex gap-2">
+              <div class="rounded-lg border-2 px-3 py-1.5 text-xs font-semibold transition-colors {advCurrentStep === 3 ? 'border-purple-500 bg-purple-600 text-white ring-2 ring-purple-200' : 'border-slate-200 text-slate-600'}">Products</div>
+              <div class="rounded-lg border-2 border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-600">Settings</div>
+            </div>
+          </div>
+        {:else if advScreen === 'products'}
+          <div class="space-y-3">
+            <h4 class="text-sm font-bold text-slate-800">Products</h4>
+            <div class="rounded-lg border-2 border-slate-200 p-3 flex items-center justify-between">
+              <div>
+                <p class="font-semibold text-sm text-slate-800">Widget Pro</p>
+                <p class="text-xs text-slate-500">$29.99</p>
+              </div>
+              <div class="rounded-lg border-2 px-3 py-1.5 text-xs font-semibold transition-colors {advCurrentStep === 4 ? 'border-purple-500 bg-purple-600 text-white ring-2 ring-purple-200' : 'border-slate-200 text-slate-600'}">
+                {advCartCount > 0 ? 'Added' : 'Add to Cart'}
+              </div>
+            </div>
+            <div class="flex gap-2 mt-2">
+              <div class="rounded-lg border-2 px-3 py-1.5 text-xs font-semibold transition-colors {advCurrentStep === 5 ? 'border-purple-500 bg-purple-600 text-white ring-2 ring-purple-200' : 'border-slate-200 text-slate-600'}">
+                Checkout ({advCartCount})
+              </div>
+            </div>
+          </div>
+        {:else}
+          <div class="space-y-3">
+            <h4 class="text-sm font-bold text-slate-800">Checkout</h4>
+            <div class="rounded-lg border-2 p-3 transition-colors {advCurrentStep === 6 ? 'border-purple-500 bg-purple-50 ring-2 ring-purple-200' : 'border-slate-200'}">
+              <div class="flex justify-between text-sm">
+                <span class="text-slate-600">Widget Pro x1</span>
+                <span class="font-bold text-slate-800">$29.99</span>
+              </div>
+              <hr class="my-2 border-slate-200" />
+              <div class="flex justify-between text-sm font-bold">
+                <span class="text-slate-800">Total</span>
+                <span class="text-purple-700">$29.99</span>
+              </div>
+            </div>
+          </div>
+        {/if}
+      </div>
+    </div>
 
-      <div class="space-y-3">
-        {#each scenario.steps as step}
-          <div class="rounded-xl border-2 p-4 {step.passed ? 'border-green-200 bg-green-50' : 'border-red-200 bg-red-50'}">
-            <div class="flex items-center gap-3 mb-2">
-              <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-sm font-bold {step.passed ? 'bg-green-200 text-green-700' : 'bg-red-200 text-red-700'}">{step.stepNum}</span>
-              <span class="font-semibold text-slate-700">{step.action}</span>
-              <span class="ml-auto text-sm font-bold {step.passed ? 'text-green-600' : 'text-red-600'}">{step.passed ? 'PASS' : 'FAIL'}</span>
-            </div>
-            <div class="ml-9 rounded-lg border bg-white p-3 text-sm text-slate-600 font-mono">
-              {step.screenshot}
-            </div>
+    <!-- Test steps indicator (advanced) -->
+    <div class="space-y-4">
+      <h3 class="text-sm font-bold uppercase tracking-wider text-slate-500">Test Steps</h3>
+      <div class="space-y-2">
+        {#each advancedSteps as step, i}
+          <div class="flex items-center gap-3 rounded-lg border-2 p-2.5 transition-all text-sm
+            {i === advCurrentStep ? 'border-purple-500 bg-purple-50' : i < advCurrentStep ? 'border-green-300 bg-green-50' : 'border-slate-200 bg-white'}">
+            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold
+              {i < advCurrentStep || (i === advCurrentStep && advLogEntries[i]?.status === 'pass') ? 'bg-green-500 text-white' : i === advCurrentStep ? 'bg-purple-500 text-white' : 'bg-slate-200 text-slate-500'}">
+              {#if i < advCurrentStep || (i === advCurrentStep && advLogEntries[i]?.status === 'pass')}
+                &#10003;
+              {:else}
+                {i + 1}
+              {/if}
+            </span>
+            <span class="font-medium {i <= advCurrentStep ? 'text-slate-800' : 'text-slate-400'}">{step.label}</span>
           </div>
         {/each}
       </div>
+    </div>
+  </div>
 
-      <div class="space-y-2">
-        <p class="font-semibold text-slate-700">{scenario.question}</p>
-        {#each scenario.options as option, i}
-          <button
-            onclick={() => checkAdvAnswer(i)}
-            disabled={advSelected !== null}
-            class="w-full rounded-xl border p-4 text-left text-sm transition-colors
-              {advSelected === i && advResults[advScenarioIndex] === 'correct' ? 'border-green-500 bg-green-50 text-green-800' : ''}
-              {advSelected === i && advResults[advScenarioIndex] === 'wrong' ? 'border-red-500 bg-red-50 text-red-800' : ''}
-              {advSelected !== null && i === scenario.correctIndex && advResults[advScenarioIndex] === 'wrong' ? 'border-green-500 bg-green-50' : ''}
-              {advSelected === null ? 'hover:border-purple-400 hover:bg-purple-50 cursor-pointer' : 'cursor-default'}
-              {advSelected !== null && advSelected !== i && i !== scenario.correctIndex ? 'opacity-50' : ''}"
-          >
-            <span class="mr-2 font-bold text-slate-400">{String.fromCharCode(65 + i)}.</span>{option}
-          </button>
-        {/each}
-      </div>
-
-      {#if advShowExplanation}
-        <div class="rounded-xl border-2 border-purple-200 bg-purple-50 p-4">
-          <p class="text-sm text-slate-700"><strong>Explanation:</strong> {scenario.explanation}</p>
+  <!-- Test log (advanced) -->
+  <div class="space-y-2">
+    <h3 class="text-sm font-bold uppercase tracking-wider text-slate-500">Test Log</h3>
+    <div class="rounded-xl border bg-slate-900 p-4 font-mono text-sm min-h-[120px] max-h-[240px] overflow-y-auto">
+      {#if advLogEntries.length === 0}
+        <p class="text-slate-500">Waiting to run...</p>
+      {/if}
+      {#each advLogEntries as entry}
+        <div class="flex gap-2">
+          <span class="text-slate-500">[{entry.time}]</span>
+          <span class="{entry.status === 'pass' ? 'text-green-400' : 'text-yellow-400'}">{entry.message}</span>
+          {#if entry.status === 'pass'}
+            <span class="text-green-400">PASS</span>
+          {:else}
+            <span class="text-yellow-400 animate-pulse">...</span>
+          {/if}
         </div>
-        <button
-          onclick={nextScenario}
-          class="rounded-lg bg-purple-600 px-6 py-2 font-semibold text-white transition-all hover:bg-purple-700 active:scale-95"
-        >
-          Next
-        </button>
+      {/each}
+      {#if advFinished}
+        <div class="mt-2 text-green-400 font-bold">All tests passed! (7/7)</div>
       {/if}
     </div>
-  {:else}
-    <div class="rounded-xl border-2 border-green-200 bg-green-50 p-6 text-center">
-      <p class="text-lg font-bold text-green-700">
-        All done! You got {advResults.filter(r => r === 'correct').length} out of {debugScenarios.length} correct.
-      </p>
-    </div>
-  {/if}
+  </div>
+
+  <div class="flex gap-3">
+    <button
+      onclick={runAdvancedTest}
+      disabled={advRunning}
+      class="rounded-full bg-purple-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-purple-700 active:scale-95 disabled:opacity-50"
+    >
+      {advRunning ? 'Running...' : 'Run E2E Test'}
+    </button>
+    {#if advFinished}
+      <button
+        onclick={resetAdvanced}
+        class="rounded-full border-2 border-purple-300 px-6 py-3 font-semibold text-purple-700 transition-all hover:bg-purple-50 active:scale-95"
+      >
+        Reset
+      </button>
+      <button
+        onclick={oncomplete}
+        class="rounded-full bg-purple-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-purple-700 active:scale-95"
+      >
+        Continue
+      </button>
+    {/if}
+  </div>
 
   {/if}
 </div>
-
-<style>
-  .code-block { background-color: #0f172a; border: 1px solid #334155; border-radius: 0.5rem; padding: 1rem 1.25rem; font-size: 0.875rem; line-height: 1.7; overflow-x: auto; color: #e2e8f0; }
-  .code-block :global(.kw)  { color: #c084fc; }
-  .code-block :global(.var) { color: #93c5fd; }
-  .code-block :global(.str) { color: #fcd34d; }
-  .code-block :global(.num) { color: #fcd34d; }
-  .code-block :global(.cmt) { color: #475569; }
-  .code-block :global(.fn)  { color: #93c5fd; }
-  .code-block :global(.op)  { color: #94a3b8; }
-  .code-block :global(.arg) { color: #fdba74; }
-</style>

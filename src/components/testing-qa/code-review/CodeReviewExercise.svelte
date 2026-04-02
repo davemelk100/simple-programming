@@ -3,7 +3,7 @@
   import { getAdvanced, onAdvancedChange } from '../../../lib/mode';
   let advanced = $state(false);
   onMount(() => { advanced = getAdvanced(); return onAdvancedChange((v) => (advanced = v)); });
-  interface Props { oncomplete?: (score: number) => void; }
+  interface Props { oncomplete?: () => void; }
   let { oncomplete }: Props = $props();
 
   // === Basic mode ===
@@ -20,24 +20,22 @@
 
   function checkB1() {
     const a = b1Answer.trim().toLowerCase().replace(/[-_]/g, ' ');
-    b1Result = (a === 'pull request' || a === 'pull requests' || a === 'pr' || a === 'prs' || a === 'merge request' || a === 'merge requests' || a === 'a pull request') ? 'correct' : 'wrong';
+    b1Result = (a === 'request' || a === 'requests' || a === 'pull request' || a === 'pull requests') ? 'correct' : 'wrong';
   }
 
   function checkB2() {
     const a = b2Answer.trim().toLowerCase();
-    b2Result = (a === 'code' || a === 'the code') ? 'correct' : 'wrong';
+    b2Result = (a === 'approve' || a === 'approval' || a === 'approved' || a === 'approving') ? 'correct' : 'wrong';
   }
 
   function checkB3() {
-    const a = b3Answer.trim().toLowerCase();
-    const valid = ['bugs', 'bug', 'naming', 'readability', 'edge cases', 'edge case', 'tests', 'test', 'errors', 'error', 'error handling', 'correctness', 'logic', 'security', 'performance', 'style', 'duplication', 'duplicated logic'];
-    b3Result = valid.some((v) => a === v || a === 'the ' + v) ? 'correct' : 'wrong';
+    const a = b3Answer.trim().toLowerCase().replace(/[-_]/g, ' ');
+    b3Result = (a === 'review' || a === 'self review' || a === 'self-review' || a === 'selfreview') ? 'correct' : 'wrong';
   }
 
   $effect(() => {
     if (allDone) {
-      const score = [b1Result, b2Result, b3Result].filter((r) => r === 'correct').length;
-      oncomplete?.(score);
+      oncomplete?.();
     }
   });
 
@@ -55,23 +53,22 @@
 
   function checkA1() {
     const a = a1Answer.trim().toLowerCase();
-    a1Result = (a === 'codeowners' || a === '.github/codeowners' || a === 'the codeowners file' || a === 'codeowners file') ? 'correct' : 'wrong';
+    a1Result = (a === 'linter' || a === 'a linter' || a === 'lint' || a === 'linting' || a === 'eslint' || a === 'prettier' || a === 'stylelint') ? 'correct' : 'wrong';
   }
 
   function checkA2() {
     const a = a2Answer.trim().toLowerCase();
-    a2Result = (a === 'linter' || a === 'a linter' || a === 'eslint' || a === 'linting' || a === 'lint' || a === 'stylelint' || a === 'prettier') ? 'correct' : 'wrong';
+    a2Result = (a === 'small' || a === 'atomic' || a === 'small prs' || a === 'small pr' || a === 'atomic commits' || a === 'keep prs small') ? 'correct' : 'wrong';
   }
 
   function checkA3() {
-    const a = a3Answer.trim().toLowerCase().replace(/[-_]/g, ' ');
-    a3Result = (a === 'pair programming' || a === 'pairing' || a === 'pair program' || a === 'pair coding') ? 'correct' : 'wrong';
+    const a = a3Answer.trim().toLowerCase().replace(/[-_\/]/g, ' ');
+    a3Result = (a === 'ci' || a === 'continuous integration' || a === 'ci cd' || a === 'ci/cd' || a === 'continuous integration continuous delivery') ? 'correct' : 'wrong';
   }
 
   $effect(() => {
     if (advAllDone) {
-      const score = [a1Result, a2Result, a3Result].filter((r) => r === 'correct').length;
-      oncomplete?.(score);
+      oncomplete?.();
     }
   });
 </script>
@@ -80,13 +77,13 @@
 <div class="space-y-8">
   <div>
     <h2 class="mb-2 text-2xl font-bold text-slate-800">Practice: Code Review</h2>
-    <p class="text-slate-600">Answer these questions to test what you've learned about code review!</p>
+    <p class="text-slate-600">Fill in the blanks to test what you have learned about code review.</p>
   </div>
 
   <!-- Challenge 1 -->
   <div class="rounded-xl border p-5 transition-colors {b1Result === 'correct' ? 'border-green-400 bg-green-50' : b1Result === 'wrong' ? 'border-red-400 bg-red-50' : 'border-slate-200'}">
     <p class="mb-1 text-xs font-bold uppercase tracking-wider text-indigo-600">Challenge 1</p>
-    <p class="mb-3 font-semibold text-slate-800">What is the vehicle for code review in Git?</p>
+    <p class="mb-3 font-semibold text-slate-800">A request to merge your code changes is called a pull _____</p>
     <div class="flex items-center gap-3">
       <input
         type="text"
@@ -110,14 +107,14 @@
       {/if}
     </div>
     {#if b1Result === 'wrong'}
-      <p class="mt-2 text-sm text-red-600">Hint: You open one of these when you want to merge a branch. Two words starting with P and R...</p>
+      <p class="mt-2 text-sm text-red-600">Hint: It starts with R. Pull _____.</p>
     {/if}
   </div>
 
   <!-- Challenge 2 -->
   <div class="rounded-xl border p-5 transition-colors {b2Result === 'correct' ? 'border-green-400 bg-green-50' : b2Result === 'wrong' ? 'border-red-400 bg-red-50' : 'border-slate-200'}">
     <p class="mb-1 text-xs font-bold uppercase tracking-wider text-indigo-600">Challenge 2</p>
-    <p class="mb-3 font-semibold text-slate-800">Should review feedback focus on the person or the code?</p>
+    <p class="mb-3 font-semibold text-slate-800">What do you call it when a reviewer agrees the code is ready to merge?</p>
     <div class="flex items-center gap-3">
       <input
         type="text"
@@ -125,7 +122,7 @@
         onkeydown={(e) => { if (e.key === 'Enter' && b2Answer.trim()) checkB2(); }}
         disabled={b2Result === 'correct'}
         class="w-48 rounded-lg border-2 border-indigo-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none disabled:opacity-60"
-        placeholder="person or code?"
+        placeholder="Type your answer..."
       />
       <button
         onclick={checkB2}
@@ -141,14 +138,14 @@
       {/if}
     </div>
     {#if b2Result === 'wrong'}
-      <p class="mt-2 text-sm text-red-600">Think about it: good feedback improves the work, not criticizes the worker.</p>
+      <p class="mt-2 text-sm text-red-600">Hint: The reviewer gives their _____ (starts with A).</p>
     {/if}
   </div>
 
   <!-- Challenge 3 -->
   <div class="rounded-xl border p-5 transition-colors {b3Result === 'correct' ? 'border-green-400 bg-green-50' : b3Result === 'wrong' ? 'border-red-400 bg-red-50' : 'border-slate-200'}">
     <p class="mb-1 text-xs font-bold uppercase tracking-wider text-indigo-600">Challenge 3</p>
-    <p class="mb-3 font-semibold text-slate-800">Name one thing to check in a code review.</p>
+    <p class="mb-3 font-semibold text-slate-800">Before asking for a code review, you should _____ your own code first</p>
     <div class="flex items-center gap-3">
       <input
         type="text"
@@ -172,7 +169,7 @@
       {/if}
     </div>
     {#if b3Result === 'wrong'}
-      <p class="mt-2 text-sm text-red-600">Hint: Think about correctness, naming, readability, or edge cases.</p>
+      <p class="mt-2 text-sm text-red-600">Hint: Read through your own changes before others do. Self-_____.</p>
     {/if}
   </div>
 
@@ -188,13 +185,13 @@
 <div class="space-y-8">
   <div>
     <h2 class="mb-2 text-2xl font-bold text-slate-800">Practice: Code Review (Advanced)</h2>
-    <p class="text-slate-600">Test your knowledge of professional code review practices.</p>
+    <p class="text-slate-600">Test your knowledge of professional code review tools and practices.</p>
   </div>
 
   <!-- Challenge 1 -->
   <div class="rounded-xl border p-5 transition-colors {a1Result === 'correct' ? 'border-green-400 bg-green-50' : a1Result === 'wrong' ? 'border-red-400 bg-red-50' : 'border-slate-200'}">
     <p class="mb-1 text-xs font-bold uppercase tracking-wider text-indigo-600">Challenge 1</p>
-    <p class="mb-3 font-semibold text-slate-800">What file defines who must approve changes to specific paths?</p>
+    <p class="mb-3 font-semibold text-slate-800">What automated tool checks code for style and formatting errors?</p>
     <div class="flex items-center gap-3">
       <input
         type="text"
@@ -218,14 +215,14 @@
       {/if}
     </div>
     {#if a1Result === 'wrong'}
-      <p class="mt-2 text-sm text-red-600">Hint: CODE + OWNERS, one word, all caps.</p>
+      <p class="mt-2 text-sm text-red-600">Hint: It "lints" your code. ESLint is a popular one.</p>
     {/if}
   </div>
 
   <!-- Challenge 2 -->
   <div class="rounded-xl border p-5 transition-colors {a2Result === 'correct' ? 'border-green-400 bg-green-50' : a2Result === 'wrong' ? 'border-red-400 bg-red-50' : 'border-slate-200'}">
     <p class="mb-1 text-xs font-bold uppercase tracking-wider text-indigo-600">Challenge 2</p>
-    <p class="mb-3 font-semibold text-slate-800">What automated tool catches style issues before review?</p>
+    <p class="mb-3 font-semibold text-slate-800">What principle says PRs should be as small as possible?</p>
     <div class="flex items-center gap-3">
       <input
         type="text"
@@ -249,14 +246,14 @@
       {/if}
     </div>
     {#if a2Result === 'wrong'}
-      <p class="mt-2 text-sm text-red-600">Hint: It "lints" your code for problems. ESLint is a popular one.</p>
+      <p class="mt-2 text-sm text-red-600">Hint: Keep PRs _____. One word, the opposite of "large".</p>
     {/if}
   </div>
 
   <!-- Challenge 3 -->
   <div class="rounded-xl border p-5 transition-colors {a3Result === 'correct' ? 'border-green-400 bg-green-50' : a3Result === 'wrong' ? 'border-red-400 bg-red-50' : 'border-slate-200'}">
     <p class="mb-1 text-xs font-bold uppercase tracking-wider text-indigo-600">Challenge 3</p>
-    <p class="mb-3 font-semibold text-slate-800">What practice is like continuous code review?</p>
+    <p class="mb-3 font-semibold text-slate-800">What practice runs automated checks on every pull request?</p>
     <div class="flex items-center gap-3">
       <input
         type="text"
@@ -280,13 +277,13 @@
       {/if}
     </div>
     {#if a3Result === 'wrong'}
-      <p class="mt-2 text-sm text-red-600">Hint: Two developers, one screen, working together in real time.</p>
+      <p class="mt-2 text-sm text-red-600">Hint: Two words starting with C and I. Abbreviated as CI.</p>
     {/if}
   </div>
 
   {#if advAllDone}
     <div class="rounded-xl border-2 border-green-200 bg-green-50 p-5 text-center">
-      <p class="text-lg font-bold text-green-700">All correct! You've mastered advanced code review concepts.</p>
+      <p class="text-lg font-bold text-green-700">All correct! You have mastered advanced code review concepts.</p>
     </div>
   {/if}
 </div>

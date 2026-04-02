@@ -3,367 +3,228 @@
   import { getAdvanced, onAdvancedChange } from '../../../lib/mode';
   let advanced = $state(false);
   onMount(() => { advanced = getAdvanced(); return onAdvancedChange((v) => (advanced = v)); });
-  interface Props { oncomplete?: (score: number) => void; }
+  interface Props { oncomplete?: () => void; }
   let { oncomplete }: Props = $props();
 
-  // === Basic mode: Read the Error ===
-  interface ErrorMatch {
-    error: string;
-    meaning: string;
-    fix: string;
-  }
-
-  const errors: ErrorMatch[] = [
-    {
-      error: 'TypeError: Cannot read properties of undefined (reading \'name\')',
-      meaning: 'You tried to access .name on something that is undefined.',
-      fix: 'Check that the variable is defined before accessing its properties.',
-    },
-    {
-      error: 'ReferenceError: myVar is not defined',
-      meaning: 'You used a variable that doesn\'t exist in the current scope.',
-      fix: 'Make sure the variable is declared (let/const/var) or check for typos.',
-    },
-    {
-      error: 'SyntaxError: Unexpected token \'}\'',
-      meaning: 'The code has a syntax mistake — a misplaced bracket, comma, or keyword.',
-      fix: 'Check for missing opening brackets, extra commas, or unclosed strings.',
-    },
-    {
-      error: 'GET /api/users 404 (Not Found)',
-      meaning: 'The URL you requested doesn\'t exist on the server.',
-      fix: 'Check the API endpoint URL for typos and verify the server is running.',
-    },
-    {
-      error: 'TypeError: undefined is not a function',
-      meaning: 'You tried to call something as a function, but it\'s undefined.',
-      fix: 'Check that the function exists and is imported correctly.',
-    },
-  ];
-
-  const matchOptions = [
-    'Variable doesn\'t exist in scope',
-    'Tried to access property on undefined',
-    'Server endpoint not found',
-    'Invalid syntax in the code',
-    'Tried to call a non-function',
-  ];
-
-  // Correct mapping: error index -> matchOptions index
-  const correctMapping = [1, 0, 3, 2, 4];
-
-  let userMatches = $state<(number | null)[]>(Array(errors.length).fill(null));
-  let dragging = $state<number | null>(null);
-  let basicChecked = $state(false);
-  let basicScore = $state(0);
-
-  function selectMatch(errorIndex: number, matchIndex: number) {
-    if (basicChecked) return;
-    const newMatches = [...userMatches];
-    // Remove this match if it's already assigned elsewhere
-    for (let i = 0; i < newMatches.length; i++) {
-      if (newMatches[i] === matchIndex) {
-        newMatches[i] = null;
-      }
-    }
-    newMatches[errorIndex] = matchIndex;
-    userMatches = newMatches;
-  }
-
-  function checkBasic() {
-    basicChecked = true;
-    basicScore = userMatches.filter((m, i) => m === correctMapping[i]).length;
-    oncomplete?.(basicScore);
-  }
-
-  function resetBasic() {
-    userMatches = Array(errors.length).fill(null);
-    basicChecked = false;
-    basicScore = 0;
-  }
-
-  // Track which error is being assigned
-  let activeError = $state<number | null>(null);
-
-  function toggleErrorSelect(errorIndex: number) {
-    if (basicChecked) return;
-    activeError = activeError === errorIndex ? null : errorIndex;
-  }
-
-  function assignMatch(matchIndex: number) {
-    if (basicChecked || activeError === null) return;
-    selectMatch(activeError, matchIndex);
-    activeError = null;
-  }
-
-  // === Advanced mode: Breakpoint Challenge ===
-  interface BreakpointChallenge {
+  interface Bug {
     title: string;
-    code: string;
-    lines: { lineNum: number; vars: string }[];
-    question: string;
-    options: string[];
-    correctIndex: number;
+    description: string;
+    lines: { code: string; isBuggy: boolean; hint: string; inspectValue?: string }[];
+    fixedLines: string[];
     explanation: string;
   }
 
-  const challenges: BreakpointChallenge[] = [
+  const basicBugs: Bug[] = [
     {
-      title: 'Off-by-One Bug',
-      code: `function getNames(users) {\n  let names = [];\n  for (let i = 0; i <= users.length; i++) {\n    names.push(users[i].name);\n  }\n  return names;\n}`,
+      title: 'Bug #1: Wrong Operator',
+      description: 'This function should calculate the area of a rectangle, but it returns the wrong result. Click lines to inspect values, then click "Fix it" on the buggy line.',
       lines: [
-        { lineNum: 3, vars: 'i=0, users[0]={name:"Alice"} -- OK' },
-        { lineNum: 3, vars: 'i=1, users[1]={name:"Bob"} -- OK' },
-        { lineNum: 3, vars: 'i=2, users[2]={name:"Carol"} -- OK' },
-        { lineNum: 3, vars: 'i=3, users[3]=undefined -- CRASH!' },
+        { code: 'function area(width, height) {', isBuggy: false, hint: 'Function declaration looks fine.', inspectValue: 'width = 5, height = 3' },
+        { code: '  return width + height;', isBuggy: true, hint: 'Wait... area uses multiplication, not addition!', inspectValue: 'width + height = 8 (expected 15)' },
+        { code: '}', isBuggy: false, hint: 'Closing bracket.' },
       ],
-      question: 'Where does the bug occur and why?',
-      options: [
-        'Line 2: names should be initialized with null',
-        'Line 3: i <= users.length should be i < users.length',
-        'Line 4: .name should be ["name"]',
-        'Line 6: return should be inside the loop',
-      ],
-      correctIndex: 1,
-      explanation: 'The loop uses <= instead of <. When i equals users.length (3), users[3] is undefined because arrays are 0-indexed. The fix is to use i < users.length.',
+      fixedLines: ['function area(width, height) {', '  return width * height;', '}'],
+      explanation: 'The bug was using + (addition) instead of * (multiplication). area(5, 3) returned 8 instead of 15.',
     },
     {
-      title: 'Accumulator Bug',
-      code: `function sumPrices(items) {\n  let total;\n  for (const item of items) {\n    total += item.price;\n  }\n  return total;\n}`,
+      title: 'Bug #2: Off-by-One',
+      description: 'This function should return the last item of an array, but it crashes. Find the bug!',
       lines: [
-        { lineNum: 2, vars: 'total = undefined' },
-        { lineNum: 4, vars: 'item.price = 10, total = undefined + 10 = NaN' },
-        { lineNum: 4, vars: 'item.price = 20, total = NaN + 20 = NaN' },
-        { lineNum: 6, vars: 'return NaN' },
+        { code: 'function lastItem(arr) {', isBuggy: false, hint: 'Function signature is fine.', inspectValue: 'arr = ["a", "b", "c"]' },
+        { code: '  return arr[arr.length];', isBuggy: true, hint: 'Arrays are 0-indexed... arr.length is 3 but the last index is 2!', inspectValue: 'arr.length = 3, arr[3] = undefined' },
+        { code: '}', isBuggy: false, hint: 'Closing bracket.' },
       ],
-      question: 'Why does this function return NaN?',
-      options: [
-        'item.price is not a number',
-        'The for...of loop doesn\'t work with arrays',
-        'total is never initialized to 0, so it starts as undefined',
-        'The return statement is in the wrong place',
-      ],
-      correctIndex: 2,
-      explanation: 'The variable total is declared but not initialized, so it\'s undefined. undefined + 10 = NaN, and NaN propagates through all subsequent additions. The fix: let total = 0.',
+      fixedLines: ['function lastItem(arr) {', '  return arr[arr.length - 1];', '}'],
+      explanation: 'Classic off-by-one: arr.length gives 3, but the last valid index is 2. The fix is arr[arr.length - 1].',
     },
     {
-      title: 'Scope Bug',
-      code: `function makeCounters() {\n  const counters = [];\n  for (var i = 0; i < 3; i++) {\n    counters.push(() => i);\n  }\n  return counters;\n}\n// counters[0]() = ? counters[1]() = ? counters[2]() = ?`,
+      title: 'Bug #3: Typo',
+      description: 'This function should greet a user by name, but it throws a ReferenceError. Find the typo!',
       lines: [
-        { lineNum: 3, vars: 'i=0, push arrow function' },
-        { lineNum: 3, vars: 'i=1, push arrow function' },
-        { lineNum: 3, vars: 'i=2, push arrow function' },
-        { lineNum: 3, vars: 'Loop ends. i=3 (var is function-scoped!)' },
+        { code: 'function greet(username) {', isBuggy: false, hint: 'Parameter is named "username".', inspectValue: 'username = "Alice"' },
+        { code: '  const message = "Hello, " + usrname;', isBuggy: true, hint: '"usrname" is not the same as "username" — typo!', inspectValue: 'ReferenceError: usrname is not defined' },
+        { code: '  return message;', isBuggy: false, hint: 'Return statement.', inspectValue: 'message = undefined (never reached)' },
+        { code: '}', isBuggy: false, hint: 'Closing bracket.' },
       ],
-      question: 'What do counters[0](), counters[1](), and counters[2]() all return?',
-      options: [
-        '0, 1, 2 — each captures its own value',
-        '3, 3, 3 — all closures share the same var i',
-        '1, 2, 3 — off by one',
-        'undefined, undefined, undefined',
-      ],
-      correctIndex: 1,
-      explanation: 'Because var is function-scoped (not block-scoped), all three arrow functions share the same i variable. After the loop, i is 3. The fix: use let instead of var, which creates a new i for each iteration.',
+      fixedLines: ['function greet(username) {', '  const message = "Hello, " + username;', '  return message;', '}'],
+      explanation: 'The variable was misspelled as "usrname" instead of "username". Typos are one of the most common bugs!',
     },
   ];
 
-  let advIndex = $state(0);
-  let advSelected = $state<number | null>(null);
-  let advResults = $state<('correct' | 'wrong' | null)[]>(Array(challenges.length).fill(null));
-  let advShowExplanation = $state(false);
-  let advDone = $derived(advIndex >= challenges.length);
+  const advancedBugs: Bug[] = [
+    {
+      title: 'Bug #1: Closure Trap',
+      description: 'This code creates 3 buttons that should alert 0, 1, 2 when clicked. But they all alert 3. Find why!',
+      lines: [
+        { code: 'for (var i = 0; i < 3; i++) {', isBuggy: true, hint: '"var" is function-scoped, not block-scoped! All closures share the same i.', inspectValue: 'var i — shared across all iterations' },
+        { code: '  buttons[i].onclick = function() {', isBuggy: false, hint: 'Creates a closure over i.', inspectValue: 'closure captures reference to i, not value' },
+        { code: '    alert(i);', isBuggy: false, hint: 'When clicked, reads the current value of i (which is 3).', inspectValue: 'i = 3 (loop already finished)' },
+        { code: '  };', isBuggy: false, hint: 'End of handler.' },
+        { code: '}', isBuggy: false, hint: 'After loop: i = 3.' },
+      ],
+      fixedLines: ['for (let i = 0; i < 3; i++) {', '  buttons[i].onclick = function() {', '    alert(i);', '  };', '}'],
+      explanation: 'Using "var" means all closures share the same i variable. After the loop, i is 3. Changing to "let" creates a new i for each iteration.',
+    },
+    {
+      title: 'Bug #2: Async Race Condition',
+      description: 'This function fetches a user profile, but sometimes shows stale data when clicking quickly between users.',
+      lines: [
+        { code: 'let currentUser = null;', isBuggy: false, hint: 'State variable.', inspectValue: 'currentUser = null' },
+        { code: 'async function showProfile(id) {', isBuggy: false, hint: 'Async function.', inspectValue: 'id = 5 (second click)' },
+        { code: '  const data = await fetch("/api/user/" + id);', isBuggy: true, hint: 'If user clicks again before this resolves, a second request starts. The first response may arrive AFTER the second!', inspectValue: 'Request for id=3 still pending, request for id=5 starts' },
+        { code: '  currentUser = await data.json();', isBuggy: false, hint: 'Whichever response arrives last wins — even if it was the earlier click.', inspectValue: 'Could be user 3 or user 5 — race!' },
+        { code: '}', isBuggy: false, hint: 'End of function.' },
+      ],
+      fixedLines: ['let currentUser = null;', 'let controller = null;', 'async function showProfile(id) {', '  if (controller) controller.abort();', '  controller = new AbortController();', '  const data = await fetch("/api/user/" + id, { signal: controller.signal });', '  currentUser = await data.json();', '}'],
+      explanation: 'Without canceling previous requests, two overlapping fetches race and the wrong data can win. The fix uses AbortController to cancel the stale request.',
+    },
+    {
+      title: 'Bug #3: Reference vs Value',
+      description: 'This function should create a settings object with defaults, but changes to the result also change the defaults!',
+      lines: [
+        { code: 'const defaults = { theme: "light", fontSize: 14 };', isBuggy: false, hint: 'Default settings object.', inspectValue: 'defaults = { theme: "light", fontSize: 14 }' },
+        { code: 'function createSettings() {', isBuggy: false, hint: 'Function to create user settings.' },
+        { code: '  const settings = defaults;', isBuggy: true, hint: 'This does NOT copy the object — it copies the REFERENCE. settings and defaults point to the same object!', inspectValue: 'settings === defaults // true (same reference!)' },
+        { code: '  return settings;', isBuggy: false, hint: 'Returns the same reference.', inspectValue: 'Mutating settings also mutates defaults!' },
+        { code: '}', isBuggy: false, hint: 'End of function.' },
+      ],
+      fixedLines: ['const defaults = { theme: "light", fontSize: 14 };', 'function createSettings() {', '  const settings = { ...defaults };', '  return settings;', '}'],
+      explanation: 'Assigning an object creates a reference, not a copy. Using the spread operator { ...defaults } creates a shallow copy, so changes to settings won\'t affect defaults.',
+    },
+  ];
 
-  function checkAdvAnswer(optIndex: number) {
-    if (advSelected !== null) return;
-    advSelected = optIndex;
-    const correct = optIndex === challenges[advIndex].correctIndex;
-    advResults[advIndex] = correct ? 'correct' : 'wrong';
-    advResults = [...advResults];
-    advShowExplanation = true;
+  let bugs = $derived(advanced ? advancedBugs : basicBugs);
+  let currentBugIndex = $state(0);
+  let inspectedLines = $state<Set<number>>(new Set());
+  let foundBug = $state(false);
+  let showFixed = $state(false);
+  let bugsCompleted = $state(0);
+
+  function inspectLine(lineIndex: number) {
+    if (showFixed) return;
+    const newSet = new Set(inspectedLines);
+    newSet.add(lineIndex);
+    inspectedLines = newSet;
   }
 
-  function nextChallenge() {
-    advSelected = null;
-    advShowExplanation = false;
-    advIndex++;
-  }
-
-  $effect(() => {
-    if (advDone) {
-      const score = advResults.filter((r) => r === 'correct').length;
-      oncomplete?.(score);
+  function fixBug(lineIndex: number) {
+    if (bugs[currentBugIndex].lines[lineIndex].isBuggy) {
+      foundBug = true;
+      showFixed = true;
     }
+  }
+
+  function nextBug() {
+    bugsCompleted++;
+    if (currentBugIndex < bugs.length - 1) {
+      currentBugIndex++;
+      inspectedLines = new Set();
+      foundBug = false;
+      showFixed = false;
+    } else {
+      oncomplete?.();
+    }
+  }
+
+  // Reset when mode changes
+  $effect(() => {
+    // Access `advanced` to make this effect reactive to it
+    const _ = advanced;
+    currentBugIndex = 0;
+    inspectedLines = new Set();
+    foundBug = false;
+    showFixed = false;
+    bugsCompleted = 0;
   });
 </script>
 
 <div class="space-y-8">
-  {#if !advanced}
-
   <div>
-    <h2 class="mb-2 text-2xl font-bold text-slate-800">Try It: Read the Error</h2>
+    <h2 class="mb-2 text-2xl font-bold text-slate-800">
+      {#if !advanced}Try It: Bug Hunter{:else}Try It: Bug Hunter (Advanced){/if}
+    </h2>
     <p class="text-slate-600">
-      Match each error message to what it means. Click an error, then click the matching meaning.
-    </p>
-  </div>
-
-  <div class="grid gap-6 lg:grid-cols-2">
-    <!-- Error messages -->
-    <div class="space-y-3">
-      <p class="text-sm font-bold uppercase tracking-wider text-orange-600">Error Messages</p>
-      {#each errors as err, i}
-        <button
-          onclick={() => toggleErrorSelect(i)}
-          disabled={basicChecked}
-          class="w-full rounded-xl border-2 p-3 text-left text-sm font-mono transition-all
-            {activeError === i ? 'border-orange-500 bg-orange-50 ring-2 ring-orange-300' : 'border-slate-200'}
-            {basicChecked && userMatches[i] === correctMapping[i] ? 'border-green-400 bg-green-50' : ''}
-            {basicChecked && userMatches[i] !== correctMapping[i] ? 'border-red-400 bg-red-50' : ''}
-            {!basicChecked ? 'hover:border-orange-300 cursor-pointer' : 'cursor-default'}"
-        >
-          <span class="text-red-600">{err.error}</span>
-          {#if userMatches[i] !== null}
-            <div class="mt-2 rounded bg-orange-100 px-2 py-1 text-xs text-orange-700">
-              Matched: {matchOptions[userMatches[i]!]}
-            </div>
-          {/if}
-        </button>
-      {/each}
-    </div>
-
-    <!-- Meanings -->
-    <div class="space-y-3">
-      <p class="text-sm font-bold uppercase tracking-wider text-orange-600">What It Means</p>
-      {#each matchOptions as option, i}
-        <button
-          onclick={() => assignMatch(i)}
-          disabled={basicChecked || activeError === null}
-          class="w-full rounded-xl border-2 p-3 text-left text-sm transition-all
-            {activeError !== null && !basicChecked ? 'hover:border-orange-400 hover:bg-orange-50 cursor-pointer' : 'cursor-default'}
-            {userMatches.includes(i) ? 'opacity-50 border-slate-200' : 'border-slate-200'}
-            {activeError === null && !basicChecked ? 'opacity-70' : ''}"
-        >
-          <span class="mr-2 font-bold text-slate-400">{String.fromCharCode(65 + i)}.</span>
-          {option}
-        </button>
-      {/each}
-    </div>
-  </div>
-
-  {#if !basicChecked}
-    <button
-      onclick={checkBasic}
-      disabled={userMatches.some(m => m === null)}
-      class="rounded-lg bg-orange-600 px-6 py-2.5 font-semibold text-white transition-all hover:bg-orange-700 active:scale-95 disabled:opacity-40"
-    >
-      Check Matches
-    </button>
-  {:else}
-    <div class="space-y-4">
-      <div class="rounded-xl border-2 {basicScore === errors.length ? 'border-green-200 bg-green-50' : 'border-yellow-200 bg-yellow-50'} p-5">
-        <p class="font-bold {basicScore === errors.length ? 'text-green-700' : 'text-yellow-700'}">
-          You got {basicScore} out of {errors.length} correct!
-        </p>
-      </div>
-
-      {#each errors as err, i}
-        {#if userMatches[i] !== correctMapping[i]}
-          <div class="rounded-xl border border-orange-200 bg-orange-50 p-3 text-sm">
-            <p class="text-slate-700"><strong>{err.error}</strong></p>
-            <p class="text-slate-600 mt-1">{err.meaning}</p>
-            <p class="text-orange-700 mt-1"><strong>Fix:</strong> {err.fix}</p>
-          </div>
-        {/if}
-      {/each}
-
-      <button
-        onclick={resetBasic}
-        class="rounded-lg bg-orange-600 px-6 py-2.5 font-semibold text-white transition-all hover:bg-orange-700 active:scale-95"
-      >
-        Try Again
-      </button>
-    </div>
-  {/if}
-
-  {:else}
-
-  <div>
-    <h2 class="mb-2 text-2xl font-bold text-slate-800">Try It: Breakpoint Challenge</h2>
-    <p class="text-slate-600">
-      Trace the execution of buggy code. Look at the variable values at each step and identify where things go wrong.
+      {#if !advanced}Find simple bugs in short code snippets. Click lines to inspect values, then fix the buggy line.
+      {:else}Track down trickier bugs involving closures, async code, and references.{/if}
     </p>
   </div>
 
   <div class="flex gap-2">
-    {#each challenges as _, i}
-      <div class="h-3 w-3 rounded-full transition-colors {advResults[i] === 'correct' ? 'bg-green-500' : advResults[i] === 'wrong' ? 'bg-red-500' : i === advIndex ? 'bg-orange-500' : 'bg-slate-200'}"></div>
+    {#each bugs as _, i}
+      <div class="h-3 w-3 rounded-full transition-colors {i < bugsCompleted ? 'bg-green-500' : i === currentBugIndex ? 'bg-orange-500' : 'bg-slate-200'}"></div>
     {/each}
   </div>
 
-  {#if !advDone}
-    {@const challenge = challenges[advIndex]}
+  {#if bugsCompleted < bugs.length}
+    {@const bug = bugs[currentBugIndex]}
     <div class="space-y-4">
-      <h3 class="text-lg font-bold text-slate-800">{challenge.title}</h3>
+      <h3 class="text-lg font-bold text-slate-800">{bug.title}</h3>
+      <p class="text-sm text-slate-600">{bug.description}</p>
 
-      <div class="rounded-xl border-2 border-orange-200 bg-orange-50 p-5">
-        <p class="mb-2 text-sm font-semibold text-slate-500">The Code</p>
-        <pre class="code-block"><code>{challenge.code}</code></pre>
-      </div>
-
-      <div class="space-y-2">
-        <p class="text-sm font-semibold text-slate-500">Execution Trace (Breakpoint on Line {challenge.lines[0].lineNum})</p>
-        {#each challenge.lines as line, i}
-          <div class="flex items-start gap-3 rounded-lg border p-3 text-sm {line.vars.includes('CRASH') || line.vars.includes('NaN') || line.vars.includes('function-scoped') ? 'border-red-300 bg-red-50' : 'border-slate-200 bg-white'}">
-            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-orange-100 text-xs font-bold text-orange-700">
-              {i + 1}
-            </span>
-            <span class="font-mono text-slate-700">{line.vars}</span>
-          </div>
-        {/each}
-      </div>
-
-      <div class="space-y-2">
-        <p class="font-semibold text-slate-700">{challenge.question}</p>
-        {#each challenge.options as option, i}
-          <button
-            onclick={() => checkAdvAnswer(i)}
-            disabled={advSelected !== null}
-            class="w-full rounded-xl border p-4 text-left text-sm transition-colors
-              {advSelected === i && advResults[advIndex] === 'correct' ? 'border-green-500 bg-green-50 text-green-800' : ''}
-              {advSelected === i && advResults[advIndex] === 'wrong' ? 'border-red-500 bg-red-50 text-red-800' : ''}
-              {advSelected !== null && i === challenge.correctIndex && advResults[advIndex] === 'wrong' ? 'border-green-500 bg-green-50' : ''}
-              {advSelected === null ? 'hover:border-orange-400 hover:bg-orange-50 cursor-pointer' : 'cursor-default'}
-              {advSelected !== null && advSelected !== i && i !== challenge.correctIndex ? 'opacity-50' : ''}"
-          >
-            <span class="mr-2 font-bold text-slate-400">{String.fromCharCode(65 + i)}.</span>{option}
-          </button>
-        {/each}
-      </div>
-
-      {#if advShowExplanation}
+      {#if !showFixed}
+        <div class="rounded-xl border-2 border-orange-200 bg-slate-900 p-5">
+          <p class="mb-3 text-xs font-bold uppercase tracking-wider text-orange-400">Click a line to inspect it</p>
+          {#each bug.lines as line, i}
+            <div class="group flex items-start gap-2">
+              <span class="w-5 shrink-0 text-right text-xs text-slate-500 leading-7">{i + 1}</span>
+              <button
+                onclick={() => inspectLine(i)}
+                class="flex-1 rounded px-2 py-0.5 text-left font-mono text-sm leading-7 transition-colors
+                  {inspectedLines.has(i) ? 'bg-slate-800' : 'hover:bg-slate-800'}"
+              >
+                <span class="text-slate-200">{line.code}</span>
+              </button>
+              {#if inspectedLines.has(i)}
+                <button
+                  onclick={() => fixBug(i)}
+                  class="shrink-0 rounded bg-orange-600 px-2 py-0.5 text-xs font-bold text-white transition-all hover:bg-orange-700 active:scale-95"
+                >
+                  Fix it
+                </button>
+              {/if}
+            </div>
+            {#if inspectedLines.has(i)}
+              <div class="ml-7 mb-1 rounded border border-slate-700 bg-slate-800 px-3 py-2 text-xs">
+                {#if line.inspectValue}
+                  <p class="font-mono text-orange-300">{line.inspectValue}</p>
+                {/if}
+                <p class="text-slate-400 mt-1">{line.hint}</p>
+              </div>
+            {/if}
+          {/each}
+        </div>
+      {:else}
+        <div class="rounded-xl border-2 border-green-300 bg-slate-900 p-5">
+          <p class="mb-3 text-xs font-bold uppercase tracking-wider text-green-400">Fixed code</p>
+          {#each bug.fixedLines as line, i}
+            <div class="flex items-start gap-2">
+              <span class="w-5 shrink-0 text-right text-xs text-slate-500 leading-7">{i + 1}</span>
+              <span class="font-mono text-sm leading-7 text-green-300">{line}</span>
+            </div>
+          {/each}
+        </div>
         <div class="rounded-xl border-2 border-orange-200 bg-orange-50 p-4">
-          <p class="text-sm text-slate-700"><strong>Explanation:</strong> {challenge.explanation}</p>
+          <p class="text-sm text-slate-700"><strong>Explanation:</strong> {bug.explanation}</p>
         </div>
         <button
-          onclick={nextChallenge}
-          class="rounded-lg bg-orange-600 px-6 py-2 font-semibold text-white transition-all hover:bg-orange-700 active:scale-95"
+          onclick={nextBug}
+          class="rounded-lg bg-orange-600 px-6 py-2.5 font-semibold text-white transition-all hover:bg-orange-700 active:scale-95"
         >
-          Next
+          {currentBugIndex < bugs.length - 1 ? 'Next Bug' : 'Complete'}
         </button>
       {/if}
     </div>
   {:else}
     <div class="rounded-xl border-2 border-green-200 bg-green-50 p-6 text-center">
       <p class="text-lg font-bold text-green-700">
-        All done! You got {advResults.filter(r => r === 'correct').length} out of {challenges.length} correct.
+        All bugs found and fixed! You squashed {bugs.length} out of {bugs.length} bugs.
       </p>
     </div>
-  {/if}
-
   {/if}
 </div>
 
 <style>
-  .code-block { background-color: #0f172a; border: 1px solid #334155; border-radius: 0.5rem; padding: 1rem 1.25rem; font-size: 0.875rem; line-height: 1.7; overflow-x: auto; color: #e2e8f0; }
+  .code-block { background-color: #0f172a; border: 1px solid #334155; border-radius: 0.5rem; padding: 1rem 1.25rem; font-size: 0.875rem; line-height: 1.7; overflow-x: auto; }
   .code-block :global(.kw)  { color: #c084fc; }
   .code-block :global(.var) { color: #93c5fd; }
   .code-block :global(.str) { color: #fcd34d; }

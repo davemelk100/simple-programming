@@ -11,132 +11,90 @@
 <div class="space-y-8">
   <div>
     <h2 class="mb-3 text-2xl font-bold text-slate-800">Debugging in Code</h2>
-    <p class="text-slate-600">Practical debugging techniques you'll use every day. These are your most important tools for finding and fixing bugs.</p>
+    <p class="text-slate-600">Practical debugging techniques you'll use every day.</p>
   </div>
 
-  <!-- console.log, console.table, console.error -->
+  <!-- console.log debugging patterns -->
   <div class="space-y-4">
-    <h3 class="text-lg font-bold text-slate-800">Console Methods</h3>
-    <pre class="code-block"><code>{@html `<span class="cmt">// Basic: print a value</span>
+    <h3 class="text-lg font-bold text-slate-800">console.log Debugging Patterns</h3>
+    <pre class="code-block"><code>{@html `<span class="cmt">// Label your values — never log bare variables</span>
 <span class="fn">console</span>.<span class="fn">log</span>(<span class="str">"user:"</span>, <span class="var">user</span>);
 <span class="fn">console</span>.<span class="fn">log</span>(<span class="str">"cart total:"</span>, <span class="var">cart</span>.<span class="var">total</span>);
 
-<span class="cmt">// Table: display arrays/objects as a table</span>
-<span class="kw">const</span> <span class="var">users</span> <span class="op">=</span> [
-  { <span class="var">name</span>: <span class="str">"Alice"</span>, <span class="var">age</span>: <span class="num">30</span> },
-  { <span class="var">name</span>: <span class="str">"Bob"</span>, <span class="var">age</span>: <span class="num">25</span> },
-];
+<span class="cmt">// Log before and after to see what changed</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="str">"BEFORE filter:"</span>, <span class="var">items</span>.<span class="var">length</span>);
+<span class="kw">const</span> <span class="var">filtered</span> <span class="op">=</span> <span class="var">items</span>.<span class="fn">filter</span>(<span class="arg">i</span> <span class="op">=></span> <span class="var">i</span>.<span class="var">active</span>);
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="str">"AFTER filter:"</span>, <span class="var">filtered</span>.<span class="var">length</span>);
+
+<span class="cmt">// Use console.table for arrays of objects</span>
 <span class="fn">console</span>.<span class="fn">table</span>(<span class="var">users</span>);
-<span class="cmt">// Displays a neat table in the console:</span>
 <span class="cmt">//  (index) | name    | age</span>
 <span class="cmt">//  0       | "Alice" | 30</span>
 <span class="cmt">//  1       | "Bob"   | 25</span>
 
-<span class="cmt">// Error: stands out in red in the console</span>
-<span class="fn">console</span>.<span class="fn">error</span>(<span class="str">"Failed to load user!"</span>, <span class="var">error</span>);
+<span class="cmt">// Use console.error for important failures</span>
+<span class="fn">console</span>.<span class="fn">error</span>(<span class="str">"Payment failed!"</span>, <span class="var">error</span>);
 
-<span class="cmt">// Warn: shows a yellow warning</span>
-<span class="fn">console</span>.<span class="fn">warn</span>(<span class="str">"Deprecated: use newMethod() instead"</span>);`}</code></pre>
+<span class="cmt">// Use console.warn for non-critical issues</span>
+<span class="fn">console</span>.<span class="fn">warn</span>(<span class="str">"Deprecated: use newMethod()"</span>);`}</code></pre>
   </div>
 
-  <!-- Reading stack traces -->
+  <!-- Reading error messages -->
   <div class="space-y-4">
-    <h3 class="text-lg font-bold text-slate-800">Reading Stack Traces</h3>
-    <p class="text-sm text-slate-600">A stack trace is like a trail of breadcrumbs. Read from top to bottom — the first line is where the error happened, and each line below shows what called it.</p>
+    <h3 class="text-lg font-bold text-slate-800">Reading Error Messages</h3>
+    <p class="text-sm text-slate-600">Error messages are clues, not punishments. Every error tells you <strong>what went wrong</strong> and <strong>where it happened</strong>.</p>
     <pre class="code-block"><code>{@html `<span class="str">TypeError</span>: Cannot read properties of <span class="kw">null</span>
     (reading <span class="str">'email'</span>)
 
-    at <span class="fn">sendEmail</span>     (<span class="var">email.js</span>:<span class="num">15</span>:<span class="num">22</span>)   <span class="cmt">// &lt;-- Error is HERE</span>
+    at <span class="fn">sendEmail</span>     (<span class="var">email.js</span>:<span class="num">15</span>:<span class="num">22</span>)   <span class="cmt">// &lt;-- Error HERE</span>
     at <span class="fn">handleSubmit</span>  (<span class="var">form.js</span>:<span class="num">42</span>:<span class="num">5</span>)    <span class="cmt">// called by this</span>
-    at <span class="fn">onClick</span>       (<span class="var">button.js</span>:<span class="num">8</span>:<span class="num">3</span>)   <span class="cmt">// which was called by this</span>
+    at <span class="fn">onClick</span>       (<span class="var">button.js</span>:<span class="num">8</span>:<span class="num">3</span>)   <span class="cmt">// called by this</span>
 
-<span class="cmt">// Translation: User clicked a button, which called</span>
-<span class="cmt">// handleSubmit, which called sendEmail, which tried</span>
-<span class="cmt">// to read .email on something that was null.</span>`}</code></pre>
+<span class="cmt">// How to read it:</span>
+<span class="cmt">// 1. TypeError — the type of error</span>
+<span class="cmt">// 2. "reading 'email'" — the property that failed</span>
+<span class="cmt">// 3. email.js:15:22 — file, line, column</span>
+<span class="cmt">// 4. Stack trace — chain of calls leading here</span>`}</code></pre>
   </div>
 
-  <!-- Common errors and fixes -->
+  <!-- Common bug patterns and fixes -->
   <div class="space-y-4">
-    <h3 class="text-lg font-bold text-slate-800">Common Errors &amp; Fixes</h3>
+    <h3 class="text-lg font-bold text-slate-800">Common Bug Patterns &amp; Fixes</h3>
     <div class="space-y-3">
       <div class="rounded-xl border-2 border-orange-200 bg-orange-50 p-4">
         <p class="font-bold text-red-600 text-sm font-mono mb-1">TypeError: Cannot read properties of undefined</p>
-        <p class="text-sm text-slate-600 mb-2">You accessed a property on something that doesn't exist yet.</p>
         <pre class="code-block"><code>{@html `<span class="cmt">// Bug: user might be undefined</span>
-<span class="fn">console</span>.<span class="fn">log</span>(<span class="var">user</span>.<span class="var">name</span>);   <span class="cmt">// CRASH if user is undefined</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="var">user</span>.<span class="var">name</span>);   <span class="cmt">// CRASH</span>
 
-<span class="cmt">// Fix: check first, or use optional chaining</span>
-<span class="fn">console</span>.<span class="fn">log</span>(<span class="var">user</span><span class="op">?.</span><span class="var">name</span>);  <span class="cmt">// Returns undefined instead of crashing</span>`}</code></pre>
+<span class="cmt">// Fix: use optional chaining</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="var">user</span><span class="op">?.</span><span class="var">name</span>);  <span class="cmt">// safe: returns undefined</span>`}</code></pre>
       </div>
 
       <div class="rounded-xl border-2 border-orange-200 bg-orange-50 p-4">
-        <p class="font-bold text-red-600 text-sm font-mono mb-1">ReferenceError: x is not defined</p>
-        <p class="text-sm text-slate-600 mb-2">You used a variable that doesn't exist. Usually a typo or scope issue.</p>
-        <pre class="code-block"><code>{@html `<span class="cmt">// Bug: typo in variable name</span>
-<span class="kw">const</span> <span class="var">userName</span> <span class="op">=</span> <span class="str">"Alice"</span>;
-<span class="fn">console</span>.<span class="fn">log</span>(<span class="var">usrName</span>);  <span class="cmt">// ReferenceError! Typo.</span>
-
-<span class="cmt">// Fix: correct the spelling</span>
-<span class="fn">console</span>.<span class="fn">log</span>(<span class="var">userName</span>);  <span class="cmt">// Works!</span>`}</code></pre>
-      </div>
-
-      <div class="rounded-xl border-2 border-orange-200 bg-orange-50 p-4">
-        <p class="font-bold text-red-600 text-sm font-mono mb-1">SyntaxError: Unexpected token</p>
-        <p class="text-sm text-slate-600 mb-2">The code structure is wrong — missing brackets, extra commas, or unclosed strings.</p>
-        <pre class="code-block"><code>{@html `<span class="cmt">// Bug: missing closing bracket</span>
-<span class="kw">function</span> <span class="fn">greet</span>(<span class="arg">name</span>) {
-  <span class="kw">return</span> <span class="str">"Hello, "</span> <span class="op">+</span> <span class="var">name</span>;
-<span class="cmt">// Missing } here — SyntaxError!</span>
-
-<span class="cmt">// Fix: add the closing bracket</span>
-<span class="kw">function</span> <span class="fn">greet</span>(<span class="arg">name</span>) {
-  <span class="kw">return</span> <span class="str">"Hello, "</span> <span class="op">+</span> <span class="var">name</span>;
-}`}</code></pre>
-      </div>
-    </div>
-  </div>
-
-  <!-- Using the debugger keyword -->
-  <div class="space-y-4">
-    <h3 class="text-lg font-bold text-slate-800">Using the debugger Keyword</h3>
-    <pre class="code-block"><code>{@html `<span class="kw">function</span> <span class="fn">processOrder</span>(<span class="arg">order</span>) {
-  <span class="kw">const</span> <span class="var">subtotal</span> <span class="op">=</span> <span class="var">order</span>.<span class="var">items</span>.<span class="fn">reduce</span>(
-    (<span class="arg">sum</span>, <span class="arg">item</span>) <span class="op">=></span> <span class="var">sum</span> <span class="op">+</span> <span class="var">item</span>.<span class="var">price</span>, <span class="num">0</span>
-  );
-
-  <span class="kw">debugger</span>;  <span class="cmt">// Execution pauses here!</span>
-  <span class="cmt">// Open DevTools to inspect: order, subtotal, tax, total</span>
-
-  <span class="kw">const</span> <span class="var">tax</span> <span class="op">=</span> <span class="var">subtotal</span> <span class="op">*</span> <span class="num">0.1</span>;
-  <span class="kw">const</span> <span class="var">total</span> <span class="op">=</span> <span class="var">subtotal</span> <span class="op">+</span> <span class="var">tax</span>;
-  <span class="kw">return</span> { <span class="var">subtotal</span>, <span class="var">tax</span>, <span class="var">total</span> };
+        <p class="font-bold text-red-600 text-sm font-mono mb-1">Off-by-one in loops</p>
+        <pre class="code-block"><code>{@html `<span class="cmt">// Bug: <= goes one past the end</span>
+<span class="kw">for</span> (<span class="kw">let</span> <span class="var">i</span> <span class="op">=</span> <span class="num">0</span>; <span class="var">i</span> <span class="op">&lt;=</span> <span class="var">arr</span>.<span class="var">length</span>; <span class="var">i</span><span class="op">++</span>) {
+  <span class="fn">console</span>.<span class="fn">log</span>(<span class="var">arr</span>[<span class="var">i</span>]);  <span class="cmt">// undefined on last iteration</span>
 }
 
-<span class="cmt">// When the browser hits "debugger", it pauses and</span>
-<span class="cmt">// you can hover over any variable to see its value,</span>
-<span class="cmt">// step line-by-line, or continue running.</span>`}</code></pre>
-  </div>
+<span class="cmt">// Fix: use < instead of <=</span>
+<span class="kw">for</span> (<span class="kw">let</span> <span class="var">i</span> <span class="op">=</span> <span class="num">0</span>; <span class="var">i</span> <span class="op">&lt;</span> <span class="var">arr</span>.<span class="var">length</span>; <span class="var">i</span><span class="op">++</span>) {
+  <span class="fn">console</span>.<span class="fn">log</span>(<span class="var">arr</span>[<span class="var">i</span>]);  <span class="cmt">// correct</span>
+}`}</code></pre>
+      </div>
 
-  <div class="rounded-xl border-2 border-orange-200 bg-orange-50 p-5">
-    <h4 class="mb-2 font-bold text-slate-800">Debugging Checklist</h4>
-    <ul class="space-y-2 text-slate-600">
-      <li class="flex items-start gap-2">
-        <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-orange-500"></span>
-        <span>Read the error message carefully — it tells you the type, the property, and the line number.</span>
-      </li>
-      <li class="flex items-start gap-2">
-        <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-orange-500"></span>
-        <span>Add <code class="rounded bg-slate-100 px-1 text-sm text-orange-700">console.log</code> before the error line to see what values you have.</span>
-      </li>
-      <li class="flex items-start gap-2">
-        <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-orange-500"></span>
-        <span>Check for typos, missing brackets, and off-by-one errors.</span>
-      </li>
-      <li class="flex items-start gap-2">
-        <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-orange-500"></span>
-        <span>Use <code class="rounded bg-slate-100 px-1 text-sm text-orange-700">debugger</code> for complex logic where you need to step through line by line.</span>
-      </li>
-    </ul>
+      <div class="rounded-xl border-2 border-orange-200 bg-orange-50 p-4">
+        <p class="font-bold text-red-600 text-sm font-mono mb-1">Uninitialized accumulator</p>
+        <pre class="code-block"><code>{@html `<span class="cmt">// Bug: total starts as undefined</span>
+<span class="kw">let</span> <span class="var">total</span>;
+<span class="kw">for</span> (<span class="kw">const</span> <span class="var">item</span> <span class="kw">of</span> <span class="var">items</span>) {
+  <span class="var">total</span> <span class="op">+=</span> <span class="var">item</span>.<span class="var">price</span>;  <span class="cmt">// undefined + 10 = NaN</span>
+}
+
+<span class="cmt">// Fix: initialize to 0</span>
+<span class="kw">let</span> <span class="var">total</span> <span class="op">=</span> <span class="num">0</span>;`}</code></pre>
+      </div>
+    </div>
   </div>
 
   <div>
@@ -154,11 +112,30 @@
     <p class="text-slate-600">Professional debugging tools and workflows for complex problems.</p>
   </div>
 
-  <!-- Chrome DevTools Breakpoints -->
+  <!-- Debugger statement -->
   <div class="space-y-4">
-    <h3 class="text-lg font-bold text-slate-800">Chrome DevTools Breakpoints</h3>
-    <p class="text-sm text-slate-600">Beyond clicking line numbers, DevTools offers specialized breakpoint types for precise debugging.</p>
-    <pre class="code-block"><code>{@html `<span class="cmt">// Conditional breakpoint: only pause when a condition is true</span>
+    <h3 class="text-lg font-bold text-slate-800">The debugger Statement</h3>
+    <p class="text-sm text-slate-600">Drop a <code class="rounded bg-slate-100 px-1 text-sm text-orange-700">debugger</code> statement anywhere in your code. When DevTools is open and execution hits that line, it pauses and lets you inspect everything.</p>
+    <pre class="code-block"><code>{@html `<span class="kw">function</span> <span class="fn">processOrder</span>(<span class="arg">order</span>) {
+  <span class="kw">const</span> <span class="var">subtotal</span> <span class="op">=</span> <span class="var">order</span>.<span class="var">items</span>.<span class="fn">reduce</span>(
+    (<span class="arg">sum</span>, <span class="arg">item</span>) <span class="op">=></span> <span class="var">sum</span> <span class="op">+</span> <span class="var">item</span>.<span class="var">price</span>, <span class="num">0</span>
+  );
+
+  <span class="kw">debugger</span>;  <span class="cmt">// Execution pauses here!</span>
+  <span class="cmt">// Hover over any variable to see its value</span>
+  <span class="cmt">// Use Step Over (F10) to go line by line</span>
+  <span class="cmt">// Use Step Into (F11) to enter function calls</span>
+
+  <span class="kw">const</span> <span class="var">tax</span> <span class="op">=</span> <span class="var">subtotal</span> <span class="op">*</span> <span class="num">0.1</span>;
+  <span class="kw">const</span> <span class="var">total</span> <span class="op">=</span> <span class="var">subtotal</span> <span class="op">+</span> <span class="var">tax</span>;
+  <span class="kw">return</span> { <span class="var">subtotal</span>, <span class="var">tax</span>, <span class="var">total</span> };
+}`}</code></pre>
+  </div>
+
+  <!-- Chrome DevTools examples -->
+  <div class="space-y-4">
+    <h3 class="text-lg font-bold text-slate-800">Chrome DevTools: Advanced Breakpoints</h3>
+    <pre class="code-block"><code>{@html `<span class="cmt">// Conditional breakpoint: only pause when condition is true</span>
 <span class="cmt">// Right-click a line number > "Add conditional breakpoint"</span>
 <span class="cmt">// Condition: user.role === "admin"</span>
 
@@ -166,133 +143,71 @@
 <span class="cmt">// Right-click a line > "Add logpoint"</span>
 <span class="cmt">// Message: "Processing user:", user.name</span>
 
-<span class="cmt">// DOM breakpoint: pause when a DOM node changes</span>
-<span class="cmt">// Right-click element in Elements tab > "Break on..."</span>
-<span class="cmt">// Options: subtree modifications, attribute changes, node removal</span>
+<span class="cmt">// DOM breakpoint: pause when a DOM element changes</span>
+<span class="cmt">// Elements tab > right-click element > "Break on..."</span>
+<span class="cmt">// Options: subtree modifications, attribute changes</span>
 
-<span class="cmt">// XHR/Fetch breakpoint: pause when a specific URL is requested</span>
+<span class="cmt">// XHR/Fetch breakpoint: pause on specific API calls</span>
 <span class="cmt">// Sources tab > XHR/fetch Breakpoints > "+"</span>
-<span class="cmt">// URL contains: "/api/users"</span>
-
-<span class="cmt">// Event listener breakpoint: pause on any event type</span>
-<span class="cmt">// Sources tab > Event Listener Breakpoints</span>
-<span class="cmt">// Check: Mouse > click, Keyboard > keydown, etc.</span>`}</code></pre>
+<span class="cmt">// URL contains: "/api/users"</span>`}</code></pre>
   </div>
 
-  <!-- Network Tab Filtering -->
+  <!-- Async debugging patterns -->
   <div class="space-y-4">
-    <h3 class="text-lg font-bold text-slate-800">Network Tab Filtering</h3>
-    <p class="text-sm text-slate-600">Filter network requests to find exactly what you're looking for.</p>
-    <pre class="code-block"><code>{@html `<span class="cmt">// Filter by type (buttons at the top of Network tab)</span>
-<span class="cmt">// XHR - API requests (fetch/XMLHttpRequest)</span>
-<span class="cmt">// JS  - JavaScript files</span>
-<span class="cmt">// CSS - Stylesheets</span>
-<span class="cmt">// Img - Images</span>
-<span class="cmt">// WS  - WebSocket connections</span>
+    <h3 class="text-lg font-bold text-slate-800">Async Debugging Patterns</h3>
+    <p class="text-sm text-slate-600">Async bugs are tricky because errors can be swallowed by unhandled promises and stack traces may be incomplete.</p>
+    <pre class="code-block"><code>{@html `<span class="cmt">// Always wrap await in try/catch</span>
+<span class="kw">async function</span> <span class="fn">fetchUser</span>(<span class="arg">id</span>) {
+  <span class="kw">try</span> {
+    <span class="kw">const</span> <span class="var">res</span> <span class="op">=</span> <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">\`/api/users/\${<span class="var">id</span>}\`</span>);
+    <span class="kw">if</span> (<span class="op">!</span><span class="var">res</span>.<span class="var">ok</span>) <span class="kw">throw new</span> <span class="fn">Error</span>(<span class="str">\`HTTP \${<span class="var">res</span>.<span class="var">status</span>}\`</span>);
+    <span class="kw">return await</span> <span class="var">res</span>.<span class="fn">json</span>();
+  } <span class="kw">catch</span> (<span class="var">err</span>) {
+    <span class="fn">console</span>.<span class="fn">error</span>(<span class="str">"fetchUser failed:"</span>, <span class="var">err</span>);
+    <span class="kw">throw</span> <span class="var">err</span>;  <span class="cmt">// Re-throw so callers know</span>
+  }
+}
 
-<span class="cmt">// Filter by text: type in the filter bar</span>
-<span class="cmt">// "api/users"        - URL contains this text</span>
-<span class="cmt">// "status-code:404"  - only 404 responses</span>
-<span class="cmt">// "method:POST"      - only POST requests</span>
-<span class="cmt">// "-status-code:200" - exclude 200 (show only errors)</span>
-
-<span class="cmt">// Throttling: simulate slow networks</span>
-<span class="cmt">// No Throttling > Slow 3G / Fast 3G / Offline</span>
-
-<span class="cmt">// Copy as cURL: right-click any request > Copy > Copy as cURL</span>
-<span class="cmt">// Paste into terminal to replay the exact request</span>`}</code></pre>
-  </div>
-
-  <!-- Node.js --inspect -->
-  <div class="space-y-4">
-    <h3 class="text-lg font-bold text-slate-800">Node.js --inspect Setup</h3>
-    <p class="text-sm text-slate-600">Debug server-side Node.js code with Chrome DevTools or VS Code.</p>
-    <pre class="code-block"><code>{@html `<span class="cmt"># Terminal: start with debugger attached</span>
-<span class="var">node</span> <span class="op">--</span>inspect <span class="var">server.js</span>
-<span class="cmt"># Output: Debugger listening on ws://127.0.0.1:9229/...</span>
-
-<span class="cmt"># Open chrome://inspect in Chrome</span>
-<span class="cmt"># Click "inspect" under Remote Target</span>
-<span class="cmt"># Full DevTools opens — set breakpoints, inspect variables</span>
-
-<span class="cmt"># Break on first line (useful for startup bugs)</span>
-<span class="var">node</span> <span class="op">--</span>inspect-brk <span class="var">server.js</span>
-
-<span class="cmt"># With nodemon for auto-restart</span>
-<span class="var">nodemon</span> <span class="op">--</span>inspect <span class="var">server.js</span>`}</code></pre>
-  </div>
-
-  <!-- Sentry Error Tracking -->
-  <div class="space-y-4">
-    <h3 class="text-lg font-bold text-slate-800">Sentry Error Tracking</h3>
-    <p class="text-sm text-slate-600">Capture errors from real users in production with full context and source maps.</p>
-    <pre class="code-block"><code>{@html `<span class="cmt">// Install: npm install @sentry/browser</span>
-<span class="kw">import</span> <span class="op">*</span> <span class="kw">as</span> <span class="var">Sentry</span> <span class="kw">from</span> <span class="str">'@sentry/browser'</span>;
-
-<span class="var">Sentry</span>.<span class="fn">init</span>({
-  <span class="var">dsn</span>: <span class="str">'https://examplePublicKey@o0.ingest.sentry.io/0'</span>,
-  <span class="var">environment</span>: <span class="str">'production'</span>,
-  <span class="var">release</span>: <span class="str">'my-app@1.2.3'</span>,
-  <span class="var">tracesSampleRate</span>: <span class="num">0.1</span>,  <span class="cmt">// 10% of transactions</span>
+<span class="cmt">// Catch unhandled promise rejections globally</span>
+<span class="var">window</span>.<span class="fn">addEventListener</span>(<span class="str">'unhandledrejection'</span>, (<span class="arg">e</span>) <span class="op">=></span> {
+  <span class="fn">console</span>.<span class="fn">error</span>(<span class="str">"Unhandled rejection:"</span>, <span class="var">e</span>.<span class="var">reason</span>);
 });
 
-<span class="cmt">// Errors are captured automatically!</span>
-<span class="cmt">// Sentry records:</span>
-<span class="cmt">//   - Stack trace (with source maps)</span>
-<span class="cmt">//   - Browser, OS, device</span>
-<span class="cmt">//   - User actions before the error (breadcrumbs)</span>
-<span class="cmt">//   - Custom context you add</span>
-
-<span class="cmt">// Add custom context</span>
-<span class="var">Sentry</span>.<span class="fn">setUser</span>({ <span class="var">id</span>: <span class="str">'user-123'</span>, <span class="var">email</span>: <span class="str">'alice@test.com'</span> });
-
-<span class="cmt">// Capture a message (not an error)</span>
-<span class="var">Sentry</span>.<span class="fn">captureMessage</span>(<span class="str">'Payment flow completed'</span>);
-
-<span class="cmt">// Capture with extra data</span>
-<span class="kw">try</span> {
-  <span class="fn">processPayment</span>(<span class="var">order</span>);
-} <span class="kw">catch</span> (<span class="var">error</span>) {
-  <span class="var">Sentry</span>.<span class="fn">captureException</span>(<span class="var">error</span>, {
-    <span class="var">extra</span>: { <span class="var">orderId</span>: <span class="var">order</span>.<span class="var">id</span>, <span class="var">amount</span>: <span class="var">order</span>.<span class="var">total</span> }
-  });
+<span class="cmt">// Cancel stale requests with AbortController</span>
+<span class="kw">let</span> <span class="var">controller</span> <span class="op">=</span> <span class="kw">null</span>;
+<span class="kw">async function</span> <span class="fn">search</span>(<span class="arg">query</span>) {
+  <span class="kw">if</span> (<span class="var">controller</span>) <span class="var">controller</span>.<span class="fn">abort</span>();
+  <span class="var">controller</span> <span class="op">=</span> <span class="kw">new</span> <span class="fn">AbortController</span>();
+  <span class="kw">const</span> <span class="var">res</span> <span class="op">=</span> <span class="kw">await</span> <span class="fn">fetch</span>(
+    <span class="str">\`/api/search?q=\${<span class="var">query</span>}\`</span>,
+    { <span class="var">signal</span>: <span class="var">controller</span>.<span class="var">signal</span> }
+  );
 }`}</code></pre>
   </div>
 
-  <!-- VS Code launch.json -->
+  <!-- Performance profiling -->
   <div class="space-y-4">
-    <h3 class="text-lg font-bold text-slate-800">Debugging with VS Code launch.json</h3>
-    <p class="text-sm text-slate-600">Configure VS Code to debug Node.js, browser apps, and tests with one click.</p>
-    <pre class="code-block"><code>{@html `<span class="cmt">// .vscode/launch.json</span>
-{
-  <span class="str">"version"</span>: <span class="str">"0.2.0"</span>,
-  <span class="str">"configurations"</span>: [
-    {
-      <span class="cmt">// Debug a Node.js server</span>
-      <span class="str">"name"</span>: <span class="str">"Debug Server"</span>,
-      <span class="str">"type"</span>: <span class="str">"node"</span>,
-      <span class="str">"request"</span>: <span class="str">"launch"</span>,
-      <span class="str">"program"</span>: <span class="str">"\${workspaceFolder}/server.js"</span>,
-      <span class="str">"skipFiles"</span>: [<span class="str">"&lt;node_internals&gt;/**"</span>]
-    },
-    {
-      <span class="cmt">// Debug current test file</span>
-      <span class="str">"name"</span>: <span class="str">"Debug Tests"</span>,
-      <span class="str">"type"</span>: <span class="str">"node"</span>,
-      <span class="str">"request"</span>: <span class="str">"launch"</span>,
-      <span class="str">"program"</span>: <span class="str">"\${workspaceFolder}/node_modules/.bin/vitest"</span>,
-      <span class="str">"args"</span>: [<span class="str">"run"</span>, <span class="str">"\${relativeFile}"</span>],
-      <span class="str">"console"</span>: <span class="str">"integratedTerminal"</span>
-    },
-    {
-      <span class="cmt">// Attach to a running process</span>
-      <span class="str">"name"</span>: <span class="str">"Attach to Process"</span>,
-      <span class="str">"type"</span>: <span class="str">"node"</span>,
-      <span class="str">"request"</span>: <span class="str">"attach"</span>,
-      <span class="str">"port"</span>: <span class="num">9229</span>
-    }
-  ]
-}`}</code></pre>
+    <h3 class="text-lg font-bold text-slate-800">Performance Profiling Snippets</h3>
+    <pre class="code-block"><code>{@html `<span class="cmt">// Measure how long something takes</span>
+<span class="fn">console</span>.<span class="fn">time</span>(<span class="str">"render"</span>);
+<span class="fn">renderDashboard</span>();
+<span class="fn">console</span>.<span class="fn">timeEnd</span>(<span class="str">"render"</span>);  <span class="cmt">// render: 142.5ms</span>
+
+<span class="cmt">// Use performance.mark for precise measurements</span>
+<span class="var">performance</span>.<span class="fn">mark</span>(<span class="str">"start-process"</span>);
+<span class="fn">processData</span>(<span class="var">bigArray</span>);
+<span class="var">performance</span>.<span class="fn">mark</span>(<span class="str">"end-process"</span>);
+<span class="var">performance</span>.<span class="fn">measure</span>(
+  <span class="str">"data-processing"</span>,
+  <span class="str">"start-process"</span>,
+  <span class="str">"end-process"</span>
+);
+
+<span class="cmt">// Profile a section of code in DevTools</span>
+<span class="fn">console</span>.<span class="fn">profile</span>(<span class="str">"MyFunction"</span>);
+<span class="fn">myExpensiveFunction</span>();
+<span class="fn">console</span>.<span class="fn">profileEnd</span>(<span class="str">"MyFunction"</span>);
+<span class="cmt">// Open DevTools > Performance to see the flame chart</span>`}</code></pre>
   </div>
 
   <div class="rounded-xl border-2 border-orange-200 bg-orange-50 p-5">
@@ -308,11 +223,11 @@
       </li>
       <li class="flex items-start gap-2">
         <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-orange-500"></span>
-        <span>Use <strong>git bisect</strong> when you know "it worked before" but don't know which commit broke it.</span>
+        <span>Enable <strong>"Async stack traces"</strong> in DevTools to see full call chains across async boundaries.</span>
       </li>
       <li class="flex items-start gap-2">
         <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-orange-500"></span>
-        <span><strong>Rubber duck debugging</strong> works. Explaining the problem out loud often reveals the answer.</span>
+        <span>Use <code class="rounded bg-slate-100 px-1 text-sm text-orange-700">console.time()</code> / <code class="rounded bg-slate-100 px-1 text-sm text-orange-700">console.timeEnd()</code> to quickly measure performance without the full profiler.</span>
       </li>
     </ul>
   </div>

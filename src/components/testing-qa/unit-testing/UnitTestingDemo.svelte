@@ -6,96 +6,152 @@
   interface Props { oncomplete?: () => void; }
   let { oncomplete }: Props = $props();
 
-  // === Basic mode: Write a Test ===
+  // === Basic mode: Run unit tests on simple functions ===
   interface TestCase {
+    id: number;
     description: string;
+    functionName: string;
     functionCall: string;
-    correctAnswer: string;
-    userAnswer: string;
+    expected: string;
+    actual: string;
     result: 'pass' | 'fail' | null;
+    animating: boolean;
   }
 
-  let currentFunction = $state<'add' | 'capitalize'>('add');
+  function add(a: number, b: number): number { return a + b; }
+  function isEven(n: number): boolean { return n % 2 === 0; }
+  function capitalize(str: string): string {
+    if (str.length === 0) return '';
+    return str[0].toUpperCase() + str.slice(1);
+  }
 
-  let addTests: TestCase[] = $state([
-    { description: 'adds two positive numbers', functionCall: 'add(2, 3)', correctAnswer: '5', userAnswer: '', result: null },
-    { description: 'adds a negative number', functionCall: 'add(10, -4)', correctAnswer: '6', userAnswer: '', result: null },
-    { description: 'adds zeros', functionCall: 'add(0, 0)', correctAnswer: '0', userAnswer: '', result: null },
+  let testCases: TestCase[] = $state([
+    { id: 1, description: 'adds two positive numbers', functionName: 'add', functionCall: 'add(2, 3)', expected: '5', actual: '', result: null, animating: false },
+    { id: 2, description: 'adds a negative number', functionName: 'add', functionCall: 'add(10, -4)', expected: '6', actual: '', result: null, animating: false },
+    { id: 3, description: 'returns true for even numbers', functionName: 'isEven', functionCall: 'isEven(4)', expected: 'true', actual: '', result: null, animating: false },
+    { id: 4, description: 'returns false for odd numbers', functionName: 'isEven', functionCall: 'isEven(7)', expected: 'false', actual: '', result: null, animating: false },
+    { id: 5, description: 'capitalizes the first letter', functionName: 'capitalize', functionCall: 'capitalize("hello")', expected: 'Hello', actual: '', result: null, animating: false },
+    { id: 6, description: 'handles empty string', functionName: 'capitalize', functionCall: 'capitalize("")', expected: '', actual: '', result: null, animating: false },
   ]);
 
-  let capitalizeTests: TestCase[] = $state([
-    { description: 'capitalizes a word', functionCall: 'capitalize("hello")', correctAnswer: 'Hello', userAnswer: '', result: null },
-    { description: 'handles single character', functionCall: 'capitalize("a")', correctAnswer: 'A', userAnswer: '', result: null },
-    { description: 'handles empty string', functionCall: 'capitalize("")', correctAnswer: '', userAnswer: '', result: null },
-  ]);
+  let passingCount = $derived(testCases.filter(t => t.result === 'pass').length);
+  let totalTests = $derived(testCases.length);
+  let allRun = $derived(testCases.every(t => t.result !== null));
 
-  let activeTests = $derived(currentFunction === 'add' ? addTests : capitalizeTests);
-  let allPassed = $derived(activeTests.every(t => t.result === 'pass'));
+  function evaluateTest(tc: TestCase): { actual: string; pass: boolean } {
+    let actual: string;
+    switch (tc.functionCall) {
+      case 'add(2, 3)': actual = String(add(2, 3)); break;
+      case 'add(10, -4)': actual = String(add(10, -4)); break;
+      case 'isEven(4)': actual = String(isEven(4)); break;
+      case 'isEven(7)': actual = String(isEven(7)); break;
+      case 'capitalize("hello")': actual = capitalize('hello'); break;
+      case 'capitalize("")': actual = capitalize(''); break;
+      default: actual = 'error';
+    }
+    return { actual, pass: actual === tc.expected };
+  }
 
-  function checkTest(index: number) {
-    const tests = currentFunction === 'add' ? addTests : capitalizeTests;
-    const test = tests[index];
-    test.result = test.userAnswer.trim() === test.correctAnswer ? 'pass' : 'fail';
+  function runSingleTest(index: number) {
+    const tc = testCases[index];
+    if (tc.result !== null) return;
+    tc.animating = true;
+    setTimeout(() => {
+      const { actual, pass } = evaluateTest(tc);
+      tc.actual = actual;
+      tc.result = pass ? 'pass' : 'fail';
+      tc.animating = false;
+    }, 400);
   }
 
   function runAllTests() {
-    const tests = currentFunction === 'add' ? addTests : capitalizeTests;
-    tests.forEach((_, i) => checkTest(i));
+    testCases.forEach((tc, i) => {
+      if (tc.result !== null) return;
+      setTimeout(() => runSingleTest(i), i * 250);
+    });
   }
 
-  // === Advanced mode: Mock It Out ===
-  interface MockOption {
-    label: string;
-    code: string;
-    shouldMock: boolean;
-    selected: boolean;
+  function resetTests() {
+    testCases.forEach(tc => {
+      tc.result = null;
+      tc.actual = '';
+      tc.animating = false;
+    });
   }
 
-  let mockOptions: MockOption[] = $state([
-    { label: 'fetch (HTTP client)', code: 'global.fetch', shouldMock: true, selected: false },
-    { label: 'JSON.parse', code: 'JSON.parse', shouldMock: false, selected: false },
-    { label: 'Database connection', code: 'db.query', shouldMock: true, selected: false },
-    { label: 'Math.round', code: 'Math.round', shouldMock: false, selected: false },
-    { label: 'Logger service', code: 'logger.info', shouldMock: true, selected: false },
+  // === Advanced mode: Mock-based testing ===
+  interface MockTestCase {
+    id: number;
+    description: string;
+    functionCall: string;
+    mockSetup: string;
+    expected: string;
+    actual: string;
+    result: 'pass' | 'fail' | null;
+    animating: boolean;
+  }
+
+  let mockTests: MockTestCase[] = $state([
+    {
+      id: 1,
+      description: 'fetchUser returns mocked user data',
+      functionCall: 'fetchUser(1)',
+      mockSetup: 'vi.spyOn(global, "fetch").mockResolvedValue({ json: () => ({ name: "Alice" }) })',
+      expected: '{"name":"Alice"}',
+      actual: '',
+      result: null,
+      animating: false,
+    },
+    {
+      id: 2,
+      description: 'fetchUser throws on network error',
+      functionCall: 'fetchUser(999)',
+      mockSetup: 'vi.spyOn(global, "fetch").mockRejectedValue(new Error("Network failure"))',
+      expected: 'Error: Network failure',
+      actual: '',
+      result: null,
+      animating: false,
+    },
+    {
+      id: 3,
+      description: 'saveUser calls the database mock',
+      functionCall: 'saveUser({ name: "Bob" })',
+      mockSetup: 'const mockDb = { save: vi.fn().mockResolvedValue({ id: 42 }) }',
+      expected: '{"id":42}',
+      actual: '',
+      result: null,
+      animating: false,
+    },
   ]);
 
-  let mockSubmitted = $state(false);
-  let mockScore = $derived(mockOptions.filter(o => o.selected === o.shouldMock).length);
+  let mockPassingCount = $derived(mockTests.filter(t => t.result === 'pass').length);
+  let mockTotalTests = $derived(mockTests.length);
+  let mockAllRun = $derived(mockTests.every(t => t.result !== null));
 
-  function toggleMock(index: number) {
-    if (!mockSubmitted) mockOptions[index].selected = !mockOptions[index].selected;
+  function runMockTest(index: number) {
+    const tc = mockTests[index];
+    if (tc.result !== null) return;
+    tc.animating = true;
+    setTimeout(() => {
+      tc.actual = tc.expected;
+      tc.result = 'pass';
+      tc.animating = false;
+    }, 500);
   }
 
-  function submitMocks() {
-    mockSubmitted = true;
+  function runAllMockTests() {
+    mockTests.forEach((_, i) => {
+      if (mockTests[i].result !== null) return;
+      setTimeout(() => runMockTest(i), i * 300);
+    });
   }
 
-  let generatedMockCode = $derived(generateMockTest());
-
-  function generateMockTest(): string {
-    if (!mockSubmitted) return '';
-    const mocked = mockOptions.filter(o => o.selected);
-    if (mocked.length === 0) return '<span class="cmt">// No mocks selected - the test would call real services!</span>';
-
-    const lines: string[] = [];
-    lines.push('<span class="cmt">// Generated test with mocks</span>');
-    lines.push('<span class="fn">describe</span>(<span class="str">\'getUserData\'</span>, () => {');
-    lines.push('  <span class="fn">beforeEach</span>(() => {');
-    for (const m of mocked) {
-      lines.push(`    <span class="var">vi</span>.<span class="fn">spyOn</span>(<span class="var">${m.code.split('.')[0]}</span>, <span class="str">\'${m.code.split('.')[1]}\'</span>).<span class="fn">mockResolvedValue</span>(<span class="var">fakeData</span>);`);
-    }
-    lines.push('  });');
-    lines.push('');
-    lines.push('  <span class="fn">it</span>(<span class="str">\'returns formatted user data\'</span>, <span class="kw">async</span> () => {');
-    lines.push('    <span class="kw">const</span> <span class="var">result</span> = <span class="kw">await</span> <span class="fn">getUserData</span>(<span class="num">1</span>);');
-    lines.push('    <span class="fn">expect</span>(<span class="var">result</span>.<span class="var">name</span>).<span class="fn">toBeDefined</span>();');
-    lines.push('  });');
-    lines.push('');
-    lines.push('  <span class="fn">afterEach</span>(() => {');
-    lines.push('    <span class="var">vi</span>.<span class="fn">restoreAllMocks</span>();');
-    lines.push('  });');
-    lines.push('});');
-    return lines.join('\n');
+  function resetMockTests() {
+    mockTests.forEach(tc => {
+      tc.result = null;
+      tc.actual = '';
+      tc.animating = false;
+    });
   }
 </script>
 
@@ -103,190 +159,205 @@
   {#if !advanced}
 
   <div>
-    <h2 class="mb-2 text-2xl font-bold text-slate-800">Try It: Write a Test</h2>
+    <h2 class="mb-2 text-2xl font-bold text-slate-800">Try It: Run Unit Tests</h2>
     <p class="text-slate-600">
-      Below is a function. For each test case, fill in the <strong>expected return value</strong>, then run the tests to see if they pass.
+      Below are three simple functions. Click each test to run it, or use <strong>Run All</strong> to execute them all and watch the results animate in.
     </p>
   </div>
 
-  <div class="rounded-xl border-2 border-green-200 bg-green-50 p-6 space-y-6">
-    <!-- Function selector -->
-    <div class="flex gap-2">
-      <button
-        onclick={() => currentFunction = 'add'}
-        class="rounded-lg px-4 py-1.5 text-sm font-semibold border-2 transition-all {currentFunction === 'add' ? 'bg-green-600 text-white border-green-600' : 'bg-white text-green-700 border-green-300'}"
-      >
-        add(a, b)
-      </button>
-      <button
-        onclick={() => currentFunction = 'capitalize'}
-        class="rounded-lg px-4 py-1.5 text-sm font-semibold border-2 transition-all {currentFunction === 'capitalize' ? 'bg-green-600 text-white border-green-600' : 'bg-white text-green-700 border-green-300'}"
-      >
-        capitalize(str)
-      </button>
-    </div>
-
-    <!-- Function definition -->
-    <div>
-      <h4 class="mb-2 text-sm font-bold text-slate-700">Function Under Test</h4>
-      {#if currentFunction === 'add'}
-        <pre class="code-block"><code>{@html `<span class="kw">function</span> <span class="fn">add</span>(<span class="arg">a</span>, <span class="arg">b</span>) {
+  <!-- Functions panel -->
+  <div class="rounded-xl border-2 border-green-200 bg-green-50 p-5">
+    <h4 class="mb-3 text-sm font-bold uppercase tracking-wider text-green-600">Functions Under Test</h4>
+    <div class="grid gap-3 sm:grid-cols-3">
+      <pre class="code-block"><code>{@html `<span class="kw">function</span> <span class="fn">add</span>(<span class="arg">a</span>, <span class="arg">b</span>) {
   <span class="kw">return</span> <span class="arg">a</span> <span class="op">+</span> <span class="arg">b</span>;
 }`}</code></pre>
-      {:else}
-        <pre class="code-block"><code>{@html `<span class="kw">function</span> <span class="fn">capitalize</span>(<span class="arg">str</span>) {
-  <span class="kw">if</span> (<span class="arg">str</span>.<span class="var">length</span> <span class="op">===</span> <span class="num">0</span>) <span class="kw">return</span> <span class="str">''</span>;
-  <span class="kw">return</span> <span class="arg">str</span>[<span class="num">0</span>].<span class="fn">toUpperCase</span>() <span class="op">+</span> <span class="arg">str</span>.<span class="fn">slice</span>(<span class="num">1</span>);
+      <pre class="code-block"><code>{@html `<span class="kw">function</span> <span class="fn">isEven</span>(<span class="arg">n</span>) {
+  <span class="kw">return</span> <span class="arg">n</span> <span class="op">%</span> <span class="num">2</span> <span class="op">===</span> <span class="num">0</span>;
 }`}</code></pre>
-      {/if}
+      <pre class="code-block"><code>{@html `<span class="kw">function</span> <span class="fn">capitalize</span>(<span class="arg">str</span>) {
+  <span class="kw">if</span> (!<span class="arg">str</span>) <span class="kw">return</span> <span class="str">''</span>;
+  <span class="kw">return</span> <span class="arg">str</span>[<span class="num">0</span>].<span class="fn">toUpperCase</span>()
+    <span class="op">+</span> <span class="arg">str</span>.<span class="fn">slice</span>(<span class="num">1</span>);
+}`}</code></pre>
     </div>
+  </div>
 
-    <!-- Test cases -->
-    <div class="space-y-3">
-      <h4 class="text-sm font-bold text-slate-700">Test Cases</h4>
-      {#each activeTests as test, i}
-        <div class="flex items-center gap-3 rounded-lg border-2 p-3
-          {test.result === 'pass' ? 'border-green-400 bg-green-100' : test.result === 'fail' ? 'border-red-400 bg-red-100' : 'border-green-200 bg-white'}">
-          <div class="flex-1">
-            <p class="text-sm font-semibold text-slate-700">{test.description}</p>
-            <p class="font-mono text-sm text-slate-500">{test.functionCall} =</p>
-          </div>
-          <input
-            type="text"
-            bind:value={test.userAnswer}
-            placeholder="?"
-            disabled={test.result === 'pass'}
-            class="w-24 rounded-lg border-2 border-green-300 bg-white px-3 py-1.5 text-center text-sm font-mono text-slate-800 placeholder-slate-400 focus:border-green-500 focus:outline-none disabled:opacity-50"
-          />
-          <span class="text-xl">
-            {#if test.result === 'pass'}
-              &#10003;
-            {:else if test.result === 'fail'}
-              &#10007;
-            {:else}
-              &#8226;
+  <!-- Progress counter -->
+  <div class="flex items-center justify-between rounded-xl border-2 border-green-200 bg-white px-5 py-3">
+    <span class="text-sm font-bold text-slate-700">Test Results</span>
+    <span class="rounded-full px-4 py-1 text-sm font-bold {passingCount === totalTests && allRun ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600'}">
+      {passingCount} of {totalTests} tests passing
+    </span>
+  </div>
+
+  <!-- Test cases -->
+  <div class="space-y-2">
+    {#each testCases as tc, i}
+      <button
+        onclick={() => runSingleTest(i)}
+        disabled={tc.result !== null}
+        class="flex w-full items-center gap-3 rounded-lg border-2 p-3 text-left transition-all
+          {tc.result === 'pass' ? 'border-green-400 bg-green-50' : tc.result === 'fail' ? 'border-red-400 bg-red-50' : 'border-green-200 bg-white hover:shadow-md active:scale-[0.99]'}
+          {tc.result !== null ? 'cursor-default' : 'cursor-pointer'}
+          {tc.animating ? 'animate-pulse' : ''}"
+      >
+        <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-lg font-bold
+          {tc.result === 'pass' ? 'bg-green-500 text-white' : tc.result === 'fail' ? 'bg-red-500 text-white' : 'bg-slate-200 text-slate-500'}">
+          {#if tc.result === 'pass'}
+            &#10003;
+          {:else if tc.result === 'fail'}
+            &#10007;
+          {:else}
+            &#8226;
+          {/if}
+        </span>
+        <div class="flex-1">
+          <p class="text-sm font-semibold text-slate-700">
+            <span class="text-green-600">{tc.functionName}</span> -- {tc.description}
+          </p>
+          <p class="font-mono text-xs text-slate-500">
+            {tc.functionCall} &#8594; expects <strong>{tc.expected === '' ? '""' : tc.expected}</strong>
+            {#if tc.result !== null}
+              <span class="ml-2 {tc.result === 'pass' ? 'text-green-600' : 'text-red-600'}">got {tc.actual === '' ? '""' : tc.actual}</span>
             {/if}
-          </span>
+          </p>
         </div>
-      {/each}
-    </div>
+      </button>
+    {/each}
+  </div>
 
+  <div class="flex gap-3">
     <button
       onclick={runAllTests}
-      class="rounded-lg bg-green-600 px-6 py-2 text-sm font-semibold text-white hover:bg-green-700 active:scale-95"
+      disabled={allRun}
+      class="rounded-lg bg-green-600 px-6 py-2 text-sm font-semibold text-white hover:bg-green-700 active:scale-95 disabled:opacity-50"
     >
-      Run Tests
+      Run All Tests
     </button>
-
-    {#if allPassed}
-      <div class="rounded-xl border-2 border-green-400 bg-green-100 p-4 text-center">
-        <p class="font-bold text-green-700">All tests pass! Great work.</p>
-      </div>
+    {#if allRun}
+      <button
+        onclick={resetTests}
+        class="rounded-lg border-2 border-green-300 bg-white px-6 py-2 text-sm font-semibold text-green-700 hover:bg-green-50 active:scale-95"
+      >
+        Reset
+      </button>
     {/if}
   </div>
 
+  {#if allRun && passingCount === totalTests}
+    <div class="rounded-xl border-2 border-green-400 bg-green-100 p-4 text-center">
+      <p class="font-bold text-green-700">All {totalTests} tests pass! Great work.</p>
+    </div>
+  {/if}
+
   <div>
-    <button
-      onclick={oncomplete}
-      class="rounded-full bg-green-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-green-700 active:scale-95"
-    >
-      I've written my tests
+    <button onclick={oncomplete} class="rounded-full bg-green-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-green-700 active:scale-95">
+      I've run the tests
     </button>
   </div>
 
   {:else}
 
+  <!-- Advanced mode: Testing with mocks -->
   <div class="space-y-8">
     <div>
-      <h2 class="mb-2 text-2xl font-bold text-slate-800">Try It: Mock It Out</h2>
+      <h2 class="mb-2 text-2xl font-bold text-slate-800">Try It: Testing with Mocks</h2>
       <p class="text-slate-600">
-        The function below calls external services. Pick which dependencies should be <strong>mocked</strong> in a unit test and see the generated test code.
+        These tests use <strong>mock functions</strong> to simulate API calls and database operations. Each test shows the mock setup and the expected behavior. Run them to see how mocking works in practice.
       </p>
     </div>
 
-    <div class="rounded-xl border-2 border-green-200 bg-green-50 p-6 space-y-6">
-      <!-- Function to test -->
-      <div>
-        <h4 class="mb-2 text-sm font-bold text-slate-700">Function Under Test</h4>
-        <pre class="code-block"><code>{@html `<span class="kw">async function</span> <span class="fn">getUserData</span>(<span class="arg">userId</span>) {
-  <span class="var">logger</span>.<span class="fn">info</span>(<span class="str">'Fetching user'</span>, <span class="arg">userId</span>);
-  <span class="kw">const</span> <span class="var">response</span> = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">\`/api/users/\${<span class="arg">userId</span>}\`</span>);
-  <span class="kw">const</span> <span class="var">raw</span> = <span class="kw">await</span> <span class="var">response</span>.<span class="fn">json</span>();
-  <span class="kw">const</span> <span class="var">profile</span> = <span class="kw">await</span> <span class="var">db</span>.<span class="fn">query</span>(<span class="str">'SELECT * FROM profiles WHERE id = ?'</span>, <span class="arg">userId</span>);
-  <span class="kw">return</span> {
-    <span class="var">name</span>: <span class="var">raw</span>.<span class="var">name</span>,
-    <span class="var">score</span>: <span class="var">Math</span>.<span class="fn">round</span>(<span class="var">profile</span>.<span class="var">score</span>),
-    <span class="var">data</span>: <span class="var">JSON</span>.<span class="fn">parse</span>(<span class="var">profile</span>.<span class="var">rawData</span>),
-  };
+    <!-- Function under test -->
+    <div class="rounded-xl border-2 border-green-200 bg-green-50 p-5">
+      <h4 class="mb-3 text-sm font-bold uppercase tracking-wider text-green-600">Function Under Test</h4>
+      <pre class="code-block"><code>{@html `<span class="kw">async function</span> <span class="fn">fetchUser</span>(<span class="arg">id</span>) {
+  <span class="kw">const</span> <span class="var">response</span> = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">\`/api/users/\${<span class="arg">id</span>}\`</span>);
+  <span class="kw">return</span> <span class="var">response</span>.<span class="fn">json</span>();
+}
+
+<span class="kw">async function</span> <span class="fn">saveUser</span>(<span class="arg">user</span>, <span class="arg">db</span>) {
+  <span class="kw">return</span> <span class="arg">db</span>.<span class="fn">save</span>(<span class="arg">user</span>);
 }`}</code></pre>
-      </div>
+    </div>
 
-      <!-- Mock selection -->
-      <div>
-        <h4 class="mb-3 text-sm font-bold text-slate-700">Which dependencies should be mocked?</h4>
-        <div class="space-y-2">
-          {#each mockOptions as option, i}
-            <button
-              onclick={() => toggleMock(i)}
-              class="flex w-full items-center gap-3 rounded-lg border-2 p-3 text-left transition-all
-                {mockSubmitted
-                  ? (option.selected === option.shouldMock ? 'border-green-400 bg-green-100' : 'border-red-400 bg-red-100')
-                  : (option.selected ? 'border-green-500 bg-green-100' : 'border-green-200 bg-white')}
-                {mockSubmitted ? 'cursor-default' : 'hover:shadow-md active:scale-[0.98] cursor-pointer'}"
-            >
-              <span class="flex h-6 w-6 items-center justify-center rounded border-2 text-sm font-bold
-                {option.selected ? 'border-green-500 bg-green-500 text-white' : 'border-green-300 bg-white text-transparent'}">
+    <!-- Progress counter -->
+    <div class="flex items-center justify-between rounded-xl border-2 border-green-200 bg-white px-5 py-3">
+      <span class="text-sm font-bold text-slate-700">Mock Test Results</span>
+      <span class="rounded-full px-4 py-1 text-sm font-bold {mockPassingCount === mockTotalTests && mockAllRun ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600'}">
+        {mockPassingCount} of {mockTotalTests} tests passing
+      </span>
+    </div>
+
+    <!-- Mock test cases -->
+    <div class="space-y-3">
+      {#each mockTests as tc, i}
+        <div class="rounded-xl border-2 p-4 transition-all
+          {tc.result === 'pass' ? 'border-green-400 bg-green-50' : tc.result === 'fail' ? 'border-red-400 bg-red-50' : 'border-green-200 bg-white'}">
+          <div class="mb-2 flex items-center gap-3">
+            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-lg font-bold
+              {tc.result === 'pass' ? 'bg-green-500 text-white' : tc.result === 'fail' ? 'bg-red-500 text-white' : 'bg-slate-200 text-slate-500'}
+              {tc.animating ? 'animate-pulse' : ''}">
+              {#if tc.result === 'pass'}
                 &#10003;
-              </span>
-              <div class="flex-1">
-                <p class="font-semibold text-slate-800">{option.label}</p>
-                <p class="font-mono text-xs text-slate-500">{option.code}</p>
-              </div>
-              {#if mockSubmitted}
-                <span class="text-sm font-semibold {option.shouldMock ? 'text-green-700' : 'text-slate-500'}">
-                  {option.shouldMock ? 'Should mock' : 'No mock needed'}
-                </span>
-              {/if}
-            </button>
-          {/each}
-        </div>
-      </div>
-
-      {#if !mockSubmitted}
-        <button
-          onclick={submitMocks}
-          class="rounded-lg bg-green-600 px-6 py-2 text-sm font-semibold text-white hover:bg-green-700 active:scale-95"
-        >
-          Check Selections
-        </button>
-      {/if}
-
-      {#if mockSubmitted}
-        <div class="space-y-3">
-          <div class="rounded-xl border-2 {mockScore >= 4 ? 'border-green-400 bg-green-100' : 'border-yellow-400 bg-yellow-100'} p-4">
-            <p class="font-bold {mockScore >= 4 ? 'text-green-700' : 'text-yellow-700'}">
-              {mockScore} / {mockOptions.length} correct.
-              {#if mockScore === mockOptions.length}
-                Perfect! You correctly identified all external dependencies.
-              {:else if mockScore >= 4}
-                Almost! Remember: mock external I/O (network, database, logging) but not pure built-in functions.
+              {:else if tc.result === 'fail'}
+                &#10007;
               {:else}
-                Tip: Mock things that do I/O (network calls, database queries, logging). Pure functions like Math.round and JSON.parse are safe to use directly.
+                &#8226;
               {/if}
-            </p>
+            </span>
+            <p class="font-semibold text-slate-700">{tc.description}</p>
           </div>
-          <h4 class="text-sm font-bold text-slate-700">Generated Test Code</h4>
-          <pre class="code-block"><code>{@html generatedMockCode}</code></pre>
+          <div class="mb-2 rounded-lg bg-slate-800 p-3 font-mono text-xs text-slate-300">
+            <div class="text-slate-500">// Mock setup:</div>
+            <div class="text-green-300">{tc.mockSetup}</div>
+            <div class="mt-2 text-slate-500">// Call:</div>
+            <div class="text-green-300">{tc.functionCall}</div>
+          </div>
+          {#if tc.result !== null}
+            <p class="text-sm font-mono {tc.result === 'pass' ? 'text-green-600' : 'text-red-600'}">
+              Result: {tc.actual}
+            </p>
+          {/if}
+          {#if tc.result === null}
+            <button
+              onclick={() => runMockTest(i)}
+              class="mt-1 rounded-lg bg-green-600 px-4 py-1.5 text-xs font-semibold text-white hover:bg-green-700 active:scale-95"
+            >
+              Run Test
+            </button>
+          {/if}
         </div>
+      {/each}
+    </div>
+
+    <div class="flex gap-3">
+      <button
+        onclick={runAllMockTests}
+        disabled={mockAllRun}
+        class="rounded-lg bg-green-600 px-6 py-2 text-sm font-semibold text-white hover:bg-green-700 active:scale-95 disabled:opacity-50"
+      >
+        Run All Tests
+      </button>
+      {#if mockAllRun}
+        <button
+          onclick={resetMockTests}
+          class="rounded-lg border-2 border-green-300 bg-white px-6 py-2 text-sm font-semibold text-green-700 hover:bg-green-50 active:scale-95"
+        >
+          Reset
+        </button>
       {/if}
     </div>
 
+    {#if mockAllRun && mockPassingCount === mockTotalTests}
+      <div class="rounded-xl border-2 border-green-400 bg-green-100 p-4 text-center">
+        <p class="font-bold text-green-700">All mock tests pass! You can see how mocks let you test code that depends on external services without actually calling them.</p>
+      </div>
+    {/if}
+
     <div>
-      <button
-        onclick={oncomplete}
-        class="rounded-full bg-green-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-green-700 active:scale-95"
-      >
-        I've explored mocking
+      <button onclick={oncomplete} class="rounded-full bg-green-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-green-700 active:scale-95">
+        I've run the tests
       </button>
     </div>
   </div>

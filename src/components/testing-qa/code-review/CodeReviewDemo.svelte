@@ -3,236 +3,255 @@
   import { getAdvanced, onAdvancedChange } from '../../../lib/mode';
   let advanced = $state(false);
   onMount(() => { advanced = getAdvanced(); return onAdvancedChange((v) => (advanced = v)); });
-  interface Props { oncomplete?: (score: number) => void; }
+  interface Props { oncomplete?: () => void; }
   let { oncomplete }: Props = $props();
 
-  // === Basic mode: Review This Code ===
-  interface CodeSnippet {
-    title: string;
-    code: string;
-    issues: { line: number; text: string; feedbackOptions: string[]; correctIndex: number; explanation: string }[];
+  interface ReviewIssue {
+    lineIndex: number;
+    label: string;
+    options: string[];
+    correctIndex: number;
+    explanation: string;
   }
 
-  const snippets: CodeSnippet[] = [
+  interface CodeReview {
+    title: string;
+    filename: string;
+    lines: string[];
+    issues: ReviewIssue[];
+  }
+
+  const basicReviews: CodeReview[] = [
     {
-      title: 'Snippet 1: Bad Naming',
-      code: `function p(a, b) {
-  const x = a * b;
-  const y = x * 0.08;
-  return x + y;
-}`,
+      title: 'User Registration',
+      filename: 'src/auth/register.ts',
+      lines: [
+        'function register(e, p) {',
+        '  const user = createUser(e, p);',
+        '  db.save(user);',
+        '  sendEmail(e, "Welcome!");',
+        '  return user;',
+        '}',
+      ],
       issues: [
         {
-          line: 1,
-          text: 'function p(a, b)',
-          feedbackOptions: [
-            'The function name "p" and parameters "a", "b" are unclear — rename to something like calculateTotalWithTax(price, quantity)',
-            'This function should be async',
-            'The parameters need type annotations',
-            'This function has too many lines',
+          lineIndex: 0,
+          label: 'function register(e, p)',
+          options: [
+            'Parameter names "e" and "p" are unclear — should be "email" and "password"',
+            'The function should be a class method',
+            'The function needs a return type of void',
+            'The function has too many lines',
           ],
           correctIndex: 0,
-          explanation: 'Names like "p", "a", "b", "x", "y" tell the reader nothing. Descriptive names like calculateTotalWithTax(price, quantity) make the code self-documenting.',
+          explanation: 'Single-letter parameter names like "e" and "p" tell the reader nothing. Using "email" and "password" makes the code self-documenting.',
         },
-      ],
-    },
-    {
-      title: 'Snippet 2: Missing Error Handling',
-      code: `async function getUser(id) {
-  const response = await fetch("/api/users/" + id);
-  const data = await response.json();
-  return data.name;
-}`,
-      issues: [
         {
-          line: 2,
-          text: 'const response = await fetch(...)',
-          feedbackOptions: [
-            'Should use XMLHttpRequest instead of fetch',
-            'The URL should use template literals for style',
-            'No check for failed responses — if the request fails or returns 404, response.json() or data.name will throw an unhelpful error',
-            'The function should be synchronous',
+          lineIndex: 2,
+          label: 'db.save(user)',
+          options: [
+            'Should use localStorage instead of a database',
+            'No error handling — if the database save fails, the function continues and sends an email for a user that was not actually saved',
+            'The save call should be synchronous',
+            'The user object should be frozen before saving',
+          ],
+          correctIndex: 1,
+          explanation: 'Database operations can fail for many reasons (connection issues, constraint violations). Without error handling, the code sends a welcome email even if the user was never saved.',
+        },
+        {
+          lineIndex: 3,
+          label: 'sendEmail(e, "Welcome!")',
+          options: [
+            'The email subject should be longer',
+            'Should use SMS instead of email',
+            'The hardcoded string "Welcome!" should be a constant or template, and the function uses the unclear parameter name "e" instead of "email"',
+            'The function call has the wrong number of arguments',
           ],
           correctIndex: 2,
-          explanation: 'Network requests can fail for many reasons. Without checking response.ok or wrapping in try/catch, this function will crash with a confusing error when the API is down or the user ID does not exist.',
-        },
-      ],
-    },
-    {
-      title: 'Snippet 3: Duplicated Logic',
-      code: `function formatUserCard(user) {
-  let html = "<div class='card'>";
-  html += "<h2>" + user.firstName + " " + user.lastName + "</h2>";
-  html += "<p>" + user.firstName + " " + user.lastName + " joined on " + user.joinDate + "</p>";
-  html += "<footer>Profile of " + user.firstName + " " + user.lastName + "</footer>";
-  html += "</div>";
-  return html;
-}`,
-      issues: [
-        {
-          line: 3,
-          text: 'user.firstName + " " + user.lastName (repeated 3 times)',
-          feedbackOptions: [
-            'Should use innerHTML instead of string concatenation',
-            'The function is too long and should be split into three functions',
-            'The full name is computed 3 separate times — extract to a variable like const fullName = user.firstName + " " + user.lastName',
-            'This code needs more comments',
-          ],
-          correctIndex: 2,
-          explanation: 'When the same expression is repeated, extract it into a variable. If the name format ever changes (e.g., adding a middle name), you only update one place instead of three. This follows the DRY principle.',
+          explanation: 'Hardcoded strings scattered through code are hard to maintain. Extract them to constants or templates. Also, using the unclear parameter name "e" here makes it easy to confuse with an error object.',
         },
       ],
     },
   ];
 
-  let currentSnippet = $state(0);
+  const advancedReviews: CodeReview[] = [
+    {
+      title: 'Data Processing Pipeline',
+      filename: 'src/pipeline/process.ts',
+      lines: [
+        'async function processOrders(orders: any[]) {',
+        '  const results = [];',
+        '  for (const order of orders) {',
+        '    const price = order.items.reduce((s, i) => s + i.price, 0);',
+        '    const user = await fetchUser(order.userId);',
+        '    await sendNotification(user.email, price);',
+        '    results.push({ orderId: order.id, total: price });',
+        '  }',
+        '  return results;',
+        '}',
+      ],
+      issues: [
+        {
+          lineIndex: 0,
+          label: 'orders: any[]',
+          options: [
+            'The function name is too long',
+            'Using "any" defeats TypeScript\'s type safety — define an Order interface with typed fields',
+            'The function should not be async',
+            'The parameter should be a Set, not an Array',
+          ],
+          correctIndex: 1,
+          explanation: 'Using "any" disables all type checking. If an order is missing fields like "items" or "userId", TypeScript will not catch it at compile time. Define a proper interface.',
+        },
+        {
+          lineIndex: 4,
+          label: 'await fetchUser(order.userId)',
+          options: [
+            'fetchUser should be renamed to getUser',
+            'The variable name "user" conflicts with a global',
+            'Fetching users sequentially inside a loop causes N+1 performance issues — batch the user lookups or use Promise.all',
+            'The await keyword is unnecessary here',
+          ],
+          correctIndex: 2,
+          explanation: 'Each iteration awaits a network call sequentially. For 1000 orders, that is 1000 sequential HTTP requests. Batch the user IDs and fetch them all at once, or use Promise.all to parallelize.',
+        },
+        {
+          lineIndex: 5,
+          label: 'await sendNotification(user.email, price)',
+          options: [
+            'The notification text should be customizable',
+            'If fetchUser returns null (deleted user), accessing user.email throws a runtime error — add a null check',
+            'sendNotification should be synchronous',
+            'The price should be formatted as currency first',
+          ],
+          correctIndex: 1,
+          explanation: 'Users can be deleted between when the order was placed and when this code runs. If fetchUser returns null, the code crashes with "Cannot read property email of null". Always guard against missing data.',
+        },
+        {
+          lineIndex: 3,
+          label: 'order.items.reduce((s, i) => s + i.price, 0)',
+          options: [
+            'reduce is slower than a for loop',
+            'The accumulator should start at 1 instead of 0',
+            'If order.items is undefined or empty, reduce on undefined throws — and the single-letter parameter names "s" and "i" hurt readability',
+            'The price calculation should use multiplication',
+          ],
+          correctIndex: 2,
+          explanation: 'If an order has no "items" field, calling .reduce on undefined crashes. Add a guard like (order.items ?? []). The short names "s" and "i" should be "sum" and "item" for clarity.',
+        },
+      ],
+    },
+  ];
+
+  let reviews = $derived(advanced ? advancedReviews : basicReviews);
+  let currentReview = $state(0);
+  let currentIssue = $state(0);
   let selectedOption = $state<number | null>(null);
   let showExplanation = $state(false);
-  let results = $state<('correct' | 'wrong')[]>([]);
-  let basicDone = $derived(results.length === snippets.length);
+  let correctCount = $state(0);
+  let totalAnswered = $state(0);
+  let done = $state(false);
+
+  let activeIssueLines = $state<Set<number>>(new Set());
+
+  $effect(() => {
+    if (!done && currentReview < reviews.length) {
+      const review = reviews[currentReview];
+      activeIssueLines = new Set(review.issues.map((issue) => issue.lineIndex));
+    }
+  });
 
   function selectOption(index: number) {
     if (selectedOption !== null) return;
     selectedOption = index;
-    const issue = snippets[currentSnippet].issues[0];
-    results = [...results, index === issue.correctIndex ? 'correct' : 'wrong'];
     showExplanation = true;
+    totalAnswered++;
+    const issue = reviews[currentReview].issues[currentIssue];
+    if (index === issue.correctIndex) correctCount++;
   }
 
-  function nextSnippet() {
+  function nextIssue() {
     selectedOption = null;
     showExplanation = false;
-    currentSnippet++;
-  }
-
-  $effect(() => {
-    if (basicDone) {
-      const score = results.filter((r) => r === 'correct').length;
-      oncomplete?.(score);
+    const review = reviews[currentReview];
+    if (currentIssue < review.issues.length - 1) {
+      currentIssue++;
+    } else if (currentReview < reviews.length - 1) {
+      currentReview++;
+      currentIssue = 0;
+    } else {
+      done = true;
     }
-  });
-
-  // === Advanced mode: Write Review Feedback ===
-  interface DiffSection {
-    title: string;
-    filename: string;
-    diff: string;
-    highlightedArea: string;
-    expertFeedback: string;
-    feedbackKeywords: string[];
   }
 
-  const diffSections: DiffSection[] = [
-    {
-      title: 'Change 1: Authentication handler',
-      filename: 'src/auth.ts',
-      diff: `  async function login(email, password) {
-+   const user = await db.findByEmail(email);
-+   if (user.password === password) {
-+     return { token: generateToken(user) };
-+   }
-+   return null;
-  }`,
-      highlightedArea: 'if (user.password === password)',
-      expertFeedback: 'Critical security issue: Passwords should never be compared as plain text. Use bcrypt.compare() or similar to compare against a hashed password. Also, if db.findByEmail returns null (user not found), accessing user.password will throw. Add a null check first.',
-      feedbackKeywords: ['plain text', 'plaintext', 'hash', 'bcrypt', 'security', 'null', 'not found', 'undefined'],
-    },
-    {
-      title: 'Change 2: API endpoint',
-      filename: 'src/routes/items.ts',
-      diff: `  app.get("/api/items", async (req, res) => {
-+   const items = await db.query("SELECT * FROM items WHERE category = '" + req.query.category + "'");
-+   res.json(items);
-  });`,
-      highlightedArea: `"SELECT * FROM items WHERE category = '" + req.query.category + "'"`,
-      expertFeedback: 'SQL injection vulnerability: User input (req.query.category) is concatenated directly into the SQL query. An attacker could pass malicious SQL. Use parameterized queries instead: db.query("SELECT * FROM items WHERE category = $1", [req.query.category]).',
-      feedbackKeywords: ['injection', 'sql injection', 'parameterized', 'prepared', 'sanitize', 'escape', 'security', 'user input'],
-    },
-    {
-      title: 'Change 3: Utility function',
-      filename: 'src/utils.ts',
-      diff: `+ function processData(data) {
-+   const result = [];
-+   for (let i = 0; i < data.length; i++) {
-+     if (data[i].active === true) {
-+       result.push({
-+         id: data[i].id,
-+         name: data[i].name.toUpperCase(),
-+         score: data[i].score * 100,
-+       });
-+     }
-+   }
-+   return result;
-+ }`,
-      highlightedArea: 'The entire function',
-      expertFeedback: 'This imperative loop can be simplified using filter() and map(), which are more readable and declarative. Also, no type annotations or documentation. What does "processData" mean — consider a more descriptive name like getActiveUsersFormatted(). Finally, data[i].name.toUpperCase() will throw if name is null or undefined.',
-      feedbackKeywords: ['filter', 'map', 'name', 'rename', 'descriptive', 'null', 'undefined', 'readable', 'declarative', 'simplify'],
-    },
-  ];
-
-  let advIndex = $state(0);
-  let advFeedback = $state('');
-  let advSubmitted = $state(false);
-  let advMatchedKeywords = $state<string[]>([]);
-  let advResults = $state<number[]>([]);
-  let advDone = $derived(advResults.length === diffSections.length);
-
-  function submitAdvFeedback() {
-    const section = diffSections[advIndex];
-    const lowerFeedback = advFeedback.toLowerCase();
-    const matched = section.feedbackKeywords.filter((kw) => lowerFeedback.includes(kw.toLowerCase()));
-    advMatchedKeywords = matched;
-    advResults = [...advResults, matched.length];
-    advSubmitted = true;
+  function highlightLine(lineIndex: number): string {
+    const review = reviews[currentReview];
+    if (!review) return '';
+    const issue = review.issues[currentIssue];
+    if (issue && lineIndex === issue.lineIndex) return 'bg-yellow-900/40 border-l-2 border-yellow-400';
+    if (activeIssueLines.has(lineIndex)) return 'bg-indigo-900/20';
+    return '';
   }
-
-  function nextAdvSection() {
-    advFeedback = '';
-    advSubmitted = false;
-    advMatchedKeywords = [];
-    advIndex++;
-  }
-
-  $effect(() => {
-    if (advDone) {
-      const totalKeywords = diffSections.reduce((sum, s) => sum + s.feedbackKeywords.length, 0);
-      const totalMatched = advResults.reduce((sum, n) => sum + n, 0);
-      const score = Math.round((totalMatched / totalKeywords) * diffSections.length);
-      oncomplete?.(score);
-    }
-  });
 </script>
 
 <div class="space-y-8">
-  {#if !advanced}
-
   <div>
-    <h2 class="mb-2 text-2xl font-bold text-slate-800">Try It: Review This Code</h2>
+    <h2 class="mb-2 text-2xl font-bold text-slate-800">
+      {#if !advanced}Try It: Review This Code{:else}Try It: Advanced Code Review{/if}
+    </h2>
     <p class="text-slate-600">
-      Each snippet has a problem. Read the code, identify the issue, and pick the best review feedback.
+      {#if !advanced}
+        Read the code below. Click on highlighted issues and identify what is wrong.
+      {:else}
+        Find subtle issues including performance problems, security risks, and race conditions.
+      {/if}
     </p>
   </div>
 
-  <!-- Progress dots -->
-  <div class="flex gap-2">
-    {#each snippets as _, i}
-      <div class="h-3 w-3 rounded-full transition-colors {i < results.length ? (results[i] === 'correct' ? 'bg-green-500' : 'bg-red-500') : i === currentSnippet ? 'bg-indigo-500' : 'bg-slate-200'}"></div>
-    {/each}
+  <!-- Score bar -->
+  <div class="flex items-center gap-4">
+    <div class="text-sm font-semibold text-slate-600">
+      Score: <span class="text-indigo-700">{correctCount}</span> / {totalAnswered}
+    </div>
+    <div class="h-2 flex-1 rounded-full bg-slate-200">
+      <div
+        class="h-2 rounded-full bg-indigo-500 transition-all"
+        style="width: {totalAnswered > 0 ? (correctCount / totalAnswered) * 100 : 0}%"
+      ></div>
+    </div>
   </div>
 
-  {#if !basicDone}
-    {@const snippet = snippets[currentSnippet]}
-    {@const issue = snippet.issues[0]}
-    <div class="space-y-4">
-      <h3 class="text-lg font-bold text-slate-800">{snippet.title}</h3>
+  {#if !done}
+    {@const review = reviews[currentReview]}
+    {@const issue = review.issues[currentIssue]}
 
-      <div class="rounded-xl border-2 border-indigo-200 bg-indigo-50 p-5">
-        <pre class="code-block"><code>{snippet.code}</code></pre>
+    <div class="space-y-4">
+      <div class="flex items-center gap-3">
+        <h3 class="text-lg font-bold text-slate-800">{review.title}</h3>
+        <span class="text-xs font-mono text-slate-500">{review.filename}</span>
       </div>
 
+      <!-- Code display -->
+      <div class="code-block rounded-xl">
+        {#each review.lines as line, i}
+          <div class="flex rounded px-2 py-0.5 {highlightLine(i)}">
+            <span class="mr-4 w-6 shrink-0 select-none text-right text-slate-500">{i + 1}</span>
+            <code class="whitespace-pre">{line}</code>
+          </div>
+        {/each}
+      </div>
+
+      <!-- Current issue -->
+      <div class="rounded-xl border-2 border-yellow-300 bg-yellow-50 p-3">
+        <p class="text-sm text-yellow-800">
+          <strong>Issue {currentIssue + 1} of {review.issues.length}:</strong> Look at <code class="rounded bg-yellow-100 px-1 text-xs">{issue.label}</code>
+        </p>
+      </div>
+
+      <!-- Options -->
       <div class="space-y-2">
-        <p class="font-semibold text-slate-700">What feedback would you give?</p>
-        {#each issue.feedbackOptions as option, i}
+        <p class="font-semibold text-slate-700">What is the problem here?</p>
+        {#each issue.options as option, i}
           <button
             onclick={() => selectOption(i)}
             disabled={selectedOption !== null}
@@ -250,123 +269,42 @@
 
       {#if showExplanation}
         <div class="rounded-xl border-2 border-indigo-200 bg-indigo-50 p-4">
-          <p class="mb-2 text-sm font-semibold text-indigo-700">Model Review Comment:</p>
+          <p class="mb-2 text-sm font-semibold text-indigo-700">Explanation:</p>
           <p class="text-sm text-slate-700">{issue.explanation}</p>
         </div>
         <button
-          onclick={nextSnippet}
+          onclick={nextIssue}
           class="rounded-lg bg-indigo-600 px-6 py-2 font-semibold text-white transition-all hover:bg-indigo-700 active:scale-95"
         >
-          Next
+          {currentIssue < review.issues.length - 1 ? 'Next Issue' : currentReview < reviews.length - 1 ? 'Next Review' : 'See Results'}
         </button>
       {/if}
     </div>
+
   {:else}
-    <div class="rounded-xl border-2 border-green-200 bg-green-50 p-6 text-center">
+    <div class="rounded-xl border-2 border-green-200 bg-green-50 p-6 text-center space-y-4">
       <p class="text-lg font-bold text-green-700">
-        All done! You got {results.filter(r => r === 'correct').length} out of {snippets.length} correct.
+        Review complete! You found {correctCount} out of {totalAnswered} issues correctly.
       </p>
-    </div>
-  {/if}
-
-  {:else}
-
-  <div>
-    <h2 class="mb-2 text-2xl font-bold text-slate-800">Try It: Write Review Feedback</h2>
-    <p class="text-slate-600">
-      Read each PR diff and write your own review comment for the highlighted section. Then compare your feedback against an expert review.
-    </p>
-  </div>
-
-  <!-- Progress dots -->
-  <div class="flex gap-2">
-    {#each diffSections as _, i}
-      <div class="h-3 w-3 rounded-full transition-colors {i < advResults.length ? (advResults[i] > 0 ? 'bg-green-500' : 'bg-red-500') : i === advIndex ? 'bg-indigo-500' : 'bg-slate-200'}"></div>
-    {/each}
-  </div>
-
-  {#if !advDone}
-    {@const section = diffSections[advIndex]}
-    <div class="space-y-4">
-      <h3 class="text-lg font-bold text-slate-800">{section.title}</h3>
-      <p class="text-xs font-mono text-slate-500">{section.filename}</p>
-
-      <div class="rounded-xl border-2 border-indigo-200 bg-indigo-50 p-5">
-        <pre class="code-block diff-block"><code>{section.diff}</code></pre>
-      </div>
-
-      <div class="rounded-xl border border-yellow-300 bg-yellow-50 p-3">
-        <p class="text-sm text-yellow-800"><strong>Review this area:</strong> <code class="rounded bg-yellow-100 px-1 text-xs">{section.highlightedArea}</code></p>
-      </div>
-
-      <div>
-        <label for="adv-feedback" class="mb-2 block font-semibold text-slate-700">Your review comment:</label>
-        <textarea
-          id="adv-feedback"
-          bind:value={advFeedback}
-          disabled={advSubmitted}
-          rows={4}
-          class="w-full rounded-xl border-2 border-indigo-300 bg-white px-4 py-3 text-sm focus:border-indigo-500 focus:outline-none disabled:opacity-60"
-          placeholder="Write your review feedback here..."
-        ></textarea>
-      </div>
-
-      {#if !advSubmitted}
-        <button
-          onclick={submitAdvFeedback}
-          disabled={!advFeedback.trim()}
-          class="rounded-lg bg-indigo-600 px-6 py-2 font-semibold text-white transition-all hover:bg-indigo-700 active:scale-95 disabled:opacity-40"
-        >
-          Submit Review
-        </button>
-      {:else}
-        <div class="space-y-3">
-          <div class="rounded-xl border-2 border-indigo-200 bg-indigo-50 p-4">
-            <p class="mb-2 text-sm font-semibold text-indigo-700">Expert Review:</p>
-            <p class="text-sm text-slate-700">{section.expertFeedback}</p>
-          </div>
-
-          <div class="rounded-xl border p-4 {advMatchedKeywords.length > 0 ? 'border-green-300 bg-green-50' : 'border-yellow-300 bg-yellow-50'}">
-            <p class="text-sm text-slate-700">
-              {#if advMatchedKeywords.length > 0}
-                <strong class="text-green-700">Nice!</strong> Your feedback touched on: {advMatchedKeywords.join(', ')}.
-              {:else}
-                <strong class="text-yellow-700">Keep practicing!</strong> Compare your feedback with the expert review above. Key points to look for include: {section.feedbackKeywords.slice(0, 3).join(', ')}.
-              {/if}
-            </p>
-          </div>
-
-          {#if advIndex < diffSections.length - 1}
-            <button
-              onclick={nextAdvSection}
-              class="rounded-lg bg-indigo-600 px-6 py-2 font-semibold text-white transition-all hover:bg-indigo-700 active:scale-95"
-            >
-              Next Diff
-            </button>
-          {/if}
-        </div>
-      {/if}
-    </div>
-  {:else}
-    <div class="rounded-xl border-2 border-green-200 bg-green-50 p-6 text-center">
-      <p class="text-lg font-bold text-green-700">
-        Review complete! You identified key issues in {advResults.filter(r => r > 0).length} out of {diffSections.length} diffs.
+      <p class="text-sm text-slate-600">
+        {#if correctCount === totalAnswered}
+          Perfect score! You have a keen eye for code issues.
+        {:else if correctCount >= totalAnswered * 0.7}
+          Great job! You caught most of the important issues.
+        {:else}
+          Keep practicing! Code review is a skill that improves with experience.
+        {/if}
       </p>
+      <button
+        onclick={oncomplete}
+        class="rounded-full bg-indigo-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-indigo-700 active:scale-95"
+      >
+        Continue
+      </button>
     </div>
-  {/if}
-
   {/if}
 </div>
 
 <style>
-  .code-block { background-color: #0f172a; border: 1px solid #334155; border-radius: 0.5rem; padding: 1rem 1.25rem; font-size: 0.875rem; line-height: 1.7; overflow-x: auto; color: #e2e8f0; }
-  .code-block :global(.kw)  { color: #c084fc; }
-  .code-block :global(.var) { color: #93c5fd; }
-  .code-block :global(.str) { color: #fcd34d; }
-  .code-block :global(.num) { color: #fcd34d; }
-  .code-block :global(.cmt) { color: #475569; }
-  .code-block :global(.fn)  { color: #93c5fd; }
-  .code-block :global(.op)  { color: #94a3b8; }
-  .code-block :global(.arg) { color: #fdba74; }
-  .diff-block { white-space: pre; }
+  .code-block { background-color: #0f172a; border: 1px solid #334155; border-radius: 0.5rem; padding: 0.75rem 0.5rem; font-size: 0.875rem; line-height: 1.7; overflow-x: auto; color: #e2e8f0; }
 </style>

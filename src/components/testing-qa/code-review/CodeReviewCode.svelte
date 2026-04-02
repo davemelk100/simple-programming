@@ -11,145 +11,96 @@
 <div class="space-y-8">
   <div>
     <h2 class="mb-3 text-2xl font-bold text-slate-800">Code Review in Practice</h2>
-    <p class="text-slate-600">Real examples of PR descriptions, review comments, code diffs with annotations, and a review checklist you can use on any project.</p>
+    <p class="text-slate-600">Real examples of common issues found in code review, with before and after fixes.</p>
   </div>
 
-  <!-- PR Description Template -->
+  <!-- Common Issues -->
   <div class="space-y-4">
-    <h3 class="text-lg font-bold text-slate-800">PR Description Template</h3>
-    <p class="text-sm text-slate-600">A good PR description helps reviewers understand <em>what</em> changed and <em>why</em>. Here is a template used by many teams:</p>
-    <pre class="code-block"><code>{@html `<span class="cmt">## What</span>
-<span class="str">Add email validation to the signup form.</span>
-
-<span class="cmt">## Why</span>
-<span class="str">Users were submitting invalid emails, causing bounced</span>
-<span class="str">welcome messages and failed account activations.</span>
-
-<span class="cmt">## How</span>
-<span class="str">- Added a validateEmail() utility function</span>
-<span class="str">- Integrated it into the form's onSubmit handler</span>
-<span class="str">- Added unit tests for common edge cases</span>
-
-<span class="cmt">## Testing</span>
-<span class="str">- [x] Unit tests pass</span>
-<span class="str">- [x] Manual test: invalid email shows error message</span>
-<span class="str">- [x] Manual test: valid email submits successfully</span>
-
-<span class="cmt">## Screenshots</span>
-<span class="str">(attach before/after if UI changed)</span>`}</code></pre>
+    <h3 class="text-lg font-bold text-slate-800">Spotting Common Issues</h3>
+    <p class="text-sm text-slate-600">Here is a code snippet with several issues a reviewer would flag. The highlighted comments show what to look for:</p>
+    <pre class="code-block"><code>{@html `<span class="kw">function</span> <span class="fn">calc</span>(<span class="arg">d</span>, <span class="arg">t</span>) {             <span class="cmt">// Issue: unclear names</span>
+  <span class="kw">var</span> <span class="var">x</span> <span class="op">=</span> <span class="var">d</span> <span class="op">*</span> <span class="var">t</span>;                  <span class="cmt">// Issue: "var" instead of "const"</span>
+  <span class="kw">var</span> <span class="var">y</span> <span class="op">=</span> <span class="var">x</span> <span class="op">*</span> <span class="num">0.0825</span>;             <span class="cmt">// Issue: magic number</span>
+  <span class="var">console</span>.<span class="fn">log</span>(<span class="var">x</span>);                 <span class="cmt">// Issue: debug log left in</span>
+  <span class="kw">return</span> <span class="var">x</span> <span class="op">+</span> <span class="var">y</span>;
+}`}</code></pre>
   </div>
 
-  <!-- Good vs Bad Comments -->
+  <!-- Before / After: Naming -->
   <div class="space-y-4">
-    <h3 class="text-lg font-bold text-slate-800">Good vs Bad Review Comments</h3>
-    <p class="text-sm text-slate-600">The difference between helpful feedback and unhelpful feedback comes down to being specific and constructive.</p>
+    <h3 class="text-lg font-bold text-slate-800">Before / After: Variable Naming</h3>
+    <p class="text-sm text-slate-600">Good names make code self-documenting. A reviewer should not need to guess what a variable holds.</p>
 
     <div class="grid gap-4 lg:grid-cols-2">
-      <div class="rounded-xl border-2 border-red-200 bg-red-50 p-5">
-        <h4 class="mb-3 font-bold text-red-700">Bad Comments</h4>
-        <div class="space-y-3">
-          <div class="rounded-lg bg-white p-3 text-sm">
-            <p class="mb-1 font-mono text-xs text-slate-400">Line 12:</p>
-            <p class="text-red-700">"This is wrong."</p>
-            <p class="mt-1 text-xs text-slate-500">Problem: Vague. What's wrong? How should it be fixed?</p>
-          </div>
-          <div class="rounded-lg bg-white p-3 text-sm">
-            <p class="mb-1 font-mono text-xs text-slate-400">Line 25:</p>
-            <p class="text-red-700">"Why did you do it like this?"</p>
-            <p class="mt-1 text-xs text-slate-500">Problem: Sounds accusatory. Doesn't suggest an alternative.</p>
-          </div>
-          <div class="rounded-lg bg-white p-3 text-sm">
-            <p class="mb-1 font-mono text-xs text-slate-400">General:</p>
-            <p class="text-red-700">"I would have done this completely differently."</p>
-            <p class="mt-1 text-xs text-slate-500">Problem: Unhelpful without specifics. Dismissive of the author's approach.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="rounded-xl border-2 border-green-200 bg-green-50 p-5">
-        <h4 class="mb-3 font-bold text-green-700">Good Comments</h4>
-        <div class="space-y-3">
-          <div class="rounded-lg bg-white p-3 text-sm">
-            <p class="mb-1 font-mono text-xs text-slate-400">Line 12:</p>
-            <p class="text-green-700">"This will throw if <code class="rounded bg-slate-100 px-1 text-xs">user</code> is null. Consider adding a guard: <code class="rounded bg-slate-100 px-1 text-xs">if (!user) return null;</code>"</p>
-            <p class="mt-1 text-xs text-slate-500">Specific problem + concrete fix suggestion.</p>
-          </div>
-          <div class="rounded-lg bg-white p-3 text-sm">
-            <p class="mb-1 font-mono text-xs text-slate-400">Line 25:</p>
-            <p class="text-green-700">"Nice approach! One thought: <code class="rounded bg-slate-100 px-1 text-xs">filter().map()</code> could replace this loop and might be easier to read."</p>
-            <p class="mt-1 text-xs text-slate-500">Praise + suggestion with reasoning.</p>
-          </div>
-          <div class="rounded-lg bg-white p-3 text-sm">
-            <p class="mb-1 font-mono text-xs text-slate-400">Line 40:</p>
-            <p class="text-green-700">"The name <code class="rounded bg-slate-100 px-1 text-xs">data</code> is pretty generic. Since this holds user profiles, maybe <code class="rounded bg-slate-100 px-1 text-xs">userProfiles</code> would be clearer?"</p>
-            <p class="mt-1 text-xs text-slate-500">Explains the problem and offers a specific alternative.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Code Diff with Annotations -->
-  <div class="space-y-4">
-    <h3 class="text-lg font-bold text-slate-800">Annotated Code Diff</h3>
-    <p class="text-sm text-slate-600">Here is what a real review looks like on a code diff. Green lines are additions, red lines are removals.</p>
-
-    <div class="rounded-xl border-2 border-indigo-200 bg-indigo-50 p-5 space-y-3">
-      <p class="text-xs font-mono text-slate-500">src/utils/validate.ts</p>
-      <pre class="code-block"><code>{@html `<span class="op">  function validateAge(age) {</span>
-<span style="color:#f87171">-   if (age < 0) return false;</span>
-<span style="color:#4ade80">+   if (age < 0 || age > 150) return false;</span>
-<span style="color:#4ade80">+   if (typeof age !== "number") return false;</span>
-<span class="op">    return true;</span>
-<span class="op">  }</span>`}</code></pre>
       <div class="space-y-2">
-        <div class="flex items-start gap-2 rounded-lg bg-white p-3 text-sm">
-          <span class="mt-0.5 shrink-0 rounded bg-green-100 px-1.5 py-0.5 text-xs font-bold text-green-700">+</span>
-          <p class="text-slate-700"><strong>Good:</strong> Adding an upper bound (150) catches unrealistic ages. The type check prevents strings from being treated as valid.</p>
-        </div>
-        <div class="flex items-start gap-2 rounded-lg bg-white p-3 text-sm">
-          <span class="mt-0.5 shrink-0 rounded bg-yellow-100 px-1.5 py-0.5 text-xs font-bold text-yellow-700">?</span>
-          <p class="text-slate-700"><strong>Suggestion:</strong> Consider also checking for <code class="rounded bg-slate-100 px-1 text-xs">NaN</code> and non-integer values: <code class="rounded bg-slate-100 px-1 text-xs">Number.isInteger(age)</code></p>
-        </div>
+        <p class="text-xs font-bold uppercase tracking-wider text-red-600">Before (unclear)</p>
+        <pre class="code-block"><code>{@html `<span class="kw">function</span> <span class="fn">p</span>(<span class="arg">a</span>, <span class="arg">b</span>) {
+  <span class="kw">const</span> <span class="var">c</span> <span class="op">=</span> <span class="var">a</span>.<span class="fn">filter</span>(<span class="arg">x</span> <span class="op">=></span> <span class="var">x</span>.<span class="var">s</span> <span class="op">></span> <span class="var">b</span>);
+  <span class="kw">return</span> <span class="var">c</span>.<span class="fn">map</span>(<span class="arg">x</span> <span class="op">=></span> <span class="var">x</span>.<span class="var">n</span>);
+}`}</code></pre>
+      </div>
+      <div class="space-y-2">
+        <p class="text-xs font-bold uppercase tracking-wider text-green-600">After (clear)</p>
+        <pre class="code-block"><code>{@html `<span class="kw">function</span> <span class="fn">getTopScorerNames</span>(<span class="arg">players</span>, <span class="arg">minScore</span>) {
+  <span class="kw">const</span> <span class="var">topPlayers</span> <span class="op">=</span> <span class="var">players</span>.<span class="fn">filter</span>(
+    <span class="arg">player</span> <span class="op">=></span> <span class="var">player</span>.<span class="var">score</span> <span class="op">></span> <span class="var">minScore</span>
+  );
+  <span class="kw">return</span> <span class="var">topPlayers</span>.<span class="fn">map</span>(<span class="arg">player</span> <span class="op">=></span> <span class="var">player</span>.<span class="var">name</span>);
+}`}</code></pre>
       </div>
     </div>
   </div>
 
-  <!-- Review Checklist -->
+  <!-- Before / After: Error Handling -->
   <div class="space-y-4">
-    <h3 class="text-lg font-bold text-slate-800">Review Checklist</h3>
-    <p class="text-sm text-slate-600">Use this checklist whenever you review someone's code:</p>
-    <div class="rounded-xl border-2 border-indigo-200 bg-indigo-50 p-5">
-      <ul class="space-y-2 text-sm text-slate-600">
-        <li class="flex items-start gap-2">
-          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-indigo-500"></span>
-          <span><strong>Does it work?</strong> Does the code do what the PR description says it does?</span>
-        </li>
-        <li class="flex items-start gap-2">
-          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-indigo-500"></span>
-          <span><strong>Can I understand it?</strong> Could a new team member read this and know what it does?</span>
-        </li>
-        <li class="flex items-start gap-2">
-          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-indigo-500"></span>
-          <span><strong>Edge cases?</strong> What happens with empty input, null, zero, or very large values?</span>
-        </li>
-        <li class="flex items-start gap-2">
-          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-indigo-500"></span>
-          <span><strong>Are there tests?</strong> New behavior should have tests. Modified behavior should update tests.</span>
-        </li>
-        <li class="flex items-start gap-2">
-          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-indigo-500"></span>
-          <span><strong>Any duplication?</strong> Is the same logic repeated? Could it be extracted to a shared function?</span>
-        </li>
-        <li class="flex items-start gap-2">
-          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-indigo-500"></span>
-          <span><strong>Good names?</strong> Are variables, functions, and files named clearly and consistently?</span>
-        </li>
-        <li class="flex items-start gap-2">
-          <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-indigo-500"></span>
-          <span><strong>Error handling?</strong> Are errors caught and reported in a way that helps debugging?</span>
-        </li>
-      </ul>
+    <h3 class="text-lg font-bold text-slate-800">Before / After: Error Handling</h3>
+    <p class="text-sm text-slate-600">Missing error handling is one of the most common review findings. Always consider what happens when things go wrong.</p>
+
+    <div class="grid gap-4 lg:grid-cols-2">
+      <div class="space-y-2">
+        <p class="text-xs font-bold uppercase tracking-wider text-red-600">Before (no error handling)</p>
+        <pre class="code-block"><code>{@html `<span class="kw">async function</span> <span class="fn">getUser</span>(<span class="arg">id</span>) {
+  <span class="kw">const</span> <span class="var">res</span> <span class="op">=</span> <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">\`/api/users/\${id}\`</span>);
+  <span class="kw">const</span> <span class="var">data</span> <span class="op">=</span> <span class="kw">await</span> <span class="var">res</span>.<span class="fn">json</span>();
+  <span class="kw">return</span> <span class="var">data</span>.<span class="var">name</span>;
+}`}</code></pre>
+      </div>
+      <div class="space-y-2">
+        <p class="text-xs font-bold uppercase tracking-wider text-green-600">After (handles errors)</p>
+        <pre class="code-block"><code>{@html `<span class="kw">async function</span> <span class="fn">getUser</span>(<span class="arg">id</span>) {
+  <span class="kw">const</span> <span class="var">res</span> <span class="op">=</span> <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">\`/api/users/\${id}\`</span>);
+  <span class="kw">if</span> (<span class="op">!</span><span class="var">res</span>.<span class="var">ok</span>) {
+    <span class="kw">throw new</span> <span class="fn">Error</span>(<span class="str">\`User \${id} not found\`</span>);
+  }
+  <span class="kw">const</span> <span class="var">data</span> <span class="op">=</span> <span class="kw">await</span> <span class="var">res</span>.<span class="fn">json</span>();
+  <span class="kw">return</span> <span class="var">data</span>.<span class="var">name</span> <span class="op">??</span> <span class="str">"Unknown"</span>;
+}`}</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Before / After: Magic Numbers -->
+  <div class="space-y-4">
+    <h3 class="text-lg font-bold text-slate-800">Before / After: Magic Numbers</h3>
+    <p class="text-sm text-slate-600">Unexplained numbers in code are confusing. Extract them to named constants so future readers understand the intent.</p>
+
+    <div class="grid gap-4 lg:grid-cols-2">
+      <div class="space-y-2">
+        <p class="text-xs font-bold uppercase tracking-wider text-red-600">Before (magic numbers)</p>
+        <pre class="code-block"><code>{@html `<span class="kw">if</span> (<span class="var">password</span>.<span class="var">length</span> <span class="op"><</span> <span class="num">8</span>) <span class="kw">return</span> <span class="kw">false</span>;
+<span class="kw">if</span> (<span class="var">retries</span> <span class="op">></span> <span class="num">3</span>) <span class="fn">lockAccount</span>();
+<span class="kw">if</span> (<span class="var">age</span> <span class="op">>=</span> <span class="num">21</span>) <span class="fn">allowPurchase</span>();`}</code></pre>
+      </div>
+      <div class="space-y-2">
+        <p class="text-xs font-bold uppercase tracking-wider text-green-600">After (named constants)</p>
+        <pre class="code-block"><code>{@html `<span class="kw">const</span> <span class="var">MIN_PASSWORD_LENGTH</span> <span class="op">=</span> <span class="num">8</span>;
+<span class="kw">const</span> <span class="var">MAX_LOGIN_RETRIES</span> <span class="op">=</span> <span class="num">3</span>;
+<span class="kw">const</span> <span class="var">LEGAL_DRINKING_AGE</span> <span class="op">=</span> <span class="num">21</span>;
+
+<span class="kw">if</span> (<span class="var">password</span>.<span class="var">length</span> <span class="op"><</span> <span class="var">MIN_PASSWORD_LENGTH</span>) <span class="kw">return</span> <span class="kw">false</span>;
+<span class="kw">if</span> (<span class="var">retries</span> <span class="op">></span> <span class="var">MAX_LOGIN_RETRIES</span>) <span class="fn">lockAccount</span>();
+<span class="kw">if</span> (<span class="var">age</span> <span class="op">>=</span> <span class="var">LEGAL_DRINKING_AGE</span>) <span class="fn">allowPurchase</span>();`}</code></pre>
+      </div>
     </div>
   </div>
 
@@ -165,178 +116,124 @@
 <div class="space-y-8">
   <div>
     <h2 class="mb-3 text-2xl font-bold text-slate-800">Code Review Tooling (Advanced)</h2>
-    <p class="text-slate-600">Configuration files, automated review bots, and professional review conventions used in production codebases.</p>
+    <p class="text-slate-600">Set up automated code quality tools: ESLint, Prettier, GitHub Actions, pre-commit hooks, and custom lint rules.</p>
   </div>
 
-  <!-- CODEOWNERS Syntax -->
+  <!-- ESLint + Prettier -->
   <div class="space-y-4">
-    <h3 class="text-lg font-bold text-slate-800">GitHub CODEOWNERS Syntax</h3>
-    <p class="text-sm text-slate-600">Place this file at <code class="rounded bg-slate-100 px-1 text-sm text-indigo-700">.github/CODEOWNERS</code> to auto-assign reviewers by file path. The last matching pattern wins.</p>
-    <pre class="code-block"><code>{@html `<span class="cmt"># .github/CODEOWNERS</span>
-<span class="cmt"># Default: engineering team reviews everything</span>
-<span class="str">*</span>                         <span class="var">@acme/engineering</span>
+    <h3 class="text-lg font-bold text-slate-800">Setting Up ESLint + Prettier</h3>
+    <p class="text-sm text-slate-600">ESLint catches code quality issues. Prettier handles formatting. Together they automate what reviewers should never waste time on.</p>
+    <pre class="code-block"><code>{@html `<span class="cmt">// eslint.config.js (flat config, ESLint 9+)</span>
+<span class="kw">import</span> <span class="var">prettier</span> <span class="kw">from</span> <span class="str">"eslint-plugin-prettier"</span>;
 
-<span class="cmt"># Frontend team owns UI code</span>
-<span class="str">/src/components/**</span>        <span class="var">@acme/frontend</span>
-<span class="str">/src/styles/**</span>            <span class="var">@acme/frontend</span>
-
-<span class="cmt"># Security team must approve auth changes</span>
-<span class="str">/src/auth/**</span>              <span class="var">@acme/security</span> <span class="var">@security-lead</span>
-
-<span class="cmt"># DevOps owns infrastructure</span>
-<span class="str">Dockerfile</span>                <span class="var">@acme/devops</span>
-<span class="str">docker-compose*.yml</span>       <span class="var">@acme/devops</span>
-<span class="str">/.github/workflows/**</span>     <span class="var">@acme/devops</span>
-
-<span class="cmt"># Database migrations need DBA review</span>
-<span class="str">/migrations/**</span>            <span class="var">@acme/dba</span>
-<span class="str">*.sql</span>                     <span class="var">@acme/dba</span>`}</code></pre>
-  </div>
-
-  <!-- Danger.js Config -->
-  <div class="space-y-4">
-    <h3 class="text-lg font-bold text-slate-800">Danger.js Configuration</h3>
-    <p class="text-sm text-slate-600">Danger.js runs in CI and posts automated review comments. It enforces conventions without human effort.</p>
-    <pre class="code-block"><code>{@html `<span class="cmt">// dangerfile.ts</span>
-<span class="kw">import</span> { danger, warn, fail, message } <span class="kw">from</span> <span class="str">"danger"</span>;
-
-<span class="cmt">// Warn if PR is too large</span>
-<span class="kw">const</span> <span class="var">bigPRThreshold</span> <span class="op">=</span> <span class="num">500</span>;
-<span class="kw">if</span> (<span class="var">danger</span>.<span class="var">github</span>.<span class="var">pr</span>.<span class="var">additions</span> <span class="op">+</span> <span class="var">danger</span>.<span class="var">github</span>.<span class="var">pr</span>.<span class="var">deletions</span> <span class="op">></span> <span class="var">bigPRThreshold</span>) {
-  <span class="fn">warn</span>(<span class="str">"This PR is quite large. Consider splitting into smaller PRs."</span>);
-}
-
-<span class="cmt">// Require PR description</span>
-<span class="kw">if</span> (<span class="op">!</span><span class="var">danger</span>.<span class="var">github</span>.<span class="var">pr</span>.<span class="var">body</span> <span class="op">||</span> <span class="var">danger</span>.<span class="var">github</span>.<span class="var">pr</span>.<span class="var">body</span>.<span class="var">length</span> <span class="op"><</span> <span class="num">10</span>) {
-  <span class="fn">fail</span>(<span class="str">"Please add a description to your PR."</span>);
-}
-
-<span class="cmt">// Check for test files when source changes</span>
-<span class="kw">const</span> <span class="var">srcChanges</span> <span class="op">=</span> <span class="var">danger</span>.<span class="var">git</span>.<span class="var">modified_files</span>.<span class="fn">filter</span>(<span class="arg">f</span> <span class="op">=></span> <span class="var">f</span>.<span class="fn">startsWith</span>(<span class="str">"src/"</span>));
-<span class="kw">const</span> <span class="var">testChanges</span> <span class="op">=</span> <span class="var">danger</span>.<span class="var">git</span>.<span class="var">modified_files</span>.<span class="fn">filter</span>(<span class="arg">f</span> <span class="op">=></span> <span class="var">f</span>.<span class="fn">includes</span>(<span class="str">".test."</span>));
-<span class="kw">if</span> (<span class="var">srcChanges</span>.<span class="var">length</span> <span class="op">></span> <span class="num">0</span> <span class="op">&&</span> <span class="var">testChanges</span>.<span class="var">length</span> <span class="op">===</span> <span class="num">0</span>) {
-  <span class="fn">warn</span>(<span class="str">"Source files changed but no tests were updated."</span>);
-}
-
-<span class="cmt">// Celebrate first-time contributors</span>
-<span class="kw">if</span> (<span class="var">danger</span>.<span class="var">github</span>.<span class="var">pr</span>.<span class="var">author_association</span> <span class="op">===</span> <span class="str">"FIRST_TIME_CONTRIBUTOR"</span>) {
-  <span class="fn">message</span>(<span class="str">"Welcome! Thanks for your first contribution! 🎉"</span>);
-}`}</code></pre>
-  </div>
-
-  <!-- ESLint Rules -->
-  <div class="space-y-4">
-    <h3 class="text-lg font-bold text-slate-800">ESLint Rule Examples</h3>
-    <p class="text-sm text-slate-600">Linters automate the tedious parts of review. Here are rules that catch common issues:</p>
-    <pre class="code-block"><code>{@html `<span class="cmt">// eslint.config.js (flat config)</span>
 <span class="kw">export default</span> [
   {
+    <span class="var">plugins</span>: { <span class="var">prettier</span> },
     <span class="var">rules</span>: {
-      <span class="cmt">// Prevent unused variables from cluttering code</span>
+      <span class="cmt">// Code quality rules</span>
       <span class="str">"no-unused-vars"</span>: <span class="str">"error"</span>,
-
-      <span class="cmt">// Require === instead of == to avoid type coercion bugs</span>
       <span class="str">"eqeqeq"</span>: [<span class="str">"error"</span>, <span class="str">"always"</span>],
-
-      <span class="cmt">// Disallow console.log in production code</span>
       <span class="str">"no-console"</span>: [<span class="str">"warn"</span>, { <span class="var">allow</span>: [<span class="str">"warn"</span>, <span class="str">"error"</span>] }],
-
-      <span class="cmt">// Enforce consistent return in functions</span>
       <span class="str">"consistent-return"</span>: <span class="str">"error"</span>,
 
-      <span class="cmt">// Limit function complexity</span>
-      <span class="str">"complexity"</span>: [<span class="str">"warn"</span>, <span class="num">10</span>],
-
-      <span class="cmt">// Prevent reassigning function parameters</span>
-      <span class="str">"no-param-reassign"</span>: <span class="str">"error"</span>,
+      <span class="cmt">// Formatting via Prettier</span>
+      <span class="str">"prettier/prettier"</span>: <span class="str">"error"</span>,
     },
   },
 ];`}</code></pre>
+    <pre class="code-block"><code>{@html `<span class="cmt">// .prettierrc</span>
+{
+  <span class="str">"semi"</span>: <span class="kw">true</span>,
+  <span class="str">"singleQuote"</span>: <span class="kw">true</span>,
+  <span class="str">"tabWidth"</span>: <span class="num">2</span>,
+  <span class="str">"trailingComma"</span>: <span class="str">"all"</span>,
+  <span class="str">"printWidth"</span>: <span class="num">100</span>
+}`}</code></pre>
   </div>
 
-  <!-- PR Template -->
+  <!-- GitHub Actions -->
   <div class="space-y-4">
-    <h3 class="text-lg font-bold text-slate-800">PR Templates in .github/</h3>
-    <p class="text-sm text-slate-600">Place a template at <code class="rounded bg-slate-100 px-1 text-sm text-indigo-700">.github/pull_request_template.md</code> and it auto-fills every new PR:</p>
-    <pre class="code-block"><code>{@html `<span class="cmt">## What does this PR do?</span>
-<span class="var">&lt;!-- Describe the change in 1-2 sentences --&gt;</span>
-
-<span class="cmt">## Why is this change needed?</span>
-<span class="var">&lt;!-- Link to the issue or explain the motivation --&gt;</span>
-
-<span class="cmt">## How was this tested?</span>
-<span class="str">- [ ] Unit tests added/updated</span>
-<span class="str">- [ ] Manual testing performed</span>
-<span class="str">- [ ] E2E tests pass</span>
-
-<span class="cmt">## Checklist</span>
-<span class="str">- [ ] Code follows project style guidelines</span>
-<span class="str">- [ ] Self-review completed</span>
-<span class="str">- [ ] Documentation updated (if needed)</span>
-<span class="str">- [ ] No new warnings introduced</span>
-
-<span class="cmt">## Screenshots (if UI change)</span>
-<span class="var">&lt;!-- Before/after screenshots --&gt;</span>`}</code></pre>
-  </div>
-
-  <!-- Conventional Comments -->
-  <div class="space-y-4">
-    <h3 class="text-lg font-bold text-slate-800">Conventional Comments Format</h3>
-    <p class="text-sm text-slate-600">
-      Teams use prefixed labels so the author instantly knows the severity and intent of each comment. This avoids ambiguity about whether a comment is a blocking issue or just a thought.
-    </p>
-    <div class="rounded-xl border-2 border-indigo-200 bg-indigo-50 p-5">
-      <div class="space-y-3 text-sm">
-        <div class="flex items-start gap-3">
-          <code class="shrink-0 rounded bg-red-100 px-2 py-0.5 text-xs font-bold text-red-700">issue:</code>
-          <span class="text-slate-600">A problem that must be fixed before merging. <em>"issue: This query is vulnerable to SQL injection."</em></span>
-        </div>
-        <div class="flex items-start gap-3">
-          <code class="shrink-0 rounded bg-yellow-100 px-2 py-0.5 text-xs font-bold text-yellow-700">suggestion:</code>
-          <span class="text-slate-600">A non-blocking improvement idea. <em>"suggestion: Using a Map here would be O(1) lookup instead of O(n)."</em></span>
-        </div>
-        <div class="flex items-start gap-3">
-          <code class="shrink-0 rounded bg-blue-100 px-2 py-0.5 text-xs font-bold text-blue-700">question:</code>
-          <span class="text-slate-600">A clarification request. <em>"question: Is this timeout value based on a specific requirement?"</em></span>
-        </div>
-        <div class="flex items-start gap-3">
-          <code class="shrink-0 rounded bg-slate-200 px-2 py-0.5 text-xs font-bold text-slate-700">nitpick:</code>
-          <span class="text-slate-600">A trivial style preference, not blocking. <em>"nitpick: I'd name this <code class="rounded bg-slate-100 px-1 text-xs">isActive</code> instead of <code class="rounded bg-slate-100 px-1 text-xs">active</code>."</em></span>
-        </div>
-        <div class="flex items-start gap-3">
-          <code class="shrink-0 rounded bg-green-100 px-2 py-0.5 text-xs font-bold text-green-700">praise:</code>
-          <span class="text-slate-600">Positive feedback. <em>"praise: Really clean error handling here. Great use of Result types."</em></span>
-        </div>
-        <div class="flex items-start gap-3">
-          <code class="shrink-0 rounded bg-purple-100 px-2 py-0.5 text-xs font-bold text-purple-700">thought:</code>
-          <span class="text-slate-600">An observation, not actionable. <em>"thought: We might want to extract this into a shared utility someday."</em></span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Automated Review Bot Setup -->
-  <div class="space-y-4">
-    <h3 class="text-lg font-bold text-slate-800">Automated Review Bot (GitHub Actions)</h3>
-    <p class="text-sm text-slate-600">A CI workflow that runs linting and type checking on every PR, posting results as a status check:</p>
+    <h3 class="text-lg font-bold text-slate-800">GitHub Actions for Automated Review</h3>
+    <p class="text-sm text-slate-600">Run lint, type checks, and tests on every pull request. Combined with branch protection, no code merges without passing:</p>
     <pre class="code-block"><code>{@html `<span class="cmt"># .github/workflows/review.yml</span>
 <span class="var">name</span>: <span class="str">Code Review Checks</span>
 <span class="var">on</span>: [<span class="str">pull_request</span>]
 
 <span class="var">jobs</span>:
-  <span class="var">lint-and-check</span>:
+  <span class="var">lint-and-test</span>:
     <span class="var">runs-on</span>: <span class="str">ubuntu-latest</span>
     <span class="var">steps</span>:
       - <span class="var">uses</span>: <span class="str">actions/checkout@v4</span>
       - <span class="var">uses</span>: <span class="str">actions/setup-node@v4</span>
         <span class="var">with</span>:
           <span class="var">node-version</span>: <span class="num">20</span>
+          <span class="var">cache</span>: <span class="str">npm</span>
 
       - <span class="var">run</span>: <span class="str">npm ci</span>
-      - <span class="var">run</span>: <span class="str">npx eslint . --max-warnings 0</span>
-      - <span class="var">run</span>: <span class="str">npx tsc --noEmit</span>
-      - <span class="var">run</span>: <span class="str">npm test -- --coverage</span>`}</code></pre>
-    <p class="text-sm text-slate-500">Combined with branch protection rules requiring this workflow to pass, no code can be merged without passing lint, type, and test checks.</p>
+      - <span class="var">name</span>: <span class="str">Lint</span>
+        <span class="var">run</span>: <span class="str">npx eslint . --max-warnings 0</span>
+      - <span class="var">name</span>: <span class="str">Type Check</span>
+        <span class="var">run</span>: <span class="str">npx tsc --noEmit</span>
+      - <span class="var">name</span>: <span class="str">Test</span>
+        <span class="var">run</span>: <span class="str">npm test -- --coverage</span>`}</code></pre>
+  </div>
+
+  <!-- Pre-commit Hooks -->
+  <div class="space-y-4">
+    <h3 class="text-lg font-bold text-slate-800">Pre-commit Hooks with Husky</h3>
+    <p class="text-sm text-slate-600">Catch issues before they even reach the PR. Husky runs scripts on <code class="rounded bg-slate-100 px-1 text-sm text-indigo-700">git commit</code> so problems are fixed locally:</p>
+    <pre class="code-block"><code>{@html `<span class="cmt"># Install husky + lint-staged</span>
+<span class="var">npm</span> <span class="fn">install</span> <span class="op">--save-dev</span> <span class="str">husky</span> <span class="str">lint-staged</span>
+<span class="var">npx</span> <span class="fn">husky</span> <span class="str">init</span>`}</code></pre>
+    <pre class="code-block"><code>{@html `<span class="cmt">// package.json</span>
+{
+  <span class="str">"lint-staged"</span>: {
+    <span class="str">"*.{ts,tsx,js,jsx}"</span>: [
+      <span class="str">"eslint --fix"</span>,
+      <span class="str">"prettier --write"</span>
+    ],
+    <span class="str">"*.{css,scss}"</span>: [
+      <span class="str">"prettier --write"</span>
+    ]
+  }
+}`}</code></pre>
+    <pre class="code-block"><code>{@html `<span class="cmt"># .husky/pre-commit</span>
+<span class="var">npx</span> <span class="fn">lint-staged</span>`}</code></pre>
+    <p class="text-sm text-slate-500">Now every commit automatically formats and lints only the files you changed. Reviewers never see formatting issues.</p>
+  </div>
+
+  <!-- Custom Lint Rules -->
+  <div class="space-y-4">
+    <h3 class="text-lg font-bold text-slate-800">Custom Lint Rules</h3>
+    <p class="text-sm text-slate-600">When your team has project-specific conventions, write a custom ESLint rule to enforce them automatically:</p>
+    <pre class="code-block"><code>{@html `<span class="cmt">// eslint-rules/no-direct-db-access.js</span>
+<span class="kw">export default</span> {
+  <span class="var">meta</span>: {
+    <span class="var">type</span>: <span class="str">"problem"</span>,
+    <span class="var">docs</span>: {
+      <span class="var">description</span>: <span class="str">"Disallow direct database calls outside the data layer"</span>,
+    },
+    <span class="var">messages</span>: {
+      <span class="var">noDirectDb</span>: <span class="str">"Use the repository pattern. Import from 'src/data/' instead of calling db directly."</span>,
+    },
+  },
+  <span class="fn">create</span>(<span class="arg">context</span>) {
+    <span class="kw">return</span> {
+      <span class="fn">CallExpression</span>(<span class="arg">node</span>) {
+        <span class="kw">const</span> <span class="var">filePath</span> <span class="op">=</span> <span class="var">context</span>.<span class="fn">getFilename</span>();
+        <span class="kw">if</span> (<span class="var">filePath</span>.<span class="fn">includes</span>(<span class="str">"/data/"</span>)) <span class="kw">return</span>;
+
+        <span class="kw">if</span> (
+          <span class="var">node</span>.<span class="var">callee</span>.<span class="var">type</span> <span class="op">===</span> <span class="str">"MemberExpression"</span> <span class="op">&&</span>
+          <span class="var">node</span>.<span class="var">callee</span>.<span class="var">object</span>.<span class="var">name</span> <span class="op">===</span> <span class="str">"db"</span>
+        ) {
+          <span class="var">context</span>.<span class="fn">report</span>({ <span class="var">node</span>, <span class="var">messageId</span>: <span class="str">"noDirectDb"</span> });
+        }
+      },
+    };
+  },
+};`}</code></pre>
+    <p class="text-sm text-slate-500">Custom rules let you codify team knowledge so it is enforced automatically, even for new developers who have not read all the docs.</p>
   </div>
 
   <div>

@@ -7,32 +7,43 @@
   let { oncomplete }: Props = $props();
 </script>
 
-{#if !advanced}
 <div class="space-y-8">
+  {#if !advanced}
+
   <div>
-    <h2 class="mb-3 text-2xl font-bold text-slate-800">E2E Testing in Code</h2>
-    <p class="text-slate-600">Here is how real E2E tests look using <strong>Playwright</strong>. Each test launches a browser, interacts with your app, and verifies the result.</p>
+    <h2 class="mb-3 text-2xl font-bold text-slate-800">Code: Playwright Test Examples</h2>
+    <p class="text-slate-600">Real E2E tests using <strong>Playwright</strong>. Each test launches a browser, interacts with your app, and verifies the result.</p>
   </div>
 
-  <div class="space-y-4">
-    <h3 class="text-lg font-bold text-slate-800">Basic Navigation &amp; Assertions</h3>
+  <!-- Navigation and clicking -->
+  <div class="space-y-2">
+    <h3 class="text-lg font-bold text-slate-800">Navigation and Clicking</h3>
+    <p class="text-sm text-slate-600">Navigate to pages, click links and buttons, and verify the URL changes.</p>
     <pre class="code-block"><code>{@html `<span class="kw">import</span> { <span class="var">test</span>, <span class="var">expect</span> } <span class="kw">from</span> <span class="str">'@playwright/test'</span>;
 
-<span class="fn">test</span>(<span class="str">'homepage has the correct title'</span>, <span class="kw">async</span> ({ <span class="arg">page</span> }) <span class="op">=></span> {
-  <span class="cmt">// Navigate to the homepage</span>
+<span class="fn">test</span>(<span class="str">'navigate to about page'</span>, <span class="kw">async</span> ({ <span class="arg">page</span> }) <span class="op">=></span> {
+  <span class="cmt">// Go to the homepage</span>
   <span class="kw">await</span> <span class="var">page</span>.<span class="fn">goto</span>(<span class="str">'/'</span>);
 
-  <span class="cmt">// Check the page title</span>
-  <span class="kw">await</span> <span class="fn">expect</span>(<span class="var">page</span>).<span class="fn">toHaveTitle</span>(<span class="str">'My App'</span>);
+  <span class="cmt">// Click the "About" link in the navigation</span>
+  <span class="kw">await</span> <span class="var">page</span>.<span class="fn">click</span>(<span class="str">'a[href="/about"]'</span>);
 
-  <span class="cmt">// Check that a heading is visible</span>
-  <span class="kw">await</span> <span class="fn">expect</span>(<span class="var">page</span>.<span class="fn">getByRole</span>(<span class="str">'heading'</span>, { <span class="var">name</span>: <span class="str">'Welcome'</span> })).<span class="fn">toBeVisible</span>();
+  <span class="cmt">// Verify we landed on the about page</span>
+  <span class="kw">await</span> <span class="fn">expect</span>(<span class="var">page</span>).<span class="fn">toHaveURL</span>(<span class="str">'/about'</span>);
+  <span class="kw">await</span> <span class="fn">expect</span>(<span class="var">page</span>).<span class="fn">toHaveTitle</span>(<span class="str">'About Us'</span>);
+
+  <span class="cmt">// Verify content is visible</span>
+  <span class="kw">await</span> <span class="fn">expect</span>(
+    <span class="var">page</span>.<span class="fn">getByRole</span>(<span class="str">'heading'</span>, { <span class="var">name</span>: <span class="str">'About Us'</span> })
+  ).<span class="fn">toBeVisible</span>();
 });`}</code></pre>
   </div>
 
-  <div class="space-y-4">
-    <h3 class="text-lg font-bold text-slate-800">Clicking &amp; Filling Forms</h3>
-    <pre class="code-block"><code>{@html `<span class="fn">test</span>(<span class="str">'user can fill and submit a form'</span>, <span class="kw">async</span> ({ <span class="arg">page</span> }) <span class="op">=></span> {
+  <!-- Form filling and submission -->
+  <div class="space-y-2">
+    <h3 class="text-lg font-bold text-slate-800">Form Filling and Submission</h3>
+    <p class="text-sm text-slate-600">Fill in form fields, submit the form, and verify the result.</p>
+    <pre class="code-block"><code>{@html `<span class="fn">test</span>(<span class="str">'submit a contact form'</span>, <span class="kw">async</span> ({ <span class="arg">page</span> }) <span class="op">=></span> {
   <span class="kw">await</span> <span class="var">page</span>.<span class="fn">goto</span>(<span class="str">'/contact'</span>);
 
   <span class="cmt">// Fill in form fields</span>
@@ -40,46 +51,38 @@
   <span class="kw">await</span> <span class="var">page</span>.<span class="fn">fill</span>(<span class="str">'input[name="email"]'</span>, <span class="str">'alice@example.com'</span>);
   <span class="kw">await</span> <span class="var">page</span>.<span class="fn">fill</span>(<span class="str">'textarea[name="message"]'</span>, <span class="str">'Hello!'</span>);
 
-  <span class="cmt">// Click the submit button</span>
+  <span class="cmt">// Submit the form</span>
   <span class="kw">await</span> <span class="var">page</span>.<span class="fn">click</span>(<span class="str">'button[type="submit"]'</span>);
 
-  <span class="cmt">// Verify success message appears</span>
-  <span class="kw">await</span> <span class="fn">expect</span>(<span class="var">page</span>.<span class="fn">getByText</span>(<span class="str">'Message sent!'</span>)).<span class="fn">toBeVisible</span>();
+  <span class="cmt">// Verify success message</span>
+  <span class="kw">await</span> <span class="fn">expect</span>(
+    <span class="var">page</span>.<span class="fn">getByText</span>(<span class="str">'Message sent!'</span>)
+  ).<span class="fn">toBeVisible</span>();
 });`}</code></pre>
   </div>
 
-  <div class="space-y-4">
-    <h3 class="text-lg font-bold text-slate-800">Login Flow Test</h3>
-    <pre class="code-block"><code>{@html `<span class="fn">test</span>(<span class="str">'user can log in and see dashboard'</span>, <span class="kw">async</span> ({ <span class="arg">page</span> }) <span class="op">=></span> {
-  <span class="cmt">// Go to login page</span>
-  <span class="kw">await</span> <span class="var">page</span>.<span class="fn">goto</span>(<span class="str">'/login'</span>);
+  <!-- Assertions on page content -->
+  <div class="space-y-2">
+    <h3 class="text-lg font-bold text-slate-800">Assertions on Page Content</h3>
+    <p class="text-sm text-slate-600">Check that text, elements, and page state are what you expect.</p>
+    <pre class="code-block"><code>{@html `<span class="fn">test</span>(<span class="str">'dashboard shows user data'</span>, <span class="kw">async</span> ({ <span class="arg">page</span> }) <span class="op">=></span> {
+  <span class="kw">await</span> <span class="var">page</span>.<span class="fn">goto</span>(<span class="str">'/dashboard'</span>);
 
-  <span class="cmt">// Enter credentials</span>
-  <span class="kw">await</span> <span class="var">page</span>.<span class="fn">fill</span>(<span class="str">'[data-testid="email"]'</span>, <span class="str">'user@example.com'</span>);
-  <span class="kw">await</span> <span class="var">page</span>.<span class="fn">fill</span>(<span class="str">'[data-testid="password"]'</span>, <span class="str">'secret123'</span>);
+  <span class="cmt">// Check text content</span>
+  <span class="kw">await</span> <span class="fn">expect</span>(<span class="var">page</span>.<span class="fn">getByText</span>(<span class="str">'Welcome back'</span>)).<span class="fn">toBeVisible</span>();
 
-  <span class="cmt">// Submit the form</span>
-  <span class="kw">await</span> <span class="var">page</span>.<span class="fn">click</span>(<span class="str">'[data-testid="login-button"]'</span>);
+  <span class="cmt">// Check an element has specific text</span>
+  <span class="kw">const</span> <span class="var">stats</span> <span class="op">=</span> <span class="var">page</span>.<span class="fn">locator</span>(<span class="str">'[data-testid="stats"]'</span>);
+  <span class="kw">await</span> <span class="fn">expect</span>(<span class="var">stats</span>).<span class="fn">toContainText</span>(<span class="str">'3 projects'</span>);
 
-  <span class="cmt">// Verify we're redirected to the dashboard</span>
-  <span class="kw">await</span> <span class="fn">expect</span>(<span class="var">page</span>).<span class="fn">toHaveURL</span>(<span class="str">'/dashboard'</span>);
+  <span class="cmt">// Check element count</span>
+  <span class="kw">const</span> <span class="var">cards</span> <span class="op">=</span> <span class="var">page</span>.<span class="fn">locator</span>(<span class="str">'.project-card'</span>);
+  <span class="kw">await</span> <span class="fn">expect</span>(<span class="var">cards</span>).<span class="fn">toHaveCount</span>(<span class="num">3</span>);
 
-  <span class="cmt">// Verify the user's name appears</span>
-  <span class="kw">await</span> <span class="fn">expect</span>(<span class="var">page</span>.<span class="fn">getByText</span>(<span class="str">'Welcome, Alice'</span>)).<span class="fn">toBeVisible</span>();
-});`}</code></pre>
-  </div>
-
-  <div class="space-y-4">
-    <h3 class="text-lg font-bold text-slate-800">Taking Screenshots</h3>
-    <pre class="code-block"><code>{@html `<span class="fn">test</span>(<span class="str">'capture the about page'</span>, <span class="kw">async</span> ({ <span class="arg">page</span> }) <span class="op">=></span> {
-  <span class="kw">await</span> <span class="var">page</span>.<span class="fn">goto</span>(<span class="str">'/about'</span>);
-
-  <span class="cmt">// Save a full-page screenshot</span>
-  <span class="kw">await</span> <span class="var">page</span>.<span class="fn">screenshot</span>({ <span class="var">path</span>: <span class="str">'about.png'</span>, <span class="var">fullPage</span>: <span class="kw">true</span> });
-
-  <span class="cmt">// Screenshot a specific element</span>
-  <span class="kw">const</span> <span class="var">hero</span> <span class="op">=</span> <span class="var">page</span>.<span class="fn">locator</span>(<span class="str">'.hero-section'</span>);
-  <span class="kw">await</span> <span class="var">hero</span>.<span class="fn">screenshot</span>({ <span class="var">path</span>: <span class="str">'hero.png'</span> });
+  <span class="cmt">// Check that an element is hidden</span>
+  <span class="kw">await</span> <span class="fn">expect</span>(
+    <span class="var">page</span>.<span class="fn">locator</span>(<span class="str">'.error-banner'</span>)
+  ).<span class="fn">toBeHidden</span>();
 });`}</code></pre>
   </div>
 
@@ -88,47 +91,45 @@
     <ul class="space-y-2 text-slate-600">
       <li class="flex items-start gap-2">
         <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-purple-500"></span>
-        <span><code class="rounded bg-slate-100 px-1 text-sm text-purple-700">page.goto(url)</code> — Navigate to a URL</span>
+        <span><code class="rounded bg-slate-100 px-1 text-sm text-purple-700">page.goto(url)</code> -- Navigate to a URL</span>
       </li>
       <li class="flex items-start gap-2">
         <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-purple-500"></span>
-        <span><code class="rounded bg-slate-100 px-1 text-sm text-purple-700">page.click(selector)</code> — Click an element</span>
+        <span><code class="rounded bg-slate-100 px-1 text-sm text-purple-700">page.click(selector)</code> -- Click an element</span>
       </li>
       <li class="flex items-start gap-2">
         <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-purple-500"></span>
-        <span><code class="rounded bg-slate-100 px-1 text-sm text-purple-700">page.fill(selector, value)</code> — Type into an input</span>
+        <span><code class="rounded bg-slate-100 px-1 text-sm text-purple-700">page.fill(selector, value)</code> -- Type into an input</span>
       </li>
       <li class="flex items-start gap-2">
         <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-purple-500"></span>
-        <span><code class="rounded bg-slate-100 px-1 text-sm text-purple-700">expect(page).toHaveURL(url)</code> — Assert the current URL</span>
-      </li>
-      <li class="flex items-start gap-2">
-        <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-purple-500"></span>
-        <span><code class="rounded bg-slate-100 px-1 text-sm text-purple-700">expect(locator).toBeVisible()</code> — Assert an element is visible</span>
+        <span><code class="rounded bg-slate-100 px-1 text-sm text-purple-700">expect(locator).toBeVisible()</code> -- Assert an element is visible</span>
       </li>
     </ul>
   </div>
 
   <div>
-    <button onclick={oncomplete} class="rounded-full bg-purple-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-purple-700 active:scale-95">
-      Got it
+    <button
+      onclick={oncomplete}
+      class="rounded-full bg-purple-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-purple-700 active:scale-95"
+    >
+      I've studied the code examples
     </button>
   </div>
-</div>
 
-{:else}
+  {:else}
 
-<div class="space-y-8">
-  <div>
-    <h2 class="mb-3 text-2xl font-bold text-slate-800">E2E Testing Patterns (Advanced)</h2>
-    <p class="text-slate-600">Professional E2E patterns used in production codebases.</p>
-  </div>
+  <div class="space-y-8">
+    <div>
+      <h2 class="mb-3 text-2xl font-bold text-slate-800">Code: Advanced E2E Patterns</h2>
+      <p class="text-slate-600">Professional E2E patterns used in production codebases.</p>
+    </div>
 
-  <!-- Page Object Model -->
-  <div class="space-y-4">
-    <h3 class="text-lg font-bold text-slate-800">Page Object Model</h3>
-    <p class="text-sm text-slate-600">Encapsulate page interactions into reusable classes. When the UI changes, you update one place instead of dozens of tests.</p>
-    <pre class="code-block"><code>{@html `<span class="cmt">// page-objects/LoginPage.ts</span>
+    <!-- Page Object Model -->
+    <div class="space-y-2">
+      <h3 class="text-lg font-bold text-slate-800">Page Object Model Implementation</h3>
+      <p class="text-sm text-slate-600">Encapsulate page interactions into reusable classes. When the UI changes, you update one place instead of every test.</p>
+      <pre class="code-block"><code>{@html `<span class="cmt">// page-objects/LoginPage.ts</span>
 <span class="kw">import</span> { <span class="var">type Page</span>, <span class="var">type Locator</span> } <span class="kw">from</span> <span class="str">'@playwright/test'</span>;
 
 <span class="kw">export class</span> <span class="fn">LoginPage</span> {
@@ -153,55 +154,20 @@
   }
 }
 
-<span class="cmt">// In a test — clean and readable</span>
+<span class="cmt">// In your test -- clean and readable</span>
 <span class="fn">test</span>(<span class="str">'login works'</span>, <span class="kw">async</span> ({ <span class="arg">page</span> }) <span class="op">=></span> {
   <span class="kw">const</span> <span class="var">loginPage</span> <span class="op">=</span> <span class="kw">new</span> <span class="fn">LoginPage</span>(<span class="var">page</span>);
   <span class="kw">await</span> <span class="var">loginPage</span>.<span class="fn">goto</span>();
   <span class="kw">await</span> <span class="var">loginPage</span>.<span class="fn">login</span>(<span class="str">'alice@test.com'</span>, <span class="str">'secret'</span>);
   <span class="kw">await</span> <span class="fn">expect</span>(<span class="var">page</span>).<span class="fn">toHaveURL</span>(<span class="str">'/dashboard'</span>);
 });`}</code></pre>
-  </div>
+    </div>
 
-  <!-- Visual Comparison -->
-  <div class="space-y-4">
-    <h3 class="text-lg font-bold text-slate-800">Visual Comparison</h3>
-    <p class="text-sm text-slate-600">Catch pixel-level regressions by comparing screenshots against baselines.</p>
-    <pre class="code-block"><code>{@html `<span class="fn">test</span>(<span class="str">'homepage matches visual snapshot'</span>, <span class="kw">async</span> ({ <span class="arg">page</span> }) <span class="op">=></span> {
-  <span class="kw">await</span> <span class="var">page</span>.<span class="fn">goto</span>(<span class="str">'/'</span>);
-
-  <span class="cmt">// Compare full page against baseline</span>
-  <span class="kw">await</span> <span class="fn">expect</span>(<span class="var">page</span>).<span class="fn">toHaveScreenshot</span>(<span class="str">'homepage.png'</span>, {
-    <span class="var">maxDiffPixelRatio</span>: <span class="num">0.01</span>,  <span class="cmt">// Allow 1% pixel diff</span>
-  });
-
-  <span class="cmt">// Compare a specific component</span>
-  <span class="kw">const</span> <span class="var">nav</span> <span class="op">=</span> <span class="var">page</span>.<span class="fn">locator</span>(<span class="str">'nav'</span>);
-  <span class="kw">await</span> <span class="fn">expect</span>(<span class="var">nav</span>).<span class="fn">toHaveScreenshot</span>(<span class="str">'navbar.png'</span>);
-});`}</code></pre>
-  </div>
-
-  <!-- Accessibility Audit -->
-  <div class="space-y-4">
-    <h3 class="text-lg font-bold text-slate-800">Accessibility Audit</h3>
-    <p class="text-sm text-slate-600">Automatically check every page for WCAG violations using axe-core.</p>
-    <pre class="code-block"><code>{@html `<span class="kw">import</span> <span class="var">AxeBuilder</span> <span class="kw">from</span> <span class="str">'@axe-core/playwright'</span>;
-
-<span class="fn">test</span>(<span class="str">'page has no accessibility violations'</span>, <span class="kw">async</span> ({ <span class="arg">page</span> }) <span class="op">=></span> {
-  <span class="kw">await</span> <span class="var">page</span>.<span class="fn">goto</span>(<span class="str">'/signup'</span>);
-
-  <span class="kw">const</span> <span class="var">results</span> <span class="op">=</span> <span class="kw">await new</span> <span class="fn">AxeBuilder</span>({ <span class="var">page</span> })
-    .<span class="fn">withTags</span>([<span class="str">'wcag2a'</span>, <span class="str">'wcag2aa'</span>])
-    .<span class="fn">analyze</span>();
-
-  <span class="fn">expect</span>(<span class="var">results</span>.<span class="var">violations</span>).<span class="fn">toEqual</span>([]);
-});`}</code></pre>
-  </div>
-
-  <!-- Network Mocking -->
-  <div class="space-y-4">
-    <h3 class="text-lg font-bold text-slate-800">Network Mocking</h3>
-    <p class="text-sm text-slate-600">Intercept API calls to test various server responses without a real backend.</p>
-    <pre class="code-block"><code>{@html `<span class="fn">test</span>(<span class="str">'shows products from API'</span>, <span class="kw">async</span> ({ <span class="arg">page</span> }) <span class="op">=></span> {
+    <!-- Network request interception -->
+    <div class="space-y-2">
+      <h3 class="text-lg font-bold text-slate-800">Network Request Interception</h3>
+      <p class="text-sm text-slate-600">Intercept and mock API calls to test edge cases without a real backend.</p>
+      <pre class="code-block"><code>{@html `<span class="fn">test</span>(<span class="str">'shows products from mocked API'</span>, <span class="kw">async</span> ({ <span class="arg">page</span> }) <span class="op">=></span> {
   <span class="cmt">// Intercept the API and return mock data</span>
   <span class="kw">await</span> <span class="var">page</span>.<span class="fn">route</span>(<span class="str">'**/api/products'</span>, (<span class="arg">route</span>) <span class="op">=></span> {
     <span class="var">route</span>.<span class="fn">fulfill</span>({
@@ -219,7 +185,7 @@
   <span class="kw">await</span> <span class="fn">expect</span>(<span class="var">page</span>.<span class="fn">getByText</span>(<span class="str">'Phone'</span>)).<span class="fn">toBeVisible</span>();
 });
 
-<span class="fn">test</span>(<span class="str">'shows error state on API failure'</span>, <span class="kw">async</span> ({ <span class="arg">page</span> }) <span class="op">=></span> {
+<span class="fn">test</span>(<span class="str">'shows error on API failure'</span>, <span class="kw">async</span> ({ <span class="arg">page</span> }) <span class="op">=></span> {
   <span class="kw">await</span> <span class="var">page</span>.<span class="fn">route</span>(<span class="str">'**/api/products'</span>, (<span class="arg">route</span>) <span class="op">=></span> {
     <span class="var">route</span>.<span class="fn">fulfill</span>({ <span class="var">status</span>: <span class="num">500</span> });
   });
@@ -227,13 +193,75 @@
   <span class="kw">await</span> <span class="var">page</span>.<span class="fn">goto</span>(<span class="str">'/products'</span>);
   <span class="kw">await</span> <span class="fn">expect</span>(<span class="var">page</span>.<span class="fn">getByText</span>(<span class="str">'Something went wrong'</span>)).<span class="fn">toBeVisible</span>();
 });`}</code></pre>
-  </div>
+    </div>
 
-  <!-- Parallel Execution Config -->
-  <div class="space-y-4">
-    <h3 class="text-lg font-bold text-slate-800">Parallel Execution Config</h3>
-    <p class="text-sm text-slate-600">Configure Playwright to run tests across multiple workers and browsers simultaneously.</p>
-    <pre class="code-block"><code>{@html `<span class="cmt">// playwright.config.ts</span>
+    <!-- Visual comparison tests -->
+    <div class="space-y-2">
+      <h3 class="text-lg font-bold text-slate-800">Visual Comparison Tests</h3>
+      <p class="text-sm text-slate-600">Catch pixel-level regressions by comparing screenshots against baselines.</p>
+      <pre class="code-block"><code>{@html `<span class="fn">test</span>(<span class="str">'homepage matches visual snapshot'</span>, <span class="kw">async</span> ({ <span class="arg">page</span> }) <span class="op">=></span> {
+  <span class="kw">await</span> <span class="var">page</span>.<span class="fn">goto</span>(<span class="str">'/'</span>);
+
+  <span class="cmt">// Compare full page against baseline</span>
+  <span class="kw">await</span> <span class="fn">expect</span>(<span class="var">page</span>).<span class="fn">toHaveScreenshot</span>(<span class="str">'homepage.png'</span>, {
+    <span class="var">maxDiffPixelRatio</span>: <span class="num">0.01</span>,  <span class="cmt">// Allow 1% pixel diff</span>
+  });
+
+  <span class="cmt">// Compare a specific component</span>
+  <span class="kw">const</span> <span class="var">nav</span> <span class="op">=</span> <span class="var">page</span>.<span class="fn">locator</span>(<span class="str">'nav'</span>);
+  <span class="kw">await</span> <span class="fn">expect</span>(<span class="var">nav</span>).<span class="fn">toHaveScreenshot</span>(<span class="str">'navbar.png'</span>);
+});
+
+<span class="cmt">// First run: saves baseline screenshots</span>
+<span class="cmt">// Later runs: compares against baseline, fails on diff</span>
+<span class="cmt">// Run \`npx playwright test --update-snapshots\` to update</span>`}</code></pre>
+    </div>
+
+    <!-- Test fixtures and hooks -->
+    <div class="space-y-2">
+      <h3 class="text-lg font-bold text-slate-800">Test Fixtures and Hooks</h3>
+      <p class="text-sm text-slate-600">Use fixtures to share setup logic across tests. Hooks run before/after each test.</p>
+      <pre class="code-block"><code>{@html `<span class="kw">import</span> { <span class="var">test</span> <span class="kw">as</span> <span class="var">base</span>, <span class="var">expect</span> } <span class="kw">from</span> <span class="str">'@playwright/test'</span>;
+<span class="kw">import</span> { <span class="fn">LoginPage</span> } <span class="kw">from</span> <span class="str">'./page-objects/LoginPage'</span>;
+
+<span class="cmt">// Create a custom fixture that provides a logged-in page</span>
+<span class="kw">const</span> <span class="var">test</span> <span class="op">=</span> <span class="var">base</span>.<span class="fn">extend</span>&lt;{
+  <span class="var">loggedInPage</span>: <span class="var">Page</span>;
+}&gt;({
+  <span class="var">loggedInPage</span>: <span class="kw">async</span> ({ <span class="arg">page</span> }, <span class="arg">use</span>) <span class="op">=></span> {
+    <span class="cmt">// Setup: log in before test</span>
+    <span class="kw">const</span> <span class="var">loginPage</span> <span class="op">=</span> <span class="kw">new</span> <span class="fn">LoginPage</span>(<span class="var">page</span>);
+    <span class="kw">await</span> <span class="var">loginPage</span>.<span class="fn">goto</span>();
+    <span class="kw">await</span> <span class="var">loginPage</span>.<span class="fn">login</span>(<span class="str">'test@test.com'</span>, <span class="str">'password'</span>);
+
+    <span class="cmt">// Give the logged-in page to the test</span>
+    <span class="kw">await</span> <span class="fn">use</span>(<span class="var">page</span>);
+
+    <span class="cmt">// Teardown: runs after test (optional)</span>
+  },
+});
+
+<span class="cmt">// Tests that need login use loggedInPage fixture</span>
+<span class="fn">test</span>(<span class="str">'can view profile'</span>, <span class="kw">async</span> ({ <span class="arg">loggedInPage</span> }) <span class="op">=></span> {
+  <span class="kw">await</span> <span class="var">loggedInPage</span>.<span class="fn">goto</span>(<span class="str">'/profile'</span>);
+  <span class="kw">await</span> <span class="fn">expect</span>(
+    <span class="var">loggedInPage</span>.<span class="fn">getByText</span>(<span class="str">'My Profile'</span>)
+  ).<span class="fn">toBeVisible</span>();
+});
+
+<span class="fn">test</span>(<span class="str">'can edit settings'</span>, <span class="kw">async</span> ({ <span class="arg">loggedInPage</span> }) <span class="op">=></span> {
+  <span class="kw">await</span> <span class="var">loggedInPage</span>.<span class="fn">goto</span>(<span class="str">'/settings'</span>);
+  <span class="kw">await</span> <span class="fn">expect</span>(
+    <span class="var">loggedInPage</span>.<span class="fn">getByText</span>(<span class="str">'Account Settings'</span>)
+  ).<span class="fn">toBeVisible</span>();
+});`}</code></pre>
+    </div>
+
+    <!-- Config -->
+    <div class="space-y-2">
+      <h3 class="text-lg font-bold text-slate-800">Parallel Execution Config</h3>
+      <p class="text-sm text-slate-600">Configure Playwright to run tests across multiple workers and browsers.</p>
+      <pre class="code-block"><code>{@html `<span class="cmt">// playwright.config.ts</span>
 <span class="kw">import</span> { <span class="fn">defineConfig</span>, <span class="var">devices</span> } <span class="kw">from</span> <span class="str">'@playwright/test'</span>;
 
 <span class="kw">export default</span> <span class="fn">defineConfig</span>({
@@ -250,42 +278,19 @@
     { <span class="var">name</span>: <span class="str">'mobile'</span>,   <span class="var">use</span>: { ...<span class="var">devices</span>[<span class="str">'iPhone 13'</span>] } },
   ],
 });`}</code></pre>
-  </div>
+    </div>
 
-  <!-- CI Workflow -->
-  <div class="space-y-4">
-    <h3 class="text-lg font-bold text-slate-800">CI Workflow for E2E</h3>
-    <p class="text-sm text-slate-600">A GitHub Actions workflow that runs Playwright tests on every pull request.</p>
-    <pre class="code-block"><code>{@html `<span class="cmt"># .github/workflows/e2e.yml</span>
-<span class="var">name</span>: E2E Tests
-<span class="var">on</span>: [pull_request]
-
-<span class="var">jobs</span>:
-  <span class="var">e2e</span>:
-    <span class="var">runs-on</span>: ubuntu-latest
-    <span class="var">strategy</span>:
-      <span class="var">matrix</span>:
-        <span class="var">shard</span>: [<span class="num">1</span>/<span class="num">4</span>, <span class="num">2</span>/<span class="num">4</span>, <span class="num">3</span>/<span class="num">4</span>, <span class="num">4</span>/<span class="num">4</span>]
-    <span class="var">steps</span>:
-      - <span class="var">uses</span>: actions/checkout@v4
-      - <span class="var">uses</span>: actions/setup-node@v4
-      - <span class="var">run</span>: npm ci
-      - <span class="var">run</span>: npx playwright install --with-deps
-      - <span class="var">run</span>: npx playwright test --shard=\${{ matrix.shard }}
-      - <span class="var">uses</span>: actions/upload-artifact@v4
-        <span class="var">if</span>: failure()
-        <span class="var">with</span>:
-          <span class="var">name</span>: playwright-report-\${{ matrix.shard }}
-          <span class="var">path</span>: playwright-report/`}</code></pre>
+    <div>
+      <button
+        onclick={oncomplete}
+        class="rounded-full bg-purple-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-purple-700 active:scale-95"
+      >
+        I've studied the advanced examples
+      </button>
+    </div>
   </div>
-
-  <div>
-    <button onclick={oncomplete} class="rounded-full bg-purple-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-purple-700 active:scale-95">
-      Got it
-    </button>
-  </div>
+  {/if}
 </div>
-{/if}
 
 <style>
   .code-block { background-color: #0f172a; border: 1px solid #334155; border-radius: 0.5rem; padding: 1rem 1.25rem; font-size: 0.875rem; line-height: 1.7; overflow-x: auto; }
