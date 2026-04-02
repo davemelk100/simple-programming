@@ -117,7 +117,7 @@
       <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">2. Syntax & Principles</p>
       <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <span class="text-2xl">{style.icon}</span>
-        <h1 class="text-2xl font-black {colorMap[style.color] ?? 'text-slate-800'}">{style.title}</h1>
+        <h1 class="text-2xl font-black break-words {colorMap[style.color] ?? 'text-slate-800'}">{style.title}</h1>
       </div>
 
       <SectionTabs

@@ -201,7 +201,7 @@
               onclick={(e) => e.stopPropagation()}
             >
               {#each group.sections as section}
-                <div class="px-3 pt-2 pb-1 text-[10px] font-bold uppercase tracking-widest text-slate-400">{section.label}</div>
+                <div class="px-3 pt-2 pb-1 text-xs font-bold uppercase tracking-widest text-slate-400">{section.label}</div>
                 {#each section.items as item}
                   {@const active = isItemActive(item.href)}
                   {@const colors = colorMap[item.color]}
