@@ -118,7 +118,7 @@
       <SectionTabs {activeSection} {completedSections} onchange={handleTabChange} />
     </div>
 
-    <div class="min-h-[300px] rounded-2xl bg-white p-6 lg:p-8 shadow-sm border border-slate-100">
+    <div class="min-h-[300px] rounded-2xl bg-white p-4 md:p-6 lg:p-8 shadow-sm border border-slate-100">
       {#if components[topicSlug]}
         {#if activeSection === 'explain'}
           <svelte:component this={components[topicSlug].explain} oncomplete={() => handleSectionComplete('explain')} />
