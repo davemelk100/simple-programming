@@ -5,8 +5,10 @@
   import { loadProgress, markSectionComplete } from '../../lib/progress';
   import { getUser } from '../../lib/auth';
   import SectionTabs from '../ui/SectionTabs.svelte';
+  import SubNav from '../ui/SubNav.svelte';
   import Modal from '../ui/Modal.svelte';
   import CompletionModal from '../ui/CompletionModal.svelte';
+  import { syntaxStyles } from '../../lib/syntax-styles';
 
   // Markup components
   import MarkupExplain from './markup/MarkupExplain.svelte';
@@ -115,6 +117,7 @@
     <!-- Header + Tabs -->
     <div class="flex flex-col gap-4">
       <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">2. Syntax & Principles</p>
+      <SubNav items={syntaxStyles} currentSlug={styleSlug} basePath="/syntax-styles" />
       <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <span class="text-2xl">{style.icon}</span>
         <h1 class="text-2xl font-black break-words {colorMap[style.color] ?? 'text-slate-800'}">{style.title}</h1>

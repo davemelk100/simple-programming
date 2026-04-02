@@ -5,8 +5,10 @@
   import { loadProgress, markSectionComplete } from '../../lib/progress';
   import { getUser } from '../../lib/auth';
   import SectionTabs from '../ui/SectionTabs.svelte';
+  import SubNav from '../ui/SubNav.svelte';
   import Modal from '../ui/Modal.svelte';
   import CompletionModal from '../ui/CompletionModal.svelte';
+  import { principles } from '../../lib/principles';
 
   // Naming components
   import NamingExplain from './naming/NamingExplain.svelte';
@@ -122,6 +124,7 @@
     <!-- Header + Tabs -->
     <div class="flex flex-col gap-4">
       <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">2. Syntax & Principles</p>
+      <SubNav items={principles} currentSlug={principleSlug} basePath="/principles" />
       <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <span class="text-2xl">{principle.icon}</span>
         <h1 class="text-2xl font-black {colorMap[principle.color] ?? 'text-slate-800'}">{principle.title}</h1>

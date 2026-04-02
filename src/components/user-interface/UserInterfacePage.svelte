@@ -5,8 +5,10 @@
   import { loadProgress, markSectionComplete } from '../../lib/progress';
   import { getUser } from '../../lib/auth';
   import SectionTabs from '../ui/SectionTabs.svelte';
+  import SubNav from '../ui/SubNav.svelte';
   import Modal from '../ui/Modal.svelte';
   import CompletionModal from '../ui/CompletionModal.svelte';
+  import { userInterfaceTopics } from '../../lib/user-interface';
 
   import HtmlStructureExplain from './html-structure/HtmlStructureExplain.svelte';
   import HtmlStructureDemo from './html-structure/HtmlStructureDemo.svelte';
@@ -99,6 +101,7 @@
   <div class="space-y-6">
     <div class="flex flex-col gap-4">
       <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">5. User Interface</p>
+      <SubNav items={userInterfaceTopics} currentSlug={topicSlug} basePath="/user-interface" />
       <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <span class="text-2xl">{topic.icon}</span>
         <h1 class="text-2xl font-black {colorMap[topic.color] ?? 'text-slate-800'}">{topic.title}</h1>

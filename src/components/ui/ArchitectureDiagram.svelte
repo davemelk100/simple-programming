@@ -228,11 +228,11 @@
   let pendingAdvance = $state(false);
 
   const layers = [
-    { idx: 0, label: 'CONCEPTS', subtitle: 'Variables, functions, logic, OOP', sub: 'The building itself', descBold: 'Before anything else, the building must exist.', descRest: 'Variables, functions, data structures, control flow, and object-oriented thinking are the concrete and steel of every application.', fill: 'bg-slate-100/70', text: 'text-slate-700', subColor: 'text-slate-400' },
-    { idx: 1, label: 'SYNTAX & PRINCIPLES', subtitle: 'Patterns, naming, DRY, KISS', sub: 'The rules and policies', descBold: 'Before the doors open, the bank sets its rules.', descRest: 'Syntax styles, naming conventions, DRY, KISS, and planning are the policies that govern how every line of code behaves.', fill: 'bg-amber-50/70', text: 'text-amber-900', subColor: 'text-amber-600' },
-    { idx: 2, label: 'LANGUAGES & TOOLS', subtitle: 'TypeScript, Python, Go, C#', sub: 'The vault and ledger', descBold: 'The vault is stocked and the ledger is open.', descRest: 'Real languages — TypeScript, Python, Go, C# — plus version control, the command line, and local servers. This is where you store and manage real code.', fill: 'bg-green-50/70', text: 'text-green-800', subColor: 'text-green-600' },
-    { idx: 3, label: 'BUILD & SHIP', subtitle: 'Stack, database, API, deploy', sub: 'The employees and computers', descBold: 'Now you hire the employees.', descRest: 'Choose a stack, scaffold a project, connect a database, add auth, build an API, and deploy. These are the brains that make your application actually work.', fill: 'bg-purple-50/70', text: 'text-purple-800', subColor: 'text-purple-500' },
-    { idx: 4, label: 'USER INTERFACE', subtitle: 'HTML, CSS, React, Svelte', sub: 'The customer experience', descBold: 'Now the customers walk in.', descRest: 'HTML, CSS, and frameworks like React and Svelte are the face of your application — what the user actually sees and interacts with.', fill: 'bg-blue-50/70', text: 'text-blue-800', subColor: 'text-blue-500' },
+    { idx: 0, label: 'CONCEPTS', href: '/topics/variables', subtitle: 'Variables, functions, logic, OOP', sub: 'The building itself', descBold: 'Before anything else, the building must exist.', descRest: 'Variables, functions, data structures, control flow, and object-oriented thinking are the concrete and steel of every application.', fill: 'bg-slate-100/70', text: 'text-slate-700', subColor: 'text-slate-400' },
+    { idx: 1, label: 'SYNTAX & PRINCIPLES', href: '/syntax-styles/markup', subtitle: 'Patterns, naming, DRY, KISS', sub: 'The rules and policies', descBold: 'Before the doors open, the bank sets its rules.', descRest: 'Syntax styles, naming conventions, DRY, KISS, and planning are the policies that govern how every line of code behaves.', fill: 'bg-amber-50/70', text: 'text-amber-900', subColor: 'text-amber-600' },
+    { idx: 2, label: 'LANGUAGES & TOOLS', href: '/languages/typescript', subtitle: 'TypeScript, Python, Go, C#', sub: 'The vault and ledger', descBold: 'The vault is stocked and the ledger is open.', descRest: 'Real languages — TypeScript, Python, Go, C# — plus version control, the command line, and local servers. This is where you store and manage real code.', fill: 'bg-green-50/70', text: 'text-green-800', subColor: 'text-green-600' },
+    { idx: 3, label: 'BUILD & SHIP', href: '/put-it-together/choose-your-stack', subtitle: 'Stack, database, API, deploy', sub: 'The employees and computers', descBold: 'Now you hire the employees.', descRest: 'Choose a stack, scaffold a project, connect a database, add auth, build an API, and deploy. These are the brains that make your application actually work.', fill: 'bg-purple-50/70', text: 'text-purple-800', subColor: 'text-purple-500' },
+    { idx: 4, label: 'USER INTERFACE', href: '/user-interface/html-structure', subtitle: 'HTML, CSS, React, Svelte', sub: 'The customer experience', descBold: 'Now the customers walk in.', descRest: 'HTML, CSS, and frameworks like React and Svelte are the face of your application — what the user actually sees and interacts with.', fill: 'bg-blue-50/70', text: 'text-blue-800', subColor: 'text-blue-500' },
   ];
 
   let activeLayer = $derived(!completed ? layers.find(l => l.idx === current) : null);
@@ -338,7 +338,7 @@
                 {/if}
               </button>
             </div>
-            <p class="text-lg sm:text-2xl font-bold {layer.text}" style="font-family: 'Permanent Marker', cursive;">{layer.label}</p>
+            <p class="text-lg sm:text-2xl font-bold {layer.text}" style="font-family: 'Permanent Marker', cursive;"><a href={layer.href} class="no-underline {layer.text} hover:underline">{layer.label}</a></p>
             <p class="text-xs sm:text-sm font-semibold {layer.text}">({layer.sub})</p>
             <p class="text-xs sm:text-sm leading-relaxed font-bold {layer.text}" style="font-family: sans-serif;">{layer.descBold}</p>
             <p class="text-xs sm:text-sm leading-relaxed font-light {layer.text}" style="font-family: sans-serif;">{layer.descRest}</p>
@@ -389,7 +389,7 @@
                   'rgba(59,130,246,0.15), rgba(59,130,246,0.05)'
                 });"
               >
-                <p class="text-xs sm:text-sm font-bold font-mono {layer.text}">{layer.label}</p>
+                <p class="text-xs sm:text-sm font-bold font-mono {layer.text}"><a href={layer.href} class="no-underline {layer.text} hover:underline">{layer.label}</a></p>
                 <p class="text-[9px] sm:text-[10px] font-light text-slate-500">{layer.subtitle}</p>
               </div>
             {/each}

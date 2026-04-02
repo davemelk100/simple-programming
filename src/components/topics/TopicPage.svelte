@@ -5,8 +5,10 @@
   import { loadProgress, markSectionComplete } from '../../lib/progress';
   import { getUser } from '../../lib/auth';
   import SectionTabs from '../ui/SectionTabs.svelte';
+  import SubNav from '../ui/SubNav.svelte';
   import Modal from '../ui/Modal.svelte';
   import CompletionModal from '../ui/CompletionModal.svelte';
+  import { topics, oopTopics } from '../../lib/topics';
 
   // Topic components
   import VariablesExplain from './variables/VariablesExplain.svelte';
@@ -91,6 +93,7 @@
   let topic = $derived(getTopicBySlug(topicSlug));
   let prevTopic = $derived(getPrevTopic(topicSlug));
   let nextTopic = $derived(getNextTopic(topicSlug));
+  let subNavItems = $derived(oopTopics.find(t => t.slug === topicSlug) ? oopTopics : topics);
 
   let activeSection = $state<SectionType>('explain');
   let completedSections = $state({ explain: false, demo: false, exercise: false, code: false });
@@ -171,6 +174,7 @@
     <!-- Header + Tabs -->
     <div class="flex flex-col gap-4">
       <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">1. Concepts</p>
+      <SubNav items={subNavItems} currentSlug={topicSlug} basePath="/topics" />
       <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <span class="text-2xl">{topic.icon}</span>
         <h1 class="text-2xl font-black {colorMap[topic.color] ?? 'text-slate-800'}">{topic.title}</h1>

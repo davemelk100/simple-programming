@@ -5,8 +5,10 @@
   import { loadProgress, markSectionComplete } from '../../lib/progress';
   import { getUser } from '../../lib/auth';
   import SectionTabs from '../ui/SectionTabs.svelte';
+  import SubNav from '../ui/SubNav.svelte';
   import Modal from '../ui/Modal.svelte';
   import CompletionModal from '../ui/CompletionModal.svelte';
+  import { toolboxTopics } from '../../lib/toolbox';
 
   import VersionControlExplain from './version-control/VersionControlExplain.svelte';
   import VersionControlDemo from './version-control/VersionControlDemo.svelte';
@@ -100,6 +102,7 @@
   <div class="space-y-6">
     <div class="flex flex-col gap-4">
       <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">3. Languages & Tools</p>
+      <SubNav items={toolboxTopics} currentSlug={toolboxSlug} basePath="/toolbox" />
       <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <span class="text-2xl">{tool.icon}</span>
         <h1 class="text-2xl font-black {colorMap[tool.color] ?? 'text-slate-800'}">{tool.title}</h1>

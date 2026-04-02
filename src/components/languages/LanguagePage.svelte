@@ -5,8 +5,10 @@
   import { loadProgress, markSectionComplete } from '../../lib/progress';
   import { getUser } from '../../lib/auth';
   import SectionTabs from '../ui/SectionTabs.svelte';
+  import SubNav from '../ui/SubNav.svelte';
   import Modal from '../ui/Modal.svelte';
   import CompletionModal from '../ui/CompletionModal.svelte';
+  import { languages } from '../../lib/languages';
 
   // TypeScript components
   import TypeScriptExplain from './typescript/TypeScriptExplain.svelte';
@@ -109,6 +111,7 @@
     <!-- Header + Tabs -->
     <div class="flex flex-col gap-4">
       <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">3. Languages & Tools</p>
+      <SubNav items={languages} currentSlug={languageSlug} basePath="/languages" />
       <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <span class="text-2xl">{language.icon}</span>
         <h1 class="text-2xl font-black {colorMap[language.color] ?? 'text-slate-800'}">{language.title}</h1>

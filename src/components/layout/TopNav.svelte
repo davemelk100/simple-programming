@@ -94,7 +94,7 @@
       ],
     },
     {
-      label: '4. Build & Deploy',
+      label: '4. Build & Ship',
       sections: [
         { key: 'putittogether', label: 'Put It Together', items: putItTogetherTopics.map(t => ({ ...t, href: `/put-it-together/${t.slug}` })) },
         { key: 'testingqa', label: 'Testing & QA', items: testingQaTopics.map(t => ({ ...t, href: `/testing-qa/${t.slug}` })) },
@@ -129,11 +129,11 @@
 
 <svelte:window onclick={handleClose} />
 
-<header class="hidden border-b border-slate-200 bg-white shadow-sm md:block">
-  <div class="mx-auto flex items-center justify-between px-4 py-2">
-    <a href="/" class="flex items-center gap-3 no-underline">
-      <img src="/logo.png" alt="Programming Is Easy" class="h-14" />
-      <span class="text-xl font-bold text-slate-900" style="font-family: 'Roboto', sans-serif;">Programming Is Easy</span>
+<header class="hidden border-b border-slate-200 bg-white md:block py-4">
+  <div class="mx-auto flex items-center justify-between px-6">
+    <a href="/" class="flex items-center gap-4 no-underline">
+      <img src="/logo.svg" alt="Programming Is Easy" class="h-14 -my-2" />
+      <span class="text-2xl font-bold text-slate-800" style="font-family: 'Permanent Marker', cursive;">Programming Is Easy</span>
     </a>
 
     <div class="flex items-center gap-4">
@@ -176,7 +176,7 @@
   </div>
 </header>
 
-<nav class="sticky top-0 border-b border-slate-200 bg-white {mobileMenuOpen ? '' : 'hidden md:block'}" style="z-index: 9999;">
+<nav class="sticky top-0 border-b border-slate-100 bg-white shadow-sm {mobileMenuOpen ? '' : 'hidden md:block'}" style="z-index: 9999;">
   <div class="mx-auto px-4 py-1.5 md:flex md:items-center">
     <div class="flex flex-col gap-1 md:flex-row md:items-center md:flex-nowrap">
       {#each groups as group}

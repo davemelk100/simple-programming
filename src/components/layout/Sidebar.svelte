@@ -271,12 +271,12 @@
 
   <hr class="my-3 border-slate-200" />
 
-  <!-- ===== 4. BUILD & DEPLOY ===== -->
+  <!-- ===== 4. BUILD & SHIP ===== -->
   <button
     onclick={() => toggle('builddeploy')}
     class="mb-1 flex w-full cursor-pointer items-center justify-between px-2"
   >
-    <span class="text-sm font-bold uppercase tracking-wider text-slate-800 text-left" style="font-family: 'Roboto', sans-serif;">4. Build & Deploy</span>
+    <span class="text-sm font-bold uppercase tracking-wider text-slate-800 text-left" style="font-family: 'Roboto', sans-serif;">4. Build & Ship</span>
     <svg class="h-4 w-4 shrink-0 text-slate-400 transition-transform duration-200 {collapsed.builddeploy ? '-rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
     </svg>
