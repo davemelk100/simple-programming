@@ -5,6 +5,17 @@ import ArchitectureDiagram from '../components/ui/ArchitectureDiagram.svelte';
 ---
 
 <BaseLayout title="Programming Is Easy">
+  <!-- Lead-in text -->
+  <section class="mb-8 max-w-3xl mx-auto text-center px-4">
+    <h1 class="text-3xl sm:text-4xl font-bold text-slate-800 mb-4" style="font-family: 'Permanent Marker', cursive;">Think of software like a bank.</h1>
+    <p class="text-base sm:text-lg text-slate-600 leading-relaxed mb-3">
+      Every application you use — from a weather app to a social network — is built from the same handful of layers, stacked on top of each other. To make that concrete, this site maps each layer to a part of a bank: the <strong class="text-slate-700">building</strong> itself (core concepts), the <strong class="text-amber-700">rules and policies</strong> (syntax &amp; principles), the <strong class="text-green-700">vault</strong> (languages &amp; tools), the <strong class="text-purple-700">employees</strong> (building &amp; shipping), and the <strong class="text-blue-700">customer-facing lobby</strong> (user interface).
+    </p>
+    <p class="text-sm sm:text-base text-slate-500 leading-relaxed">
+      Walk through each layer below and you'll see: programming isn't magic — it's architecture.
+    </p>
+  </section>
+
   <!-- Architecture diagram -->
   <section class="-mt-6 mb-10 lg:-mt-8">
     <ArchitectureDiagram client:visible />
