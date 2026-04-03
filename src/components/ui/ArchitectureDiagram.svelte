@@ -306,7 +306,7 @@
           class="absolute inset-0 z-20 font-mono transition-opacity duration-700 {layer.idx === current ? 'opacity-100' : 'opacity-0 pointer-events-none'}"
         >
           <div
-            class="w-full md:w-[22rem] md:max-w-[30%] h-full px-4 py-4 sm:px-6 sm:py-6 backdrop-blur-[2px] {layer.fill} flex flex-col gap-3"
+            class="w-full md:w-[22rem] h-full px-4 py-4 sm:px-6 sm:py-6 backdrop-blur-sm {layer.fill} flex flex-col gap-3"
           >
             <div class="hidden sm:flex items-center gap-2">
               <button
@@ -355,7 +355,7 @@
         class="absolute inset-0 z-20 font-mono transition-opacity duration-1000 {showSummary ? 'opacity-100' : 'opacity-0 pointer-events-none'}"
       >
         <div
-          class="w-full md:w-[22rem] md:max-w-[30%] h-full px-4 py-4 sm:px-6 sm:py-6 backdrop-blur-[6px] flex flex-col gap-2 overflow-hidden"
+          class="w-full md:w-[22rem] h-full px-4 py-4 sm:px-6 sm:py-6 backdrop-blur-sm flex flex-col gap-2 overflow-hidden"
           style="background: linear-gradient(135deg, rgba(255,255,255,0.5), rgba(255,255,255,0.3));"
         >
           <!-- Liquid glass blobs inside column -->
