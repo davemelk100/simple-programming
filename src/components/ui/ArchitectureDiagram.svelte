@@ -239,11 +239,11 @@
   let pastLayers = $derived(layers.filter(l => l.idx < current || (completed && l.idx === current)));
 </script>
 
-<div class="overflow-hidden" style="width: 100vw; margin-left: calc(-50vw + 50%); margin-top: calc(-1.5rem - 1px);">
+<div style="width: 100vw; margin-left: calc(-50vw + 50%); margin-top: calc(-1.5rem - 1px);">
   <div>
 
     <!-- Video / illustration area -->
-    <div class="relative min-h-[32rem] sm:min-h-[36rem] lg:min-h-[40rem] overflow-hidden">
+    <div class="relative w-screen min-h-[32rem] sm:min-h-[36rem] lg:min-h-[40rem] overflow-hidden">
 
       <!-- Video/illustration backgrounds - all rendered, cross-fade via opacity -->
       {#each slides as s, idx}
