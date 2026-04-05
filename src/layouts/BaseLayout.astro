@@ -24,9 +24,7 @@ const { title = 'Simple Programming' } = Astro.props;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Permanent+Marker&family=Roboto:wght@200;300;400;500;700&display=swap" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Permanent+Marker&family=Roboto:wght@200;300;400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Permanent+Marker&family=Roboto:wght@200;300;400;500;700&display=swap" rel="stylesheet" /></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Permanent+Marker&family=Roboto:wght@200;300;400;500;700&display=swap" rel="stylesheet" />
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
@@ -42,12 +40,12 @@ const { title = 'Simple Programming' } = Astro.props;
 
     <title>{title}</title>
   </head>
-  <body class="flex min-h-screen flex-col">
+  <body class="flex min-h-screen flex-col overflow-x-hidden">
     <Header client:load />
     <TopNav client:load currentPath={Astro.url.pathname} />
 
     <div class="mx-auto w-full max-w-7xl flex-1 flex isolate" style="z-index: 1;">
-      <main class="flex-1 min-w-0 overflow-x-hidden px-3 py-4 md:px-6 md:py-6 lg:px-12 lg:py-8">
+      <main class="flex-1 min-w-0 px-3 pb-4 md:px-6 md:pb-6 lg:px-12 lg:pb-8">
         <slot />
       </main>
     </div>

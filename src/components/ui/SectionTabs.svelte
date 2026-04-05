@@ -78,13 +78,14 @@
 </div>
 
 <!-- Desktop: horizontal tabs -->
-<div class="hidden shrink-0 border-b border-slate-200 sm:flex sm:border-b-0">
+<div class="hidden shrink-0 sm:flex">
   {#each tabs as tab}
     <button
       onclick={() => handleClick(tab.key)}
+      style="letter-spacing: 0.06em; {activeSection === tab.key ? 'color: #085899;' : ''}"
       class="relative flex items-center gap-2 px-6 py-3 text-sm font-medium transition-colors duration-200
         {activeSection === tab.key
-          ? 'text-blue-600'
+          ? ''
           : 'text-slate-500 hover:text-slate-700'}"
     >
       <span class="text-lg">{tab.icon}</span>
@@ -99,7 +100,7 @@
       {/if}
 
       {#if activeSection === tab.key}
-        <div class="absolute bottom-0 left-0 h-0.5 w-full bg-blue-600 transition-all duration-300"></div>
+        <div class="absolute bottom-0 left-0 h-0.5 w-full transition-all duration-300" style="background-color: #085899;"></div>
       {/if}
     </button>
   {/each}

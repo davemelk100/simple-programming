@@ -173,22 +173,18 @@
   <div class="space-y-6">
     <!-- Header + Tabs -->
     <div class="flex flex-col gap-4">
-      <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 sm:hidden">1. Concepts</p>
-      <SubNav items={subNavItems} currentSlug={topicSlug} basePath="/topics" label="1. Concepts" />
-      <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-        <span class="text-2xl">{topic.icon}</span>
-        <h1 class="text-2xl font-black {colorMap[topic.color] ?? 'text-slate-800'}">{topic.title}</h1>
-      </div>
-
-      <SectionTabs
-        {activeSection}
-        {completedSections}
-        onchange={handleTabChange}
-      />
+      <SubNav items={subNavItems} currentSlug={topicSlug} basePath="/topics" />
     </div>
 
     <!-- Content area -->
-    <div class="min-h-[300px] rounded-2xl bg-white p-4 md:p-6 lg:p-8 shadow-sm border border-slate-100">
+    <div class="min-h-[300px] rounded-2xl bg-white shadow-sm border border-slate-100 p-4 md:p-6 lg:p-8 card-with-tabs">
+      <div class="section-tabs-wrapper">
+        <SectionTabs
+          {activeSection}
+          {completedSections}
+          onchange={handleTabChange}
+        />
+      </div>
       {#if components[topicSlug]}
         {#if activeSection === 'explain'}
           <svelte:component

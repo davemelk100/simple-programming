@@ -86,3 +86,11 @@ body {
   outline-offset: 2px;
   border-radius: 4px;
 }
+
+/* Card layout: SectionTabs float right, sharing row with title */
+@media (min-width: 640px) {
+  .card-with-tabs > .section-tabs-wrapper {
+    float: right;
+    margin-left: 2rem;
+  }
+}
