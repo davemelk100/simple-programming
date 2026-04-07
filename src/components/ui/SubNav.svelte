@@ -60,8 +60,8 @@
       {@const active = item.slug === currentSlug}
       <a
         href="{basePath}/{item.slug}"
-        style="font-family: 'Permanent Marker', 'Inter', sans-serif; letter-spacing: 0.12em; {active ? 'color: #085899;' : ''}"
-        class="relative flex items-center gap-2 px-8 py-4 text-base font-medium no-underline transition-colors duration-200 {active ? '' : 'text-slate-400 hover:text-slate-600'}"
+        style="font-family: 'Roboto', sans-serif; {active ? 'color: #085899;' : ''}"
+        class="relative flex items-center gap-2 px-8 py-4 text-base font-medium capitalize no-underline transition-colors duration-200 {active ? '' : 'text-slate-400 hover:text-slate-600'}"
       >
         <span>{item.title}</span>
         {#if active}

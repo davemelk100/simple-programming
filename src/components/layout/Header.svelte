@@ -54,7 +54,7 @@
     </button>
     <a href="/" class="flex items-center gap-3 no-underline">
       <img src="/logo.svg" alt="Programming Is Easy" class="h-10 shrink-0" />
-      <span class="text-lg font-bold text-slate-800" style="font-family: 'Permanent Marker', cursive;">Programming Is Easy</span>
+      <span class="text-lg font-bold text-slate-800" style="font-family: 'Permanent Marker', cursive; letter-spacing: 0.08em;">Programming Is Easy</span>
     </a>
   </div>
 </header>

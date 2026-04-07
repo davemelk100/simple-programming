@@ -133,7 +133,7 @@
   <div class="mx-auto flex items-center justify-between px-6">
     <a href="/" class="flex items-center gap-4 no-underline">
       <img src="/logo.svg" alt="Programming Is Easy" class="h-14 -my-2" />
-      <span class="text-2xl font-bold text-slate-800" style="font-family: 'Permanent Marker', cursive;">Programming Is Easy</span>
+      <span class="text-2xl font-bold text-slate-800" style="font-family: 'Permanent Marker', cursive; letter-spacing: 0.08em;">Programming Is Easy</span>
     </a>
 
     <div class="flex items-center gap-4">
