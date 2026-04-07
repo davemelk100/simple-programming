@@ -183,7 +183,7 @@
         <div class="relative">
           <button
             onclick={(e) => { e.stopPropagation(); handleToggle(group.label); }}
-            style="font-family: 'Permanent Marker', 'Inter', sans-serif; letter-spacing: 0.05em;"
+            style="font-family: 'Roboto', sans-serif; letter-spacing: 0.05em;"
             class="w-full shrink-0 whitespace-nowrap rounded-md px-2.5 py-2 md:py-1.5 text-left text-base font-semibold uppercase tracking-wide transition-colors
               {isGroupActive(group) ? 'bg-indigo-50 text-indigo-700' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700'}
               {openMenu === group.label ? 'bg-slate-100 text-slate-800' : ''}"
