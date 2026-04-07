@@ -45,7 +45,7 @@ const { title = 'Simple Programming' } = Astro.props;
     <TopNav client:load currentPath={Astro.url.pathname} />
 
     <div class="w-full flex-1 flex isolate" style="z-index: 1;">
-      <main class="flex-1 min-w-0 px-3 pb-4 md:px-6 md:pb-6 lg:px-12 lg:pb-8">
+      <main class="flex-1 min-w-0 px-3 pt-4 pb-4 md:px-6 md:pb-6 lg:px-12 lg:pb-8">
         <slot />
       </main>
     </div>

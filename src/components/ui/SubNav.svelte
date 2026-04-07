@@ -61,11 +61,11 @@
       <a
         href="{basePath}/{item.slug}"
         style="font-family: 'Roboto', sans-serif; {active ? 'color: #085899;' : ''}"
-        class="relative flex items-center gap-2 px-8 py-4 text-base font-medium capitalize no-underline transition-colors duration-200 {active ? '' : 'text-slate-400 hover:text-slate-600'}"
+        class="relative flex items-center gap-2 px-5 py-4 text-xs font-medium whitespace-nowrap no-underline transition-colors duration-200 {active ? '' : 'text-slate-400 hover:text-slate-600'}"
       >
         <span>{item.title}</span>
         {#if active}
-          <div class="absolute bottom-0 left-0 h-0.5 w-full transition-all duration-300" style="background-color: #085899;"></div>
+          <div class="absolute bottom-0 left-0 h-1 w-full transition-all duration-300" style="background-color: #085899;"></div>
         {/if}
       </a>
     {/each}

@@ -170,14 +170,16 @@
 </script>
 
 {#if topic}
-  <div class="space-y-6">
-    <!-- Header + Tabs -->
-    <div class="flex flex-col gap-4">
-      <SubNav items={subNavItems} currentSlug={topicSlug} basePath="/topics" />
-    </div>
+  <div>
+    <!-- Mobile wrapper -->
+    <div class="rounded-2xl bg-slate-50 p-3 md:bg-transparent md:p-0">
+      <!-- Header + Tabs -->
+      <div class="flex flex-col gap-4">
+        <SubNav items={subNavItems} currentSlug={topicSlug} basePath="/topics" />
+      </div>
 
-    <!-- Content area -->
-    <div class="min-h-[300px] rounded-2xl bg-white shadow-sm border border-slate-100 p-4 md:p-6 lg:p-8 card-with-tabs">
+      <!-- Content area -->
+      <div class="mt-6 min-h-[300px] rounded-2xl bg-white shadow-sm border border-slate-100 p-4 md:p-6 lg:p-8 card-with-tabs">
       <div class="section-tabs-wrapper">
         <SectionTabs
           {activeSection}
@@ -210,6 +212,7 @@
       {:else}
         <p class="text-center text-slate-500">Content coming soon!</p>
       {/if}
+    </div>
     </div>
 
     <!-- Navigation -->
