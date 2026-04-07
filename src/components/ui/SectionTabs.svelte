@@ -82,7 +82,7 @@
   {#each tabs as tab}
     <button
       onclick={() => handleClick(tab.key)}
-      style="letter-spacing: 0.06em; {activeSection === tab.key ? 'color: #085899;' : ''}"
+      style="letter-spacing: normal; {activeSection === tab.key ? 'color: #085899;' : ''}"
       class="relative flex items-center gap-2 px-6 py-3 text-sm font-medium transition-colors duration-200
         {activeSection === tab.key
           ? ''

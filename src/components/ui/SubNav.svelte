@@ -61,7 +61,7 @@
       <a
         href="{basePath}/{item.slug}"
         style="font-family: 'Roboto', sans-serif; {active ? 'color: #085899;' : ''}"
-        class="relative flex items-center gap-2 px-5 py-4 text-xs font-medium whitespace-nowrap no-underline transition-colors duration-200 {active ? '' : 'text-slate-400 hover:text-slate-600'}"
+        class="relative flex items-center gap-2 px-5 py-4 text-sm font-medium whitespace-nowrap no-underline transition-colors duration-200 {active ? '' : 'text-slate-400 hover:text-slate-600'}"
       >
         <span>{item.title}</span>
         {#if active}
