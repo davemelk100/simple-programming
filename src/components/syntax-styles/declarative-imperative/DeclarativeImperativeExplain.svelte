@@ -31,7 +31,6 @@
   {#if !advanced}
 
   <div>
-    <h2 class="mb-3 text-2xl font-bold text-slate-800">Declarative vs. Imperative Programming</h2>
     <p class="text-slate-600">
       There are two fundamentally different ways to tell a computer what to do. The difference is simple:
       <strong>declarative</strong> code describes <em>what</em> you want, while <strong>imperative</strong> code describes <em>how</em> to do it.

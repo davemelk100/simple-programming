@@ -338,7 +338,7 @@
                 {/if}
               </button>
             </div>
-            <h2 class="text-4xl sm:text-6xl font-bold {layer.text}"><a href={layer.href} class="no-underline {layer.text} hover:underline">{layer.label}</a></h2>
+            <h2 class="text-5xl sm:text-7xl font-bold {layer.text}"><a href={layer.href} class="no-underline {layer.text} hover:underline">{layer.label}</a></h2>
             <p class="text-xs sm:text-sm font-semibold {layer.text}">({layer.sub})</p>
             <p class="text-xs sm:text-sm leading-relaxed font-bold {layer.text}" style="font-family: sans-serif;">{layer.descBold}</p>
             <p class="text-xs sm:text-sm leading-relaxed font-light {layer.text}" style="font-family: sans-serif;">{layer.descRest}</p>

@@ -30,7 +30,7 @@
 <div class="relative sm:hidden">
   <button
     onclick={() => (dropdownOpen = !dropdownOpen)}
-    class="flex w-full items-center justify-between rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition-colors hover:bg-slate-50"
+    class="flex w-full items-center justify-between rounded-lg border border-slate-200 bg-white px-4 py-2.5 mb-4 text-sm font-medium text-slate-700 shadow-sm transition-colors hover:bg-slate-50"
   >
     <span class="flex items-center gap-2">
       <span class="text-lg">{activeTab.icon}</span>

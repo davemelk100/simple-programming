@@ -60,7 +60,6 @@
 <div class="space-y-8">
   {#if !advanced}
   <div>
-    <h2 class="mb-3 text-2xl font-bold text-slate-800">What Are Markup Languages?</h2>
     <p class="text-slate-600">
       Imagine you are wrapping gifts. The present inside is your <strong>content</strong> — text, images, data. The wrapping paper and label on the outside is the <strong>tag</strong>. Tags tell the computer <em>what kind of thing</em> the content is. A heading? A paragraph? A link? You wrap content in tags to give it meaning and structure.
     </p>

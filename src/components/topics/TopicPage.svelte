@@ -180,13 +180,15 @@
 
       <!-- Content area -->
       <div class="mt-6 min-h-[300px] rounded-2xl bg-white shadow-sm border border-slate-100 p-4 md:p-6 lg:p-8 card-with-tabs">
-      <div class="section-tabs-wrapper">
+      <div class="title-row">
+        <h2 class="text-2xl font-bold text-slate-800" style="font-family: 'Permanent Marker', sans-serif;">{topic.title}</h2>
         <SectionTabs
           {activeSection}
           {completedSections}
           onchange={handleTabChange}
         />
       </div>
+      <div class="content-row">
       {#if components[topicSlug]}
         {#if activeSection === 'explain'}
           <svelte:component
@@ -212,6 +214,7 @@
       {:else}
         <p class="text-center text-slate-500">Content coming soon!</p>
       {/if}
+      </div>
     </div>
     </div>
 

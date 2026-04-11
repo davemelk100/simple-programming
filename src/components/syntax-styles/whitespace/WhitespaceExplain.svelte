@@ -36,7 +36,6 @@
 {#if !advanced}
 <div class="space-y-8">
   <div>
-    <h2 class="mb-3 text-2xl font-bold text-slate-800">Whitespace-Sensitive Languages</h2>
     <p class="text-slate-600">
       Some programming languages use <strong>indentation itself</strong> as part of the syntax. There are no curly braces or begin/end keywords to mark code blocks -- the spaces or tabs at the start of each line tell the language what belongs where.
     </p>

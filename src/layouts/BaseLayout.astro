@@ -3,6 +3,7 @@ import Header from '../components/layout/Header.svelte';
 import TopNav from '../components/layout/TopNav.svelte';
 import MobileSidebar from '../components/layout/MobileSidebar.svelte';
 import Sidebar from '../components/layout/Sidebar.svelte';
+import StickyFooter from '../components/layout/StickyFooter.svelte';
 import '../styles/global.css';
 
 interface Props {
@@ -61,5 +62,6 @@ const { title = 'Simple Programming' } = Astro.props;
       </main>
     </div>
 
+    <StickyFooter client:load />
   </body>
 </html>

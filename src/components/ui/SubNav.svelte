@@ -14,7 +14,7 @@
 </script>
 
 <!-- Mobile: dropdown -->
-<div class="relative lg:hidden">
+<div class="relative lg:hidden px-5">
   <button
     onclick={() => (dropdownOpen = !dropdownOpen)}
     class="flex w-full items-center justify-between rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition-colors hover:bg-slate-50"

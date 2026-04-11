@@ -87,10 +87,19 @@ body {
   border-radius: 4px;
 }
 
-/* Card layout: SectionTabs float right, sharing row with title */
-@media (min-width: 640px) {
-  .card-with-tabs > .section-tabs-wrapper {
-    float: right;
-    margin-left: 2rem;
-  }
+/* Card layout: title row (heading + tabs) then content below */
+.card-with-tabs {
+  display: flex;
+  flex-direction: column;
+}
+.card-with-tabs > .title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.card-with-tabs > .content-row {
+  flex: 1;
 }

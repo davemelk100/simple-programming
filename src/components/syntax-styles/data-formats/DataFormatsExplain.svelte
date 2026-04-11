@@ -54,7 +54,6 @@
 <div class="space-y-8">
   {#if !advanced}
   <div>
-    <h2 class="mb-2 text-2xl font-bold text-slate-800">What Are Data Serialization Formats?</h2>
     <p class="text-slate-600">
       When two systems need to exchange information -- a browser talking to a server, or one app sending data to another -- they need a shared language. <strong>Data serialization</strong> is the process of converting structured information into a text format that both humans can read and computers can parse.
     </p>

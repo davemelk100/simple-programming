@@ -54,7 +54,6 @@
 <div class="space-y-8">
   {#if !advanced}
   <div>
-    <h2 class="mb-2 text-2xl font-bold text-slate-800">The C-Style Syntax Family</h2>
     <p class="text-slate-600">
       A huge number of programming languages share the same basic punctuation style, inherited from the <strong>C language</strong> (created in 1972). If you learn to read one of them, you can read most of the others. This family includes JavaScript, TypeScript, Java, C#, Go, CSS, and many more.
     </p>

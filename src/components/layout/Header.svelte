@@ -1,6 +1,10 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { getAdvanced, toggleAdvanced, onAdvancedChange } from "../../lib/mode";
+  import {
+    getAdvanced,
+    toggleAdvanced,
+    onAdvancedChange,
+  } from "../../lib/mode";
 
   let user: { email?: string } | null = $state(null);
   let signingOut = $state(false);
@@ -38,23 +42,37 @@
 </script>
 
 <!-- Mobile header only -->
-<header class="border-b border-slate-200 bg-white md:hidden py-4">
+<header class="border-b border-slate-200 bg-white lg:hidden py-4">
   <div class="flex items-center gap-2 px-4">
     <button
       onclick={() => {
-        const event = new CustomEvent('toggle-mobile-menu');
+        const event = new CustomEvent("toggle-mobile-menu");
         window.dispatchEvent(event);
       }}
       class="shrink-0 rounded-lg p-1.5 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700"
       aria-label="Toggle menu"
     >
-      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+      <svg
+        class="h-5 w-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4 6h16M4 12h16M4 18h16"
+        />
       </svg>
     </button>
     <a href="/" class="flex items-center gap-3 no-underline">
       <img src="/logo.svg" alt="Programming Is Easy" class="h-10 shrink-0" />
-      <span class="text-lg font-bold text-slate-800" style="font-family: 'Permanent Marker', cursive; letter-spacing: 0.08em;">Programming Is Easy</span>
+      <span
+        class="text-lg font-bold text-slate-800"
+        style="font-family: 'Permanent Marker', sans-serif; letter-spacing: 0.08em;"
+        >Programming Is Easy</span
+      >
     </a>
   </div>
 </header>
