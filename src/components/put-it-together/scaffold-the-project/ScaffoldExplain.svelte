@@ -10,7 +10,6 @@
 <div class="space-y-8">
   {#if !advanced}
   <div>
-    <h2 class="mb-3 text-2xl font-bold text-slate-800">What Is Scaffolding?</h2>
     <p class="text-slate-600">
       Think of scaffolding like the <strong>skeleton of a building</strong> before the walls go up. When you scaffold a project, a CLI tool generates a starter set of files and folders so you do not have to create everything from scratch. It gives your project structure from day one.
     </p>

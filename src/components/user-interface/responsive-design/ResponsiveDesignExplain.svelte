@@ -25,7 +25,6 @@
 <div class="space-y-8">
   {#if !advanced}
   <div>
-    <h2 class="mb-2 text-2xl font-bold text-slate-800">What Is Responsive Design?</h2>
     <p class="text-slate-600">
       <strong>Responsive design</strong> is the practice of making your web app look and work great on any screen size — from a tiny phone to a widescreen monitor. Think of water: it takes the shape of whatever container you pour it into. A responsive layout does the same thing, reshaping itself to fit the available space.
     </p>

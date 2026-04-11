@@ -20,7 +20,6 @@
   {#if !advanced}
 
   <div class="transition-all duration-700 {visibleSections >= 1 ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}">
-    <h2 class="mb-2 text-2xl font-bold text-slate-800">What Is Code Review?</h2>
     <p class="text-slate-600">
       Code review is having <strong>another developer read your code</strong> before it gets merged into the project. Think of it like <strong>having someone proofread your essay</strong> — you might read your own writing ten times and miss a typo, but a friend spots it immediately.
     </p>

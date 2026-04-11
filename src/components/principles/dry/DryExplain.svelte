@@ -34,7 +34,6 @@
 <div class="space-y-8">
   {#if !advanced}
   <div>
-    <h2 class="mb-3 text-2xl font-bold text-slate-800">Don't Repeat Yourself (DRY)</h2>
     <p class="text-slate-600">
       The DRY principle says: <strong>every piece of knowledge should have a single, unambiguous representation in your code</strong>. If you find yourself writing the same logic in multiple places, something has gone wrong.
     </p>

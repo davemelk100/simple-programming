@@ -29,7 +29,6 @@
 <div class="space-y-8">
   {#if !advanced}
   <div>
-    <h2 class="mb-2 text-2xl font-bold text-slate-800">What Is Version Control?</h2>
     <p class="text-slate-600">
       Imagine you are writing a school essay in Google Docs. Every few minutes, Google saves a version of your document. If you accidentally delete a paragraph, you can open the version history and restore it. <strong>Version control</strong> is the same idea, but for code — and much more powerful.
     </p>

@@ -28,7 +28,6 @@
 {#if !advanced}
 <div class="space-y-8">
   <div>
-    <h2 class="mb-2 text-2xl font-bold text-slate-800">What is Go?</h2>
     <p class="text-slate-600">
       Go (often called <strong>Golang</strong>) is a programming language created at
       <strong>Google</strong> in 2009 by Robert Griesemer, Rob Pike, and Ken Thompson. It was

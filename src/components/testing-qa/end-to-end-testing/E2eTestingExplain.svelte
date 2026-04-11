@@ -20,7 +20,6 @@
   {#if !advanced}
 
   <div>
-    <h2 class="mb-2 text-2xl font-bold text-slate-800">What Is End-to-End Testing?</h2>
     <p class="text-slate-600">
       End-to-end (E2E) testing means <strong>simulating a real user</strong> clicking through your app. Think of it as a <strong>robot using your website</strong> -- it opens a browser, navigates pages, fills in forms, clicks buttons, and checks that everything works the way a real person would expect. If anything breaks along the way, the test fails and tells you exactly where.
     </p>

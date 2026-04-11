@@ -20,7 +20,6 @@
   {#if !advanced}
 
   <div class="transition-all duration-700 {visibleSections >= 1 ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}">
-    <h2 class="mb-2 text-2xl font-bold text-slate-800">What Is Integration Testing?</h2>
     <p class="text-slate-600">
       Integration testing checks how <strong>multiple pieces work together</strong>. Imagine you have a lock and a key. Each might look perfect on its own, but the real question is: <strong>does the key actually open the lock?</strong> That is what integration tests answer. They test the <em>connections</em> between parts, not the parts themselves.
     </p>

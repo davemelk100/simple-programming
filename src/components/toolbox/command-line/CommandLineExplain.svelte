@@ -24,7 +24,6 @@
   {#if !advanced}
 
   <div>
-    <h2 class="mb-3 text-2xl font-bold text-slate-800">The Command Line</h2>
     <p class="text-slate-600">
       The command line is like <strong>texting your computer</strong> instead of clicking buttons. Instead of navigating menus and dragging files around, you type short commands and press Enter. Your computer reads your message, does the work, and texts you back with the result.
     </p>

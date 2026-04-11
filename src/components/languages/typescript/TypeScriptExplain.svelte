@@ -54,7 +54,6 @@
 <div class="space-y-8">
   {#if !advanced}
   <div>
-    <h2 class="mb-2 text-2xl font-bold text-slate-800">What is TypeScript / JavaScript?</h2>
     <p class="text-slate-600">
       JavaScript is <strong>the language of the web</strong>. Every website you visit uses it. TypeScript is a superset of JavaScript that adds optional types, helping you catch mistakes before your code even runs. Together they are the most widely used programming languages in the world.
     </p>

@@ -36,7 +36,6 @@
 {#if !advanced}
 <div class="space-y-8">
   <div>
-    <h2 class="mb-3 text-2xl font-bold text-slate-800">What is Python?</h2>
     <p class="text-slate-600">
       Python is a programming language designed with one guiding principle: <strong>code should read like English</strong>. Created by Guido van Rossum in 1991, Python strips away unnecessary punctuation and complex syntax so you can focus on <em>what</em> you want to do, not <em>how</em> to tell the computer to do it.
     </p>

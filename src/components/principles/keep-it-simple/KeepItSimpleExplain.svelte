@@ -32,7 +32,6 @@
 <div class="space-y-8">
   {#if !advanced}
   <div>
-    <h2 class="mb-2 text-2xl font-bold text-slate-800">Keep It Simple (KISS)</h2>
     <p class="text-slate-600">
       KISS stands for <strong>"Keep It Simple, Stupid"</strong> — a reminder that most systems work best when they stay simple rather than getting complicated. In programming, this means writing code that is easy to read, easy to understand, and easy to change.
     </p>

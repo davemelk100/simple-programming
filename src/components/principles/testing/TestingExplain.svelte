@@ -36,7 +36,6 @@
 <div class="space-y-8">
   {#if !advanced}
   <div>
-    <h2 class="mb-2 text-2xl font-bold text-slate-800">Why Test Your Code?</h2>
     <p class="text-slate-600">
       Think of testing like a <strong>spell-checker</strong> for your code. Just as a spell-checker catches typos before you send an email, tests catch bugs before anyone else sees them. You write small checks that verify your code does what you expect — and those checks run automatically every time you make a change.
     </p>

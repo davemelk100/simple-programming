@@ -15,7 +15,6 @@
 
   let { currentPath = "" }: Props = $props();
 
-  let user: { email?: string } | null = $state(null);
 
   onMount(() => {
     const toggleHandler = () => {
@@ -27,23 +26,6 @@
     };
   });
 
-  onMount(() => {
-    let subscription: { unsubscribe: () => void } | undefined;
-
-    import("../../lib/supabase").then(async ({ supabase }) => {
-      const { data } = await supabase.auth.getUser();
-      user = data.user;
-
-      const { data: authData } = supabase.auth.onAuthStateChange(
-        (_event, session) => {
-          user = session?.user ?? null;
-        },
-      );
-      subscription = authData.subscription;
-    });
-
-    return () => subscription?.unsubscribe();
-  });
 
   const colorMap: Record<string, { hover: string; active: string }> = {
     blue: {
@@ -307,15 +289,6 @@
       {/each}
     </nav>
 
-    {#if !user}
-      <a
-        href="/auth/login"
-        class="shrink-0 rounded-lg bg-indigo-600 p-2 text-white no-underline hover:bg-indigo-700"
-        aria-label="Sign In"
-      >
-        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
-      </a>
-    {/if}
   </div>
 </header>
 
@@ -395,15 +368,5 @@
       {/each}
     </div>
 
-    {#if !user}
-      <div class="flex items-center gap-3 pt-3 mt-2 border-t border-slate-200">
-        <a
-          href="/auth/login"
-          class="rounded-lg bg-indigo-600 px-3 py-1 text-xs font-medium text-white no-underline hover:bg-indigo-700"
-        >
-          Sign In
-        </a>
-      </div>
-    {/if}
   </div>
 </nav>

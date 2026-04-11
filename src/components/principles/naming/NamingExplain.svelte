@@ -39,7 +39,6 @@
 <div class="space-y-8">
   {#if !advanced}
   <div>
-    <h2 class="mb-3 text-2xl font-bold text-slate-800">Why Naming Matters</h2>
     <p class="text-slate-600">
       There is a saying in programming: <strong>"Code is read far more often than it is written."</strong> Every time you name a variable, function, or file, you are leaving a message for the next person who reads your code. That person might be a teammate, a collaborator, or future-you six months from now. Good names make code feel like reading a story. Bad names make it feel like deciphering a secret code.
     </p>

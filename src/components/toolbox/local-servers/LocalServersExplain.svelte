@@ -29,7 +29,6 @@
 <div class="space-y-8">
   {#if !advanced}
   <div>
-    <h2 class="mb-2 text-2xl font-bold text-slate-800">What Does "Running Locally" Mean?</h2>
     <p class="text-slate-600">
       Imagine you want to build a house. You wouldn't construct it in the middle of a busy street for everyone to see while it's half-finished. Instead, you'd build it in a <strong>private workshop</strong> first, test everything, then move it to its final location. That's exactly what "running locally" means for software: <strong>your computer becomes a mini version of the internet</strong>, running your project in private so only you can see it.
     </p>

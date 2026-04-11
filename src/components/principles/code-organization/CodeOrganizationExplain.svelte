@@ -37,7 +37,6 @@
 <div class="space-y-8">
   {#if !advanced}
   <div>
-    <h2 class="mb-3 text-2xl font-bold text-slate-800">Why Code Organization Matters</h2>
     <p class="text-slate-600">
       Think about organizing your room. When everything is tossed on the floor, finding your keys takes forever. But when shirts go in the closet, books go on the shelf, and keys hang by the door, you can find anything in seconds. Code organization works the same way: <strong>everything has a place, and similar things go together.</strong>
     </p>

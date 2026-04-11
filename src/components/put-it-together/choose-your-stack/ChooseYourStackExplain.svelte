@@ -30,7 +30,6 @@
 <div class="space-y-8">
   {#if !advanced}
   <div>
-    <h2 class="mb-3 text-2xl font-bold text-slate-800">What Is a "Stack"?</h2>
     <p class="text-slate-600">
       A <strong>stack</strong> is the combination of technologies you use to build an app. Think of it like a layer cake: each layer handles a different job. Together, they form everything your app needs to work.
     </p>

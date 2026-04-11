@@ -31,7 +31,6 @@
   {#if !advanced}
 
   <div>
-    <h2 class="mb-2 text-2xl font-bold text-slate-800">What Does "Deploy" Mean?</h2>
     <p class="text-slate-600">
       Think of coding like <strong>writing a book</strong>. You spend weeks drafting, editing, and polishing your manuscript. But nobody can read it until you <strong>publish and distribute</strong> it. <strong>Deploying</strong> is the publishing step for software &mdash; it takes the code on your laptop and puts it on a server where the whole world can use it.
     </p>

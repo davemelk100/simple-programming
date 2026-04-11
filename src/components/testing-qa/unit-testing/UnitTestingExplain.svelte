@@ -24,7 +24,6 @@
   {#if !advanced}
 
   <div>
-    <h2 class="mb-2 text-2xl font-bold text-slate-800">What Is Unit Testing?</h2>
     <p class="text-slate-600">
       Unit testing means <strong>testing one small piece of code at a time</strong>, in complete isolation. Think of it like <strong>checking each ingredient before baking a cake</strong>. You taste the sugar to make sure it is not salt, you check that the eggs are fresh, and you confirm the flour is not expired -- all <em>before</em> mixing them together. If something is wrong, you want to catch it early, not after the cake is in the oven.
     </p>

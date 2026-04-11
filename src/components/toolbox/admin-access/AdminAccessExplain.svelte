@@ -29,7 +29,6 @@
 {#if !advanced}
 <div class="space-y-8">
   <div>
-    <h2 class="mb-2 text-2xl font-bold text-slate-800">Admin &amp; Permissions</h2>
     <p class="text-slate-600">
       Every computer system controls <strong>who can do what</strong>. Understanding permissions
       is essential for working on real servers, deploying applications, and keeping systems secure.

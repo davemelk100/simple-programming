@@ -25,7 +25,6 @@
 <div class="space-y-8">
   {#if !advanced}
   <div>
-    <h2 class="mb-2 text-2xl font-bold text-slate-800">What Are Component Frameworks?</h2>
     <p class="text-slate-600">
       Imagine building a house entirely from raw lumber, nails, and concrete versus snapping together pre-made walls, windows, and doors. <strong>Component frameworks</strong> give you the pre-made parts. Instead of writing every line of HTML, CSS, and JavaScript from scratch, you build your UI from reusable <strong>components</strong> — self-contained pieces that each handle their own appearance and behavior.
     </p>

@@ -37,7 +37,6 @@
 <div class="space-y-8">
   {#if !advanced}
   <div>
-    <h2 class="mb-3 text-2xl font-bold text-slate-800">What Is HTML Structure?</h2>
     <p class="text-slate-600">
       HTML is the <strong>skeleton</strong> of every web page. Think of a building: before you paint the walls or hang curtains, you need a <strong>frame</strong> — steel beams, floors, and rooms. HTML provides that frame for the web. It tells the browser <em>what</em> each piece of content is and <em>how</em> things are organized.
     </p>

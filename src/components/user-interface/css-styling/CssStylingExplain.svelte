@@ -37,7 +37,6 @@
 <div class="space-y-8">
   {#if !advanced}
   <div>
-    <h2 class="mb-3 text-2xl font-bold text-slate-800">What Is CSS?</h2>
     <p class="text-slate-600">
       If HTML is the <strong>structure</strong> of a building -- the walls, floors, and rooms -- then CSS is the <strong>paint and decoration</strong>. CSS (Cascading Style Sheets) controls how things look: colors, sizes, spacing, fonts, and layout. Without CSS, every website would be plain black text on a white background.
     </p>

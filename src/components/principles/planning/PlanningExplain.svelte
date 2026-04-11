@@ -37,7 +37,6 @@
 <div class="space-y-8">
   {#if !advanced}
   <div>
-    <h2 class="mb-3 text-2xl font-bold text-slate-800">Why Planning Matters</h2>
     <p class="text-slate-600">
       Imagine building a house. You would never show up to an empty lot with a pile of bricks and just start stacking. You need a blueprint first: where do the walls go? How many rooms? Where is the plumbing? Software works the same way. <strong>Thinking before coding</strong> is the single most important habit that separates beginners from professionals.
     </p>

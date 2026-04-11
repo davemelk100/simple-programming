@@ -30,7 +30,6 @@
   {#if !advanced}
 
   <div>
-    <h2 class="mb-2 text-2xl font-bold text-slate-800">What Is an API?</h2>
     <p class="text-slate-600">
       Imagine you are at a restaurant. You do not walk into the kitchen and cook your own food. Instead, you tell the <strong>waiter</strong> what you want, the waiter takes your order to the kitchen, and then brings back your meal. An <strong>API</strong> (Application Programming Interface) works exactly the same way.
     </p>

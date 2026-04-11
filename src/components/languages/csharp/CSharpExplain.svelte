@@ -36,7 +36,6 @@
 {#if !advanced}
 <div class="space-y-8">
   <div>
-    <h2 class="mb-2 text-2xl font-bold text-slate-800">What is C#?</h2>
     <p class="text-slate-600">
       C# (pronounced "C sharp") is a powerful, modern programming language created by <strong>Microsoft</strong> in 2000 as part of the <strong>.NET</strong> platform. It was designed by Anders Hejlsberg, the same brilliant mind behind Turbo Pascal and TypeScript. C# combines the power of C++ with the simplicity of modern languages, making it one of the most versatile tools in a programmer's toolkit.
     </p>

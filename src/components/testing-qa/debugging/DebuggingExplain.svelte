@@ -20,7 +20,6 @@
   {#if !advanced}
 
   <div>
-    <h2 class="mb-2 text-2xl font-bold text-slate-800">What Is Debugging?</h2>
     <p class="text-slate-600">
       Debugging is the process of <strong>finding and fixing bugs</strong> in your code. Think of yourself as a <strong>detective for code</strong> — you gather clues from error messages, unexpected behavior, and logs, then track down the culprit and bring it to justice.
     </p>

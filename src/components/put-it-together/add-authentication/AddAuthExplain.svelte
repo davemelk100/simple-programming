@@ -29,7 +29,6 @@
 <div class="space-y-8">
   {#if !advanced}
   <div>
-    <h2 class="mb-2 text-2xl font-bold text-slate-800">What Is Authentication?</h2>
     <p class="text-slate-600">
       Almost every app needs to know who is using it. A social media app needs to know whose profile to show. An email app needs to know whose inbox to open. <strong>Authentication</strong> is the process of verifying a user's identity, and <strong>authorization</strong> is deciding what that user is allowed to do.
     </p>

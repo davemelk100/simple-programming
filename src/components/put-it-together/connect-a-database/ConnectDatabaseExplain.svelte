@@ -29,7 +29,6 @@
 <div class="space-y-8">
   {#if !advanced}
   <div>
-    <h2 class="mb-2 text-2xl font-bold text-slate-800">How Apps Talk to Databases</h2>
     <p class="text-slate-600">
       Your app stores data — users, posts, orders, messages. That data lives in a <strong>database</strong>, a specialized program designed to store and retrieve information reliably. But your app and your database speak different languages. Your app is written in JavaScript, Python, or Go; your database speaks <strong>SQL</strong>. Connecting them requires a few key pieces.
     </p>
