@@ -345,7 +345,8 @@
 </div>
 
 <style>
-  .code-block { background-color: #0f172a; border: 1px solid #334155; border-radius: 0.5rem; padding: 1rem 1.25rem; font-size: 0.875rem; line-height: 1.7; overflow-x: auto; color: #e2e8f0; }
+  .code-block { background-color: #0f172a;
+    color: #e2e8f0; border: 1px solid #334155; border-radius: 0.5rem; padding: 1rem 1.25rem; font-size: 0.875rem; line-height: 1.7; overflow-x: auto; color: #e2e8f0; }
   .code-block :global(.kw)  { color: #c084fc; }
   .code-block :global(.var) { color: #93c5fd; }
   .code-block :global(.str) { color: #fcd34d; }

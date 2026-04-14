@@ -247,6 +247,7 @@
 <style>
   .code-block {
     background-color: #0f172a;
+    color: #e2e8f0;
     border: 1px solid #334155;
     border-radius: 0.5rem;
     padding: 1rem 1.25rem;

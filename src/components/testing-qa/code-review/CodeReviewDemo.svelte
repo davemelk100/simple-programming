@@ -306,5 +306,6 @@
 </div>
 
 <style>
-  .code-block { background-color: #0f172a; border: 1px solid #334155; border-radius: 0.5rem; padding: 0.75rem 0.5rem; font-size: 0.875rem; line-height: 1.7; overflow-x: auto; color: #e2e8f0; }
+  .code-block { background-color: #0f172a;
+    color: #e2e8f0; border: 1px solid #334155; border-radius: 0.5rem; padding: 0.75rem 0.5rem; font-size: 0.875rem; line-height: 1.7; overflow-x: auto; color: #e2e8f0; }
 </style>
