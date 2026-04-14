@@ -115,7 +115,6 @@
 
   <div class="space-y-8">
     <div>
-      <h2 class="mb-2 text-2xl font-bold text-slate-800">Integration Testing (Advanced)</h2>
       <p class="text-slate-600">Testing strategies, environments, database patterns, and contract testing between services.</p>
     </div>
 

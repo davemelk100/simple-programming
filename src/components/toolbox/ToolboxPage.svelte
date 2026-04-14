@@ -4,6 +4,7 @@
   import { getToolboxBySlug, getNextToolbox, getPrevToolbox } from '../../lib/toolbox';
   import { loadProgress, markSectionComplete } from '../../lib/progress';
   import { getUser } from '../../lib/auth';
+  import { setAdvanced } from '../../lib/mode';
   import SectionTabs from '../ui/SectionTabs.svelte';
   import SubNav from '../ui/SubNav.svelte';
   import Modal from '../ui/Modal.svelte';
@@ -41,7 +42,7 @@
   let nextTool = $derived(getNextToolbox(toolboxSlug));
 
   let activeSection = $state<SectionType>('explain');
-  let completedSections = $state({ explain: false, demo: false, exercise: false, code: false });
+  let completedSections = $state({ explain: false, demo: false, exercise: false, code: false, advanced: false });
   let userId = $state<string | null>(null);
   let showCompletionModal = $state(false);
   let completedSectionType = $state<SectionType>('explain');
@@ -53,6 +54,8 @@
     green: 'text-green-700',
     orange: 'text-orange-700',
   };
+
+  onMount(() => setAdvanced(false));
 
   onMount(async () => {
     try {
@@ -67,6 +70,7 @@
             demo: toolProgress.demo?.completed ?? false,
             exercise: toolProgress.exercise?.completed ?? false,
             code: toolProgress.code?.completed ?? false,
+            advanced: false,
           };
         }
       }
@@ -76,6 +80,7 @@
   });
 
   function handleTabChange(section: SectionType) {
+    setAdvanced(section === 'advanced');
     activeSection = section;
   }
 
@@ -134,6 +139,11 @@
           <svelte:component
             this={components[toolboxSlug].code}
             oncomplete={() => handleSectionComplete('code')}
+          />
+        {:else if activeSection === 'advanced'}
+          <svelte:component
+            this={components[toolboxSlug].explain}
+            oncomplete={() => handleSectionComplete('advanced')}
           />
         {/if}
       {:else}

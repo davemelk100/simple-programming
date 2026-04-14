@@ -101,7 +101,6 @@
 
   <div class="space-y-8">
     <div>
-      <h2 class="mb-2 text-2xl font-bold text-slate-800">Testing Your Code (Advanced)</h2>
       <p class="text-slate-600">Testing strategies, methodologies, and professional practices for building reliable software.</p>
     </div>
 

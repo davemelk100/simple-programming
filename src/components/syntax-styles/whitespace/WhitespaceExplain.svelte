@@ -123,7 +123,7 @@
 
 <div class="space-y-8">
   <div>
-    <h2 class="mb-3 text-2xl font-bold text-slate-800">Whitespace Sensitivity: Deep Dive</h2>
+    <h2 class="mb-3 text-2xl font-bold text-slate-800">Deep Dive</h2>
     <p class="text-slate-600">
       The idea that indentation defines program structure has a formal name, a contentious history, and subtle implications across many languages.
     </p>

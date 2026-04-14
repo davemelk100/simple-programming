@@ -107,7 +107,6 @@
 
   <div class="space-y-8">
     <div>
-      <h2 class="mb-2 text-2xl font-bold text-slate-800">Fine-Tuning (Advanced)</h2>
       <p class="text-slate-600">LoRA, RLHF, DPO, quantized training, and the science behind model customization.</p>
     </div>
 

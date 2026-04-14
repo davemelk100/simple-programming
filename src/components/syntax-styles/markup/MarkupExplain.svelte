@@ -177,7 +177,7 @@
 
   <div class="space-y-8">
     <div>
-      <h2 class="mb-3 text-2xl font-bold text-slate-800">Markup Languages: Deep Dive</h2>
+      <h2 class="mb-3 text-2xl font-bold text-slate-800">Deep Dive</h2>
       <p class="text-slate-600">
         Markup languages structure documents using a tree of nested elements. Understanding the DOM, semantic HTML5, XML namespaces, and the differences between HTML5 and XHTML gives you deeper control over how documents are parsed and interpreted.
       </p>

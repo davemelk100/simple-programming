@@ -136,7 +136,7 @@
 
   <div class="space-y-8">
     <div>
-      <h2 class="mb-2 text-2xl font-bold text-slate-800">C-Style Syntax: History and Nuances</h2>
+      <h2 class="mb-2 text-2xl font-bold text-slate-800">History and Nuances</h2>
       <p class="text-slate-600">
         The curly-brace syntax convention is one of the most influential design decisions in programming history. It traces a direct lineage from C (1972) through nearly every mainstream language used today.
       </p>

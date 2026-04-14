@@ -109,7 +109,6 @@
 
   <div class="space-y-8">
     <div>
-      <h2 class="mb-2 text-2xl font-bold text-slate-800">End-to-End Testing (Advanced)</h2>
       <p class="text-slate-600">Professional patterns and strategies for robust E2E test suites.</p>
     </div>
 

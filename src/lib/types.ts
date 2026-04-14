@@ -6,7 +6,7 @@ export interface Topic {
   color: string;
 }
 
-export type SectionType = 'explain' | 'demo' | 'exercise' | 'code';
+export type SectionType = 'explain' | 'demo' | 'exercise' | 'code' | 'advanced';
 
 export interface SectionProgress {
   completed: boolean;

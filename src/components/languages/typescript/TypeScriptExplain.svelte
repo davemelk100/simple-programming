@@ -116,7 +116,7 @@
 
   <div class="space-y-8">
     <div>
-      <h2 class="mb-2 text-2xl font-bold text-slate-800">TypeScript: The Typed Superset of JavaScript</h2>
+      <h2 class="mb-2 text-2xl font-bold text-slate-800">The Typed Superset of JavaScript</h2>
       <p class="text-slate-600">
         TypeScript adds a powerful <strong>static type system</strong> on top of JavaScript. Every valid JavaScript program is also valid TypeScript, but TypeScript lets you describe the <em>shapes</em> of your data so the compiler can catch bugs before runtime.
       </p>

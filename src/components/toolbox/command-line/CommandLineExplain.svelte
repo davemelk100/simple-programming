@@ -129,7 +129,7 @@
 
   <div class="space-y-8">
     <div>
-      <h2 class="mb-3 text-2xl font-bold text-slate-800">Command Line: Deep Dive</h2>
+      <h2 class="mb-3 text-2xl font-bold text-slate-800">Deep Dive</h2>
       <p class="text-slate-600">
         Beyond basic commands, the shell is a powerful programming environment. Understanding streams, pipes, process management, and configuration turns you from a command-line user into a command-line <strong>power user</strong>.
       </p>

@@ -99,7 +99,6 @@
 
   <div class="space-y-8">
     <div>
-      <h2 class="mb-2 text-2xl font-bold text-slate-800">Code Review (Advanced)</h2>
       <p class="text-slate-600">Best practices, automated tooling, metrics, and anti-patterns for professional code review.</p>
     </div>
 

@@ -98,7 +98,6 @@
 
   <div class="space-y-8">
     <div>
-      <h2 class="mb-3 text-2xl font-bold text-slate-800">Scaffolding (Advanced)</h2>
       <p class="text-slate-600">
         Beyond basic file generation, professional projects need <strong>monorepo management</strong>, <strong>linting/formatting</strong>, <strong>pre-commit hooks</strong>, and <strong>CI pipelines</strong> from the start.
       </p>

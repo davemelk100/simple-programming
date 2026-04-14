@@ -134,7 +134,7 @@
 
   <div class="space-y-8">
     <div>
-      <h2 class="mb-3 text-2xl font-bold text-slate-800">Planning &amp; Design: The Deep Dive</h2>
+      <h2 class="mb-3 text-2xl font-bold text-slate-800">The Deep Dive</h2>
       <p class="text-slate-600">
         At a professional level, planning goes far beyond writing a to-do list. It involves <strong>requirements engineering</strong>, <strong>architectural decisions</strong>, <strong>prototyping</strong>, and choosing the right <strong>development methodology</strong>. Poor planning is the number one cause of failed software projects.
       </p>

@@ -102,7 +102,6 @@
 
   <div class="space-y-8">
     <div>
-      <h2 class="mb-2 text-2xl font-bold text-slate-800">Version Control (Advanced)</h2>
       <p class="text-slate-600">Git internals, advanced workflows, and professional branching strategies.</p>
     </div>
 

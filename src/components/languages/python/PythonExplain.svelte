@@ -90,7 +90,7 @@
 
 <div class="space-y-8">
   <div>
-    <h2 class="mb-3 text-2xl font-bold text-slate-800">Python: Under the Hood</h2>
+    <h2 class="mb-3 text-2xl font-bold text-slate-800">Under the Hood</h2>
     <p class="text-slate-600">
       Python is a dynamically-typed, garbage-collected language with a rich data model. Let's explore the concepts that make Python powerful for experienced developers.
     </p>

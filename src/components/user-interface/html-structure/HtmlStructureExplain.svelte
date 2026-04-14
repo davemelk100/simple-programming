@@ -167,7 +167,7 @@
 
   <div class="space-y-8">
     <div>
-      <h2 class="mb-3 text-2xl font-bold text-slate-800">HTML Structure: Deep Dive</h2>
+      <h2 class="mb-3 text-2xl font-bold text-slate-800">Deep Dive</h2>
       <p class="text-slate-600">
         Beyond the basics, HTML structure involves the Document Object Model (DOM), semantic elements, content models, and how browsers parse and error-correct your markup into a living tree of nodes.
       </p>

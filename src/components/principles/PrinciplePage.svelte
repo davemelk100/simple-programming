@@ -4,6 +4,7 @@
   import { getPrincipleBySlug, getNextPrinciple, getPrevPrinciple } from '../../lib/principles';
   import { loadProgress, markSectionComplete } from '../../lib/progress';
   import { getUser } from '../../lib/auth';
+  import { setAdvanced } from '../../lib/mode';
   import SectionTabs from '../ui/SectionTabs.svelte';
   import SubNav from '../ui/SubNav.svelte';
   import Modal from '../ui/Modal.svelte';
@@ -57,7 +58,7 @@
   let nextPrinciple = $derived(getNextPrinciple(principleSlug));
 
   let activeSection = $state<SectionType>('explain');
-  let completedSections = $state({ explain: false, demo: false, exercise: false, code: false });
+  let completedSections = $state({ explain: false, demo: false, exercise: false, code: false, advanced: false });
   let userId = $state<string | null>(null);
   let showCompletionModal = $state(false);
   let completedSectionType = $state<SectionType>('explain');
@@ -73,6 +74,8 @@
     indigo: 'text-indigo-700',
   };
 
+  onMount(() => setAdvanced(false));
+
   onMount(async () => {
     try {
       const user = await getUser();
@@ -86,6 +89,7 @@
             demo: princProgress.demo?.completed ?? false,
             exercise: princProgress.exercise?.completed ?? false,
             code: princProgress.code?.completed ?? false,
+            advanced: false,
           };
         }
       }
@@ -95,6 +99,7 @@
   });
 
   function handleTabChange(section: SectionType) {
+    setAdvanced(section === 'advanced');
     activeSection = section;
   }
 
@@ -157,6 +162,11 @@
           <svelte:component
             this={components[principleSlug].code}
             oncomplete={() => handleSectionComplete('code')}
+          />
+        {:else if activeSection === 'advanced'}
+          <svelte:component
+            this={components[principleSlug].explain}
+            oncomplete={() => handleSectionComplete('advanced')}
           />
         {/if}
       {:else}

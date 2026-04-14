@@ -93,7 +93,6 @@
 
   <div class="space-y-8">
     <div>
-      <h2 class="mb-2 text-2xl font-bold text-slate-800">Generative AI (Advanced)</h2>
       <p class="text-slate-600">Diffusion models, GANs, VAEs, multimodal architectures, and the technical foundations of content generation.</p>
     </div>
 

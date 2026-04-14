@@ -138,7 +138,7 @@
 
   <div class="space-y-8">
     <div>
-      <h2 class="mb-3 text-2xl font-bold text-slate-800">DRY: The Full Picture</h2>
+      <h2 class="mb-3 text-2xl font-bold text-slate-800">The Full Picture</h2>
       <p class="text-slate-600">
         The DRY principle goes beyond simple code duplication. It was originally defined in <em>The Pragmatic Programmer</em> by Andy Hunt and Dave Thomas, and has since been debated, refined, and sometimes overapplied.
       </p>

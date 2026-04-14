@@ -91,7 +91,6 @@
 
   <div class="space-y-8">
     <div>
-      <h2 class="mb-2 text-2xl font-bold text-slate-800">Component Frameworks (Advanced)</h2>
       <p class="text-slate-600">Deeper patterns: component lifecycle, reactivity models, server-side rendering, and architecture decisions.</p>
     </div>
 

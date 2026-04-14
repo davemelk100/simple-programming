@@ -111,7 +111,7 @@
 
 <div class="space-y-8">
   <div>
-    <h2 class="mb-2 text-2xl font-bold text-slate-800">Go: Under the Hood</h2>
+    <h2 class="mb-2 text-2xl font-bold text-slate-800">Under the Hood</h2>
     <p class="text-slate-600">
       Go makes deliberate, opinionated design choices. Understanding them helps you write
       idiomatic Go and appreciate why the language works the way it does.

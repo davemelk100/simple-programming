@@ -111,7 +111,6 @@
 
   <div class="space-y-8">
     <div>
-      <h2 class="mb-2 text-2xl font-bold text-slate-800">Deploy &amp; Ship (Advanced)</h2>
       <p class="text-slate-600">Build pipelines, deployment strategies, CDN edge caching, monitoring, feature flags, and database migrations.</p>
     </div>
 

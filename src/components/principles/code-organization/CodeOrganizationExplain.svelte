@@ -143,7 +143,7 @@
 
   <div class="space-y-8">
     <div>
-      <h2 class="mb-3 text-2xl font-bold text-slate-800">Code Organization: The Deep Dive</h2>
+      <h2 class="mb-3 text-2xl font-bold text-slate-800">The Deep Dive</h2>
       <p class="text-slate-600">
         At scale, code organization is an architectural discipline. Poor organization leads to tangled dependencies, slow builds, merge conflicts, and teams that step on each other's toes. Good organization creates clear boundaries that let code evolve independently.
       </p>

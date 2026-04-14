@@ -4,6 +4,7 @@
   import { getLanguageBySlug, getNextLanguage, getPrevLanguage } from '../../lib/languages';
   import { loadProgress, markSectionComplete } from '../../lib/progress';
   import { getUser } from '../../lib/auth';
+  import { setAdvanced } from '../../lib/mode';
   import SectionTabs from '../ui/SectionTabs.svelte';
   import SubNav from '../ui/SubNav.svelte';
   import Modal from '../ui/Modal.svelte';
@@ -45,7 +46,7 @@
   let nextLanguage = $derived(getNextLanguage(languageSlug));
 
   let activeSection = $state<SectionType>('explain');
-  let completedSections = $state({ explain: false, demo: false, exercise: false, code: false });
+  let completedSections = $state({ explain: false, demo: false, exercise: false, code: false, advanced: false });
   let userId = $state<string | null>(null);
   let showCompletionModal = $state(false);
   let completedSectionType = $state<SectionType>('explain');
@@ -62,6 +63,8 @@
     sky: 'text-sky-700',
   };
 
+  onMount(() => setAdvanced(false));
+
   onMount(async () => {
     try {
       const user = await getUser();
@@ -75,6 +78,7 @@
             demo: langProgress.demo?.completed ?? false,
             exercise: langProgress.exercise?.completed ?? false,
             code: langProgress.code?.completed ?? false,
+            advanced: false,
           };
         }
       }
@@ -84,6 +88,7 @@
   });
 
   function handleTabChange(section: SectionType) {
+    setAdvanced(section === 'advanced');
     activeSection = section;
   }
 
@@ -144,6 +149,11 @@
           <svelte:component
             this={components[languageSlug].code}
             oncomplete={() => handleSectionComplete('code')}
+          />
+        {:else if activeSection === 'advanced'}
+          <svelte:component
+            this={components[languageSlug].explain}
+            oncomplete={() => handleSectionComplete('advanced')}
           />
         {/if}
       {:else}

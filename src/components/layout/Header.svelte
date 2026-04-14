@@ -1,19 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import {
-    getAdvanced,
-    toggleAdvanced,
-    onAdvancedChange,
-  } from "../../lib/mode";
-
   let user: { email?: string } | null = $state(null);
   let signingOut = $state(false);
-  let advanced = $state(false);
-
-  onMount(() => {
-    advanced = getAdvanced();
-    return onAdvancedChange((v) => (advanced = v));
-  });
 
   onMount(() => {
     let subscription: { unsubscribe: () => void } | undefined;

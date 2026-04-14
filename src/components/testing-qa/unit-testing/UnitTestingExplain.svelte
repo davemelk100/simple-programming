@@ -120,7 +120,6 @@
 
   <div class="space-y-8">
     <div>
-      <h2 class="mb-2 text-2xl font-bold text-slate-800">Unit Testing (Advanced)</h2>
       <p class="text-slate-600">Test doubles, coverage strategies, edge cases, and the TDD workflow.</p>
     </div>
 

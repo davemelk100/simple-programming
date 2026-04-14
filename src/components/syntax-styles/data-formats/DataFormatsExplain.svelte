@@ -122,7 +122,7 @@
 
   <div class="space-y-8">
     <div>
-      <h2 class="mb-2 text-2xl font-bold text-slate-800">Data Serialization: Deep Dive</h2>
+      <h2 class="mb-2 text-2xl font-bold text-slate-800">Deep Dive</h2>
       <p class="text-slate-600">
         Beyond basic structure, data formats have rich ecosystems for validation, typing, streaming, and optimization. Understanding these details is essential for building robust data pipelines and APIs.
       </p>

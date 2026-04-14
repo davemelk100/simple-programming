@@ -152,7 +152,7 @@
 
   <div class="space-y-8">
     <div>
-      <h2 class="mb-3 text-2xl font-bold text-slate-800">Declarative vs. Imperative: The Full Picture</h2>
+      <h2 class="mb-3 text-2xl font-bold text-slate-800">The Full Picture</h2>
       <p class="text-slate-600">
         The declarative/imperative divide isn't binary — it's a <strong>spectrum</strong>. Many modern languages and frameworks let you write declaratively within an imperative host language. Understanding where different tools sit on this spectrum is key to choosing the right approach.
       </p>

@@ -113,7 +113,7 @@
 
   <div class="space-y-8">
     <div>
-      <h2 class="mb-3 text-2xl font-bold text-slate-800">Naming: The Deep Dive</h2>
+      <h2 class="mb-3 text-2xl font-bold text-slate-800">The Deep Dive</h2>
       <p class="text-slate-600">
         Phil Karlton famously said: <em>"There are only two hard things in Computer Science: cache invalidation and naming things."</em> Naming well requires balancing brevity with clarity, following conventions your team and language expect, and thinking about the <strong>domain</strong> your code represents.
       </p>

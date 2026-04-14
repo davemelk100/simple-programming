@@ -94,7 +94,6 @@
 
   <div class="space-y-8">
     <div>
-      <h2 class="mb-2 text-2xl font-bold text-slate-800">Responsive Design (Advanced)</h2>
       <p class="text-slate-600">Container queries, advanced fluid typography, responsive images, and modern layout strategies.</p>
     </div>
 

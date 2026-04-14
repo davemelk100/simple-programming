@@ -182,7 +182,7 @@
 
 <div class="space-y-8">
   <div>
-    <h2 class="mb-2 text-2xl font-bold text-slate-800">Admin &amp; Permissions: Deep Dive</h2>
+    <h2 class="mb-2 text-2xl font-bold text-slate-800">Deep Dive</h2>
     <p class="text-slate-600">
       The Unix permission model, SSH internals, IAM roles, RBAC, and the principle of
       least privilege -- the security concepts that underpin real-world infrastructure.

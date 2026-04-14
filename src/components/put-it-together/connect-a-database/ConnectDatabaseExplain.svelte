@@ -94,7 +94,6 @@
 
   <div class="space-y-8">
     <div>
-      <h2 class="mb-2 text-2xl font-bold text-slate-800">Connect a Database (Advanced)</h2>
       <p class="text-slate-600">Connection pooling, ORM trade-offs, migration strategies, and performance optimization.</p>
     </div>
 

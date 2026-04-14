@@ -103,7 +103,6 @@
 
   <div class="space-y-8">
     <div>
-      <h2 class="mb-2 text-2xl font-bold text-slate-800">LLMs (Advanced)</h2>
       <p class="text-slate-600">Transformer internals, scaling laws, inference optimization, and the science behind modern language models.</p>
     </div>
 

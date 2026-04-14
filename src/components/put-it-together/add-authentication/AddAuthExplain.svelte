@@ -116,7 +116,6 @@
 
   <div class="space-y-8">
     <div>
-      <h2 class="mb-2 text-2xl font-bold text-slate-800">Authentication (Advanced)</h2>
       <p class="text-slate-600">JWT internals, OAuth 2.0 flows, session security, RBAC, MFA, and auth providers.</p>
     </div>
 

@@ -97,7 +97,6 @@
 
   <div class="space-y-8">
     <div>
-      <h2 class="mb-3 text-2xl font-bold text-slate-800">Choosing a Stack (Advanced)</h2>
       <p class="text-slate-600">
         Beyond picking individual technologies, modern development offers <strong>full-stack frameworks</strong>, architectural patterns, and deployment paradigms that bundle decisions together.
       </p>

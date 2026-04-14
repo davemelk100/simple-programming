@@ -4,6 +4,7 @@
   import { getUserInterfaceBySlug, getNextUserInterface, getPrevUserInterface } from '../../lib/user-interface';
   import { loadProgress, markSectionComplete } from '../../lib/progress';
   import { getUser } from '../../lib/auth';
+  import { setAdvanced } from '../../lib/mode';
   import SectionTabs from '../ui/SectionTabs.svelte';
   import SubNav from '../ui/SubNav.svelte';
   import Modal from '../ui/Modal.svelte';
@@ -41,7 +42,7 @@
   let nextTopic = $derived(getNextUserInterface(topicSlug));
 
   let activeSection = $state<SectionType>('explain');
-  let completedSections = $state({ explain: false, demo: false, exercise: false, code: false });
+  let completedSections = $state({ explain: false, demo: false, exercise: false, code: false, advanced: false });
   let userId = $state<string | null>(null);
   let showCompletionModal = $state(false);
   let completedSectionType = $state<SectionType>('explain');
@@ -56,6 +57,8 @@
     pink: 'text-pink-700',
   };
 
+  onMount(() => setAdvanced(false));
+
   onMount(async () => {
     try {
       const user = await getUser();
@@ -69,6 +72,7 @@
             demo: p.demo?.completed ?? false,
             exercise: p.exercise?.completed ?? false,
             code: p.code?.completed ?? false,
+            advanced: false,
           };
         }
       }
@@ -76,6 +80,7 @@
   });
 
   function handleTabChange(section: SectionType) {
+    setAdvanced(section === 'advanced');
     activeSection = section;
   }
 
@@ -118,6 +123,8 @@
           <svelte:component this={components[topicSlug].exercise} oncomplete={(score) => handleSectionComplete('exercise', score)} />
         {:else if activeSection === 'code'}
           <svelte:component this={components[topicSlug].code} oncomplete={() => handleSectionComplete('code')} />
+        {:else if activeSection === 'advanced'}
+          <svelte:component this={components[topicSlug].explain} oncomplete={() => handleSectionComplete('advanced')} />
         {/if}
       {:else}
         <p class="text-center text-slate-500">Content coming soon!</p>

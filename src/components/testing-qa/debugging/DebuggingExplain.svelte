@@ -96,7 +96,6 @@
 
   <div class="space-y-8">
     <div>
-      <h2 class="mb-2 text-2xl font-bold text-slate-800">Debugging (Advanced)</h2>
       <p class="text-slate-600">Professional debugging techniques, tools, and strategies for tracking down complex problems.</p>
     </div>
 
