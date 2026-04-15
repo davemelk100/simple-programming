@@ -61,6 +61,15 @@
   let openMenu = $state<string | null>(null);
   let mobileMenuOpen = $state(false);
 
+  const groupIcons: Record<string, string> = {
+    "1. Concepts": `<svg class="inline h-4.5 w-4.5 mr-1.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>`,
+    "2. Syntax & Principles": `<svg class="inline h-4.5 w-4.5 mr-1.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>`,
+    "3. Languages & Tools": `<svg class="inline h-4.5 w-4.5 mr-1.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/></svg>`,
+    "4. Build & Ship": `<svg class="inline h-4.5 w-4.5 mr-1.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>`,
+    "5. User Interface": `<svg class="inline h-4.5 w-4.5 mr-1.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>`,
+    "6. AI": `<svg class="inline h-4.5 w-4.5 mr-1.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714a2.25 2.25 0 00.659 1.591L19 14.5M14.25 3.104c.251.023.501.05.75.082M19 14.5l-1.5 4.5H6.5L5 14.5m14 0H5"/></svg>`,
+  };
+
   const groups = [
     {
       label: "1. Concepts",
@@ -179,6 +188,27 @@
         },
       ],
     },
+    {
+      label: "6. AI",
+      sections: [
+        {
+          key: "ai-using",
+          label: "Using AI",
+          items: aiUsingTopics.map((t) => ({
+            ...t,
+            href: `/ai/${t.slug}`,
+          })),
+        },
+        {
+          key: "ai-developing",
+          label: "Developing AI",
+          items: aiDevelopingTopics.map((t) => ({
+            ...t,
+            href: `/ai/${t.slug}`,
+          })),
+        },
+      ],
+    },
   ];
 
   const sections = groups.flatMap((g) => g.sections);
@@ -209,17 +239,19 @@
   class="sticky top-0 hidden bg-white lg:block py-5"
   style="z-index: 9999;"
 >
-  <div class="mx-auto flex items-center justify-between px-6">
-    <a href="/" class="flex shrink-0 items-center gap-4 no-underline">
-      <img src="/logo.svg" alt="Programming Is Easy" class="h-14 -my-2" />
-      <span
-        class="text-2xl font-bold text-slate-800"
-        style="font-family: 'Permanent Marker', sans-serif; letter-spacing: 0.08em;"
-        >Programming Is Easy</span
-      >
-    </a>
+  <div class="mx-auto px-6">
+    <div class="flex items-center py-2">
+      <a href="/" class="flex shrink-0 items-center gap-4 no-underline" style="width: 20%;">
+        <img src="/logo.svg" alt="Programming Is Easy" class="h-14 -my-2" />
+        <span
+          class="text-2xl font-bold text-slate-800"
+          style="font-family: 'Permanent Marker', sans-serif; letter-spacing: 0.08em;"
+          >Programming Is Easy</span
+        >
+      </a>
+    </div>
 
-    <nav class="flex items-center gap-1">
+    <nav class="flex items-center gap-1 pt-1 pb-2">
       {#each groups as group}
         <div class="relative">
           <button
@@ -228,15 +260,15 @@
               handleToggle(group.label);
             }}
             style="font-family: 'Roboto', sans-serif; letter-spacing: 0.03em;"
-            class="shrink-0 whitespace-nowrap rounded-md px-1.5 py-1 text-xs font-medium uppercase transition-colors
+            class="shrink-0 whitespace-nowrap rounded-md px-2.5 py-1.5 text-sm font-medium uppercase transition-colors
               {isGroupActive(group)
               ? 'bg-indigo-50 text-indigo-700'
               : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700'}
               {openMenu === group.label ? 'bg-slate-100 text-slate-800' : ''}"
           >
-            {group.label}
+            {@html groupIcons[group.label] ?? ''}{group.label}
             <svg
-              class="ml-0.5 inline h-2.5 w-2.5 transition-transform {openMenu ===
+              class="ml-1 inline h-3 w-3 transition-transform {openMenu ===
               group.label
                 ? 'rotate-180'
                 : ''}"
@@ -288,7 +320,6 @@
         </div>
       {/each}
     </nav>
-
   </div>
 </header>
 
@@ -313,7 +344,7 @@
               : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700'}
               {openMenu === group.label ? 'bg-slate-100 text-slate-800' : ''}"
           >
-            {group.label}
+            {@html groupIcons[group.label] ?? ''}{group.label}
             <svg
               class="ml-1 inline h-3 w-3 transition-transform {openMenu ===
               group.label

@@ -80,12 +80,12 @@
 </div>
 
 <!-- Desktop: horizontal tabs -->
-<div class="hidden shrink-0 sm:flex overflow-x-auto">
+<div class="hidden sm:flex flex-wrap">
   {#each tabs as tab}
     <button
       onclick={() => handleClick(tab.key)}
       style="letter-spacing: normal; {activeSection === tab.key ? 'color: #085899;' : ''}"
-      class="relative flex shrink-0 items-center gap-1.5 px-3 lg:px-5 py-3 text-sm font-medium transition-colors duration-200
+      class="relative flex items-center gap-1.5 px-3 lg:px-5 py-3 text-sm font-medium transition-colors duration-200
         {activeSection === tab.key
           ? ''
           : 'text-slate-500 hover:text-slate-700'}"
