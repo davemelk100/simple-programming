@@ -241,7 +241,7 @@
 >
   <div class="mx-auto px-6">
     <div class="flex items-center py-2">
-      <a href="/" class="flex shrink-0 items-center gap-4 no-underline" style="width: 20%;">
+      <a href="/" class="flex shrink-0 items-center gap-4 no-underline whitespace-nowrap">
         <img src="/logo.svg" alt="Programming Is Easy" class="h-14 -my-2" />
         <span
           class="text-2xl font-bold text-slate-800"
