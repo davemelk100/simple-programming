@@ -3,7 +3,7 @@
 
   interface Props {
     activeSection: SectionType;
-    completedSections: { explain: boolean; demo: boolean; exercise: boolean; code: boolean; advanced: boolean };
+    completedSections: { explain: boolean; demo: boolean; exercise: boolean; code: boolean; advanced: boolean; ai: boolean };
     onchange?: (section: SectionType) => void;
   }
 
@@ -17,6 +17,7 @@
     { key: 'exercise', label: 'Practice', icon: '✏️' },
     { key: 'code', label: 'Code', icon: '💻' },
     { key: 'advanced', label: 'Advanced', icon: '🎓' },
+    { key: 'ai', label: 'AI', icon: '🤖' },
   ];
 
   let activeTab = $derived(tabs.find((t) => t.key === activeSection) ?? tabs[0]);

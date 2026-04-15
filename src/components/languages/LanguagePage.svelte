@@ -5,6 +5,7 @@
   import { loadProgress, markSectionComplete } from '../../lib/progress';
   import { getUser } from '../../lib/auth';
   import { setAdvanced } from '../../lib/mode';
+  import AiSection from '../ui/AiSection.svelte';
   import SectionTabs from '../ui/SectionTabs.svelte';
   import SubNav from '../ui/SubNav.svelte';
   import Modal from '../ui/Modal.svelte';
@@ -46,7 +47,7 @@
   let nextLanguage = $derived(getNextLanguage(languageSlug));
 
   let activeSection = $state<SectionType>('explain');
-  let completedSections = $state({ explain: false, demo: false, exercise: false, code: false, advanced: false });
+  let completedSections = $state({ explain: false, demo: false, exercise: false, code: false, advanced: false, ai: false });
   let userId = $state<string | null>(null);
   let showCompletionModal = $state(false);
   let completedSectionType = $state<SectionType>('explain');
@@ -79,6 +80,7 @@
             exercise: langProgress.exercise?.completed ?? false,
             code: langProgress.code?.completed ?? false,
             advanced: false,
+            ai: false,
           };
         }
       }
@@ -155,6 +157,8 @@
             this={components[languageSlug].explain}
             oncomplete={() => handleSectionComplete('advanced')}
           />
+        {:else if activeSection === 'ai'}
+          <AiSection topicTitle={language.title} topicSlug={languageSlug} oncomplete={() => handleSectionComplete('ai')} />
         {/if}
       {:else}
         <p class="text-center text-slate-500">Content coming soon!</p>

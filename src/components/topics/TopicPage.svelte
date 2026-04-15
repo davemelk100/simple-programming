@@ -5,6 +5,7 @@
   import { loadProgress, markSectionComplete } from '../../lib/progress';
   import { getUser } from '../../lib/auth';
   import { setAdvanced } from '../../lib/mode';
+  import AiSection from '../ui/AiSection.svelte';
   import SectionTabs from '../ui/SectionTabs.svelte';
   import SubNav from '../ui/SubNav.svelte';
   import Modal from '../ui/Modal.svelte';
@@ -97,7 +98,7 @@
   let subNavItems = $derived(oopTopics.find(t => t.slug === topicSlug) ? oopTopics : topics);
 
   let activeSection = $state<SectionType>('explain');
-  let completedSections = $state({ explain: false, demo: false, exercise: false, code: false, advanced: false });
+  let completedSections = $state({ explain: false, demo: false, exercise: false, code: false, advanced: false, ai: false });
   let userId = $state<string | null>(null);
   let showCompletionModal = $state(false);
   let completedSectionType = $state<SectionType>('explain');
@@ -131,6 +132,7 @@
             exercise: topicProgress.exercise?.completed ?? false,
             code: topicProgress.code?.completed ?? false,
             advanced: false,
+            ai: false,
           };
         }
       }
@@ -220,6 +222,8 @@
             this={components[topicSlug].explain}
             oncomplete={() => handleSectionComplete('advanced')}
           />
+        {:else if activeSection === 'ai'}
+          <AiSection topicTitle={topic.title} {topicSlug} oncomplete={() => handleSectionComplete('ai')} />
         {/if}
       {:else}
         <p class="text-center text-slate-500">Content coming soon!</p>
